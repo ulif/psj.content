@@ -4,6 +4,10 @@ psj.content document objects
 :Test-Layer: unit
 
 A psj.content document is basically an office document with additional
-data. The interface of is defined in ``interfaces.py``::
+data. 
+
+The interface of PSJ documents is defined in ``interfaces.py``::
 
    >>> from psj.content.interfaces import IDocument
+   >>> sorted(IDocument.names())
+   ['description', 'title']
