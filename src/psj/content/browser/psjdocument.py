@@ -1,7 +1,7 @@
 ##
-## interfaces.py
+## psjdocument.py
 ## Login : <uli@pu.smp.net>
-## Started on  Sun Mar 23 02:31:40 2008 Uli Fouquet
+## Started on  Mon Mar 31 10:32:09 2008 Uli Fouquet
 ## $Id$
 ## 
 ## Copyright (C) 2008 Uli Fouquet
@@ -19,18 +19,19 @@
 ## along with this program; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##
-"""Interfaces for psj.content types.
+"""Views for PSJ documents.
 """
+from Products.Five.browser import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
-from zope.interface import Interface
-from zope import schema
-
-from psj.content import PSJContentMessageFactory as _
-
-class IDocument(Interface):
-    """A PSJ document.
+class PSJDocumentView(BrowserView):
+    """Default view of a PSJ document.
     """
-    def rebuild():
-        """This method is called, everytime a document is updated.
+    __call__ = ViewPageTemplateFile('psjdocument.pt')
+
+    def getDocument(self):
+        """Get the embedded document as HTML.
         """
-        pass
+        html = self.context.annotations['psj.content']['html']
+        return html
+    

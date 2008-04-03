@@ -1,0 +1,23 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    i18n_domain="psj.content">
+
+    <!-- Declare security for the field properties of the various
+         content types, and register other components, such as
+         validation subscription adapters, event subscribers, and
+         adapter factories.
+      -->
+
+    <class class=".psjdocument.PSJDocument">
+        <require
+            permission="zope2.View"
+            interface="..interfaces.IDocument"
+            />
+        <require
+            permission="cmf.ModifyPortalContent"
+            set_schema="..interfaces.IDocument"
+            />
+    </class>
+    
+</configure>

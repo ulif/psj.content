@@ -1,7 +1,7 @@
 psj.content document objects
 ****************************
 
-:Test-Layer: unit
+:Test-Layer: integration
 
 A psj.content document is basically an office document with additional
 data. 
@@ -10,4 +10,131 @@ The interface of PSJ documents is defined in ``interfaces.py``::
 
    >>> from psj.content.interfaces import IDocument
    >>> sorted(IDocument.names())
-   ['description', 'title']
+   ['rebuild']
+
+It contains a method `rebuild()` which is called upon creating or
+editing a PSJ document. Because our eventhandler calls `rebuild()` on
+every change of IDocument objects, all those objects must provide
+this method.
+
+Creating a PSJDocument
+======================
+
+As all Archetypes based content types, PSJDocument objects can only be
+created in a quite complex Plone environment. That's why we have to
+run this test as integration test and not as a simple unit test, which
+would be much faster.
+
+The only content type implementing this interface is
+``PSJDocument``. It is the base type of a PSJ site, which holds the
+documents. We create such a PSJDocument::
+
+   >>> from psj.content.content.psjdocument import PSJDocument
+   >>> doc = PSJDocument('mydoc')
+   >>> doc
+   <PSJDocument at mydoc>
+
+   >>> doc.title_or_id()
+   'mydoc'
+
+We can set the title of a PSJ document::
+
+   >>> doc.setTitle('My Title')
+   >>> doc.title_or_id()
+   'My Title'
+
+and the description::
+
+   >>> doc.setDescription('My description.')
+   >>> str(doc['description'])
+   'My description.'
+
+Both attributes can be fetched using the "square bracket" notation,
+because they are stored as annotations. For performance reasons they
+are *not* stored as attributes::
+
+   >>> doc.title
+   ''
+
+   >>> doc.description
+   ''
+
+Beside this, PSJ documents contain a ``document`` annotation, in which
+a office document can be hold. At the beginning, this document is just
+an empty string::
+
+   >>> doc['document']
+   ''
+
+After rebuildung, it should contain a 'File'::
+
+   >>> doc.rebuild()
+   >>> doc['document']
+   <File at mydoc/document>
+
+The ``rebuild()`` function is called in real Plone sites on creation
+and modify events of IDoc documents, so that normally a document is
+contained right from the beginning by upload.
+
+The 'file' contained provides a filename and the real file contents,
+which naturally is all empty at the beginning::
+
+   >>> file = doc['document']
+   >>> file.filename
+   ''
+
+   >>> file.data
+   ''
+
+We can also access these and other data by examining the appropriate
+field in the schema::
+
+   >>> filefield = doc.getField('document')
+   >>> filefield.getFilename(doc)
+   ''
+
+   >>> filefield.getRaw(doc)
+   <File at mydoc/document>
+
+   >>> filefield.getRaw(doc).data
+   ''
+
+   >>> filefield.getContentType(doc)
+   'text/plain'
+
+We now simulate a file upload by injecting a StringIO object with silly
+content::
+
+   >>> import StringIO
+   >>> mutator = filefield.getMutator(doc)
+   >>> mutator(
+   ...     StringIO.StringIO('My Content\non different lines'),
+   ...     filename='myfile.txt')
+   >>> filefield.getFilename(doc)
+   'myfile.txt'
+
+   >>> filefield.getRaw(doc)
+   <File at mydoc/document>
+
+   >>> filefield.getRaw(doc).data
+   'My Content\non different lines'
+
+   >>> filefield.getContentType(doc)
+   'text/plain'
+
+That's all very well, but until now we have no HTML representation of
+the uploaded object. This will be stored in the object annotation with
+keys 'psj.content' and 'html'::
+
+   >>> doc.annotations['psj.content']['html']
+   u''
+
+To create the HTML representation of the 'uploaded' text, we have to
+rebuild the object, which in regular use is done by the event manager
+(and tested in README.txt). We rebuild the object now and lookup the
+generated text::
+
+   >>> doc.rebuild()
+   >>> doc.annotations['psj.content']['html']
+   u'<p>My Content<br />on different lines</p>'
+

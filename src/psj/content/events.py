@@ -1,7 +1,7 @@
 ##
-## interfaces.py
+## events.py
 ## Login : <uli@pu.smp.net>
-## Started on  Sun Mar 23 02:31:40 2008 Uli Fouquet
+## Started on  Mon Mar 31 18:15:06 2008 Uli Fouquet
 ## $Id$
 ## 
 ## Copyright (C) 2008 Uli Fouquet
@@ -19,18 +19,9 @@
 ## along with this program; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##
-"""Interfaces for psj.content types.
-"""
+def rebuild(obj, event):
+    """Call rebuild() on PSJDocuments.
 
-from zope.interface import Interface
-from zope import schema
-
-from psj.content import PSJContentMessageFactory as _
-
-class IDocument(Interface):
-    """A PSJ document.
+    XXX Eventually create a log message.
     """
-    def rebuild():
-        """This method is called, everytime a document is updated.
-        """
-        pass
+    obj.rebuild()

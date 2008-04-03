@@ -1,7 +1,7 @@
 ##
-## interfaces.py
+## config.py
 ## Login : <uli@pu.smp.net>
-## Started on  Sun Mar 23 02:31:40 2008 Uli Fouquet
+## Started on  Sun Mar 30 17:20:15 2008 Uli Fouquet
 ## $Id$
 ## 
 ## Copyright (C) 2008 Uli Fouquet
@@ -19,18 +19,21 @@
 ## along with this program; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##
-"""Interfaces for psj.content types.
+"""Common configuration constants
 """
 
-from zope.interface import Interface
-from zope import schema
+PROJECTNAME = "psj.content"
 
-from psj.content import PSJContentMessageFactory as _
+# This maps portal types to their corresponding add permissions.
+# These are referenced in the root product __init__.py, during
+# Archetypes/CMF type initialisation. The permissions here are
+# also defined in content/configure.zcml, so that they can be
+# looked up as a Zope 3-style IPermission utility.
 
-class IDocument(Interface):
-    """A PSJ document.
-    """
-    def rebuild():
-        """This method is called, everytime a document is updated.
-        """
-        pass
+# We prefix the permission names with our product name to group
+# them sensibly. This is good practice, because it makes it
+# easier to find permissions in the Security tab in the ZMI.
+
+ADD_PERMISSIONS = {
+    "PSJDocument"  : "PSJ: Add PSJ Document",
+}
