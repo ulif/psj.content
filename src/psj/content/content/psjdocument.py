@@ -121,9 +121,6 @@ class PSJDocument(folder.ATFolder):
         for elem in self.keys():
             del self[elem]
         return
-        # This returns the day, traversing works...
-        self.annotations[self.annotations_key]['subobjects'] = OOBTree()
-        return
 
     def setSubObject(self, id, data):
         """Add a subobjects in our annotations.
@@ -131,12 +128,6 @@ class PSJDocument(folder.ATFolder):
         at_file = ATFile(id)
         at_file.update_data(data)
         self[id] = at_file
-        return
-        # This returns the day, traversing works...
-        mtr = self.mimetypes_registry
-        mime = mtr.classify(data, filename=id)
-        mime = str(mime) or 'application/octet-stream'
-        self.annotations[self.annotations_key]['subobjects'][id] = (data, mime)
         return
 
     def _getSubObject(self, id, request=None, response=None):
@@ -167,7 +158,6 @@ class PSJDocument(folder.ATFolder):
 
         XXX create a log message.
 
-        XXX care for updating image links in HTML code.
         """
         self._initDocAnnotations()
         self.clearSubObjects()

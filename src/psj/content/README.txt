@@ -193,3 +193,75 @@ Okay. Now let's see, whether we can access the picture directly::
 
 The picure was directly delivered.
 
+
+Replacing subobjects upon new upload
+------------------------------------
+
+When uploading a new document or version of a document, the old
+subobjects should be removed. We upload `input3.doc` which includes
+two images, both different from the one in the above file::
+
+   >>> browser.open(portal_url  + '/my-first-document')
+   >>> browser.getLink('Edit').click()
+   >>> file_ctrl = browser.getControl(name="document_file")
+   >>> test_filepath = os.path.join(
+   ...     os.path.dirname(__file__), 'tests', 'input3.doc')
+   >>> myfile = cStringIO.StringIO(str(open(test_filepath, 'rb').read()))
+   >>> file_ctrl.add_file(myfile, 'application/msword', filename='input3.doc')
+   >>> browser.getControl(name='document_delete').value = ['']
+   >>> browser.getControl(name='form_submit').click()
+
+Now let's see, whether also the second image is provided by a link
+inside the HTML page we get as response::
+
+   >>> print browser.contents
+   <!DOCTYPE html PUBLIC...
+   <BLANKLINE>
+   <BLANKLINE>
+   <br />
+   ...
+   This document includes a picture:
+   ...
+   <img ... src="my-first-document/unknown.doc0.png" />...
+   ...
+   <img ... src="my-first-document/unknown.doc1.png" />...
+   ...
+   </html>
+
+We make sure, the first picture is a new one::
+
+   >>> img_loc = portal_url + '/my-first-document/unknown.doc0.png'
+   >>> browser.open(img_loc)
+   >>> browser.headers['content-type']
+   'image/png'
+
+   >>> browser.headers['content-length']
+   '5506'
+
+This is the prove: the only picture of the last document was bigger.
+
+To be really sure, that old subobjects are not only replaced, but also
+removed if not part of a freshly uploaded document, we upload the
+first document again, which contains no images at all::
+
+   >>> browser.open(portal_url  + '/my-first-document')
+   >>> browser.getLink('Edit').click()
+   >>> file_ctrl = browser.getControl(name="document_file")
+   >>> test_filepath = os.path.join(
+   ...     os.path.dirname(__file__), 'tests', 'input1.doc')
+   >>> myfile = cStringIO.StringIO(str(open(test_filepath, 'rb').read()))
+   >>> file_ctrl.add_file(myfile, 'application/msword', filename='input1.doc')
+   >>> browser.getControl(name='document_delete').value = ['']
+   >>> browser.getControl(name='form_submit').click()
+
+If we now try to get the a picture, this should fail::
+
+   >>> img_loc = portal_url + '/my-first-document/unknown.doc0.png'
+   >>> browser.handleErrors = True
+   >>> browser.open(img_loc)
+   Traceback (most recent call last):
+   ...
+   HTTPError: HTTP Error 404: Not Found
+
+   >>> browser.headers['status']
+   '404 Not Found'
