@@ -1,0 +1,58 @@
+psj.content Metadata
+********************
+
+:Test-Layer: unit
+
+Metadata for content types.
+
+PSJ supports metadata for content objects. This support is extremely
+flexible, as it allows changing of metadata sets for certain content
+types.
+
+In this context Metadata is mostly handled as a set of metadata items,
+which are collected in a metadata set.
+
+
+MetadataSets
+============
+
+We create a metadata set like this::
+
+   >>> from psj.content.metadata import MetadataSet
+   >>> mset = MetadataSet()
+
+A metadata set describes an (ordered) list of MetadataItem
+instances. In the beginning, the set is empty::
+
+   >>> list(mset)
+   []
+
+The basic things we can do with metadata sets are to add and remove
+metadata items::
+
+   >>> from psj.content.metadata import Value
+   >>> item = Value()
+   >>> mset.add('title', item)
+   >>> list(mset)
+   [u'title']
+
+We can also get a certain entry by key::
+
+   >>> mset.get('title')
+   <psj.content.metadata.Value object at 0x...>
+
+Removing Metadata Set Entries
+-----------------------------
+
+We can remove an entry by name (key)::
+
+   >>> mset.add('title', item)
+   >>> mset.remove('title')
+   >>> list(mset)
+   []
+
+
+Metadata Value
+==============
+
+Values store the actual data of a metadata set.

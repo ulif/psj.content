@@ -1,9 +1,13 @@
 from zope.i18nmessageid import MessageFactory
 from psj.content import config
+from psj.content import metadataregistry
 
 from Products.Archetypes import atapi
 from Products.CMFCore import utils
 
+tools = (
+    metadataregistry.MetadataSchemaRegistry,
+    )
 
 # Define a message factory for when this product is internationalised.
 # This will be imported with the special name "_" in most
@@ -47,3 +51,10 @@ def initialize(context):
             permission         = config.ADD_PERMISSIONS[atype.portal_type],
             extra_constructors = (constructor,),
             ).initialize(context)
+
+    # Register the metadataschemaRegistry
+    utils.ToolInit("%s Tool" % config.PROJECTNAME,
+                   tools = tools,
+                   icon="tool.gif",
+                   ).initialize(context)
+    

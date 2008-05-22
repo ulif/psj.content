@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<import-steps>
+ <import-step id="metadata-registry-various" version="20080522-01"
+              handler="psj.content.setuphandlers.setupMetadataSchemaRegistry"
+              title="Metadata Schema registry setup">
+  <dependency step="componentregistry"/>
+    MetadataSchemaRegistry installation step.
+ </import-step>
+</import-steps>

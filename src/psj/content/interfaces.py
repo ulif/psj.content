@@ -25,7 +25,7 @@
 from zope.interface import Interface
 from zope import schema
 
-from psj.content import PSJContentMessageFactory as _
+#from psj.content import PSJContentMessageFactory as _
 
 class IDocument(Interface):
     """A PSJ document.
@@ -34,3 +34,29 @@ class IDocument(Interface):
         """This method is called, everytime a document is updated.
         """
         pass
+
+class IMetadataItem(Interface):
+    """An item in a metadata set.
+    """
+
+class IMetadataSet(Interface):
+    """A set of metadata items.
+    """
+    def __iter__():
+        """Make instances iterable.
+        """
+
+    def next():
+        """Yield next element.
+        """
+
+    def add():
+        """Add an metadata item.
+        """
+
+    def remove():
+        """Remove an item.
+        """
+class IMetadataSchemaRegistryTool(Interface):
+    """A registry for metadata schemas.
+    """
