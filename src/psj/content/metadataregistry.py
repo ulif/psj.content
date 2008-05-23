@@ -32,7 +32,7 @@ from zope.interface import implements
 
 from psj.content.interfaces import IMetadataSchemaRegistryTool
 
-_www = os.path.join(os.path.dirname(__file__), 'www')
+_www = os.path.join(os.path.dirname(__file__), 'browser')
 
 class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
     implements(IMetadataSchemaRegistryTool)
