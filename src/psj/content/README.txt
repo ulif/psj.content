@@ -271,7 +271,56 @@ Handling Metadata
 
 Metadata is handles by special tool in the ZMI.
 
-We go there::
+We go to the overview page. In the beginning there are no schemata
+available::
 
-   >>> browser.open(portal_url + '/metadataschemas_registry')
-   >>> #print browser.contents
+   >>> browser.open(portal_url + '/metadataschemas_registry/manage_main')
+   >>> print browser.contents
+   <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"...
+   ...
+   Registered metadata schemata (0).
+   ...
+
+Adding a new schema
+-------------------
+
+But we can add a new schema::
+
+   >>> ctrl = browser.getControl('Add a new metadata schema')
+   >>> ctrl.click()
+
+We fill in the values for a text line field::
+
+   >>> browser.getControl(name="text_line.title").value='Title'
+   >>> browser.getControl(name="text_line.default").value='Untitled'
+   >>> browser.getControl("Add text line field").click()
+
+We then set a name for the whole metadataset::
+
+   >>> browser.getControl(name="id").value='My new Schema'
+
+And then submit the whole schema as a new one::
+
+   >>> browser.getControl("Create new schema").click()
+
+Back on the metadata schemas overview, our new entry is listed::
+
+   >>> print browser.contents
+   <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"...
+   ...
+   Registered metadata schemata (1).
+   ...
+
+
+Deleting a schema
+-----------------
+
+We select the only one schema and click on the delete button::
+
+   >>> browser.getControl(name='ids:list', index=0).value=True
+   >>> browser.getControl("Delete Selected Items").click()
+   >>> print browser.contents
+   <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"...
+   ...
+   Registered metadata schemata (0).
+   ...

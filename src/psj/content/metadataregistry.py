@@ -39,7 +39,7 @@ _www = os.path.join(os.path.dirname(__file__), 'browser')
 class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
     implements(IMetadataSchemaRegistryTool)
 
-    id = 'metadataschema_registry'
+    id = 'metadataschemas_registry'
     meta_type = 'MetadataSchema Registry'
     isPrincipiaFolderish = 1 # Show in the ZMI
 
@@ -62,6 +62,12 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
 
     def __init__(self,):
         self._schemas = PersistentMapping()
+        return
+
+    def unregister(self, metadataset):
+        id = metadataset.id
+        del self._schemas[id]
+        return
 
     def schemas(self):
         return self._schemas
@@ -69,13 +75,45 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
     def listSchemas(self):
         return [str(schema) for schema in self.schemas()]
 
+    def lookup(self, id):
+        return [self._schemas[x] for x in self._schemas.keys() if x == id]
+
     def manage_addMetadataSchema(self, id, fields=(), REQUEST=None):
         mset = MetadataSet(id, fields)
-        self._schemas[id] = mset
+        self._schemas[mset.id] = mset
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
-            
+        return
+
+    def manage_delObjects(self, ids, REQUEST=None):
+        """ delete the selected meta data schemata"""
+        for id in ids:
+            self.unregister(self.lookup(id)[0])
+        if REQUEST is not None:
+            REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
+
+    def process_addForm(self, request):
+        result = ()
+        fields = request.form.get('fields', [])
+        for field in fields:
+            result += (field,)
+        if request.get('add_text_line', None) is not None:
+            result += ((dict(type='TextLine',
+                            title=request.get('text_line.title', 'unnamed'),
+                            default=request.get('text_line.title', None))),)
+        if request.get('add_schema', None) is not None:
+            new_result = ()
+            for elem in result:
+                new_elem = dict()
+                for attr in dir(elem):
+                    if attr.startswith('_'):
+                        continue
+                    new_elem[attr] = elem[attr]
+                new_result += (new_elem,)
+            name = request.get('id', 'Untitled Schema')
+            self.manage_addMetadataSchema(name, new_result, REQUEST=request)
+        return result
 
 
 InitializeClass(MetadataSchemaRegistry)
-registerToolInterface('metadataschema_registry', IMetadataSchemaRegistryTool)
+registerToolInterface('metadataschemas_registry', IMetadataSchemaRegistryTool)

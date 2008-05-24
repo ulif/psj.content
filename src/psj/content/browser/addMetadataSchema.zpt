@@ -2,11 +2,10 @@
 <h2 tal:define="manage_tabs_message options/manage_tabs_message | nothing"
     tal:replace="structure here/manage_tabs">Tabs</h2>
 
-
-<form method="POST" action="manage_addMimeType"
-      tal:attributes="action string:${here/absolute_url}/manage_addMimeType;">
+<form method="POST" action=""
+      tal:define="data python:context.process_addForm(request)" >
   <div class="form-title">
-    Add a new mime type
+    Add a new metadata schema
   </div>
 
   <div tal:define="status python:request.get('portal_status', '')"
@@ -17,49 +16,66 @@
 
   <table width="50%">
     <tr>
-      <td class="form-label">Name</td>
+      <td class="form-label">* Name of new schema</td>
       <td class="form-element">
         <input name="id"
-               tal:attributes="value python:request.get('id', '');"/>
+               tal:attributes="value python:request.get('id', 
+			       'Untitled Schema');"/>
       </td>
       </tr><tr>
-      <td class="form-label">Icon path</td>
-      <td class="form-element">
-        <input name="icon_path"
-               tal:attributes="value python:request.get('icon_path', '');"/>
-      </td>
-      </tr><tr>
-      <td class="form-label">Binary?
+      <td class="form-label">Fields
       </td>
       <td class="form-element">
-        <input name="binary" type="checkbox"
-               tal:attributes="value python:request.get('binary', '');"/>
-      </td>
-      </tr><tr>
-      <td class="form-label">Mime-types
-      </td>
-      <td class="form-element">
-        <textarea name="mimetypes:list"
-                  tal:content="python:request.get('mimetypes', '')"/>
-      </td>
-      </tr><tr>
-      <td class="form-label">Extensions
-      </td>
-      <td class="form-element">
-        <textarea name="extensions:list"
-                  tal:content="python:request.get('extensions', '')"/>
-      </td>
-    </tr><tr>
-      <td class="form-label">Globs
-      </td>
-      <td class="form-element">
-        <textarea name="globs:list"
-                  tal:content="python:request.get('globs', '')"/>
+	<div tal:condition="not: python:len(data)">
+	  No fields defined yet.
+	</div>
+	<table tal:condition="python:len(data)">
+	  <tr>
+	    <td></td>
+	    <td class="form-label">name</td>
+	    <td class="form-label">type</td>
+	  </tr>
+	  <tr tal:repeat="field data">
+	    <td class="form-element">
+	      <input type="checkbox" name="del_field" />
+	    </td>
+	    <td class="form-element">
+	      <span tal:content="field/title">Fieldname</span>
+	    </td><td class="form-element">
+	      <span tal:content="field/type">Type of Field</span>
+	    </td>
+
+	    <input type="hidden" 
+		   tal:repeat="attr python:field.keys()"
+		   tal:attributes="name python:'fields.%s:records' % attr;
+				   value python: field[attr]" />
+	  </tr>
+	</table>
       </td>
     </tr>
   </table>
 
-  <input type="submit" />
-</form>
 
+  <fieldset>
+    <legend>Add a textline field</legend>
+    <table width="50%">
+      <tr>
+	<td class="form-label">* Field Name</td>
+	<td class="form-element">
+	  <input name="text_line.title" value="Unnamed" />
+	</td>
+	</tr><tr>
+	<td class="form-label">Default Value</td>
+	<td class="form-element">
+	  <input name="text_line.default" />
+	</td>
+      </tr>
+    </table>
+    <input type="submit" name="add_text_line" value="Add text line field" />
+  </fieldset>
+
+  <div>
+    <input type="submit" name="add_schema" value="Create new schema" />
+  </div>
+</form>
 <tal:footer tal:replace="structure here/manage_page_footer|nothing">footer</tal:footer>

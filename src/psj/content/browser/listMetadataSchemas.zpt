@@ -24,34 +24,29 @@
     <table width="90%">
       <tr class="form-label">
         <th colspan="3">Name</th>
-        <th>Mime-types</th>
-        <th>Extensions</th>
-        <th>Globs</th>
-        <th>Binary?</th>
+        <th>Fields</th>
       </tr>
-<!--
-      <tr class="form-element" tal:repeat="mt_id schemas">
-        <tal:block tal:define="mt python:here.lookup(mt_id)[0];">
+
+
+      <tr class="form-element" tal:repeat="ms_id schemas">
+
+
+	<tal:block tal:define="ms python:here.lookup(ms_id)[0];">
           <td>
             <input type="checkbox" name="ids:list"
-                   tal:attributes="value mt/normalized"/>
+                   tal:attributes="value ms/id"/>
           </td>
+	  <td></td>
           <td>
-            <img tal:attributes="src string:${here/portal_url}/${mt/icon_path}"/>
-          </td>
-          <td>
-            <a tal:content="mt/name"
-               tal:attributes="href string:${here/absolute_url}/manage_editMimeTypeForm?mt_name=${mt/urlsafe}"/>
-          </td>
-          <td tal:content="python:', '.join(mt.schemas)"/>
-          <td tal:content="python:', '.join(mt.extensions)"/>
-          <td tal:content="python:', '.join(mt.globs)"/>
-          <td tal:content="python: mt.binary and 'yes' or 'no'"/>
-        </tal:block>
-      </tr>
--->
-    </table>
+	    <span tal:replace= "ms/name">Name</span>
+	  </td>
+	  <td tal:content="python:', '.join(list(ms))"/>
+	</tal:block>
 
+      </tr>
+
+    </table>
+    <input type="hidden" name="foo" value="bar" />
     <input type="submit" value="Delete Selected Items" />
 
   </form>
