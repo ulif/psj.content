@@ -21,7 +21,8 @@
 ##
 import os
 from OFS.Folder import Folder
-from Globals import InitializeClass
+from Globals import InitializeClass, PersistentMapping
+from Acquisition import aq_base
 
 from Products.CMFCore.utils import registerToolInterface
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
@@ -31,6 +32,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.interface import implements
 
 from psj.content.interfaces import IMetadataSchemaRegistryTool
+from psj.content.metadata import MetadataSet
 
 _www = os.path.join(os.path.dirname(__file__), 'browser')
 
@@ -57,7 +59,23 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
     manage_editMimeTypeForm = PageTemplateFile('editMetadataSchema', _www)
 
     #security = ClassSecurityInfo()
-    
+
+    def __init__(self,):
+        self._schemas = PersistentMapping()
+
+    def schemas(self):
+        return self._schemas
+        
+    def listSchemas(self):
+        return [str(schema) for schema in self.schemas()]
+
+    def manage_addMetadataSchema(self, id, fields=(), REQUEST=None):
+        mset = MetadataSet(id, fields)
+        self._schemas[id] = mset
+        if REQUEST is not None:
+            REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
+            
+
 
 InitializeClass(MetadataSchemaRegistry)
 registerToolInterface('metadataschema_registry', IMetadataSchemaRegistryTool)

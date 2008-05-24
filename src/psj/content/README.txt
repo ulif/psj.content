@@ -265,3 +265,13 @@ If we now try to get the a picture, this should fail::
 
    >>> browser.headers['status']
    '404 Not Found'
+
+Handling Metadata
+=================
+
+Metadata is handles by special tool in the ZMI.
+
+We go there::
+
+   >>> browser.open(portal_url + '/metadataschemas_registry')
+   >>> #print browser.contents

@@ -1,0 +1,40 @@
+psj.content.metadataregistry
+****************************
+
+A tool for creating metadata schemas.
+
+:Test-Layer: integration
+
+
+psj.content provides a `metadataschemas_registry` which manages
+metadata schemata for content objects::
+
+  >>> from pprint import pprint
+  >>> reg = self.portal['metadataschemas_registry']
+  >>> reg
+  <MetadataSchemaRegistry at /plone/metadataschema_registry>
+
+This registry stores available schemata. It comes with some
+ready-for-use schemata out of the box::
+
+  >>> reg.listSchemas()
+  [...]
+
+We can add a new schema::
+
+  >>> reg.manage_addMetadataSchema(
+  ...   'myschema', fields=(dict(title='title',
+  ...                            type='TextLine',
+  ...                            default=None),
+  ...                       dict(title='place',
+  ...                            type='TextLine',
+  ...                            default=None))
+  ...   )
+
+  >>> reg.listSchemas()
+  ['myschema']
+
+The new schema can be retrieved directly::
+
+  >>> reg.schemas()['myschema']
+  <psj.content.metadata.MetadataSet object at 0x...>
