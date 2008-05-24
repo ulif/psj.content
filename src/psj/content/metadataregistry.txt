@@ -12,7 +12,7 @@ metadata schemata for content objects::
   >>> from pprint import pprint
   >>> reg = self.portal['metadataschemas_registry']
   >>> reg
-  <MetadataSchemaRegistry at /plone/metadataschema_registry>
+  <MetadataSchemaRegistry at /plone/metadataschemas_registry>
 
 This registry stores available schemata. It comes with some
 ready-for-use schemata out of the box::
