@@ -22,17 +22,31 @@
 """
 Metadata for content objects.
 """
-
-class Value(object):
-    pass
+from psj.content.util import get_id_string
 
 class MetadataSet(object):
     data = dict()
     _keys = () # To keep an ordering, we maintain the keys in a tuple.
     index = 0
 
-    def add(self, key, item):
-        key = unicode(key)
+    def __init__(self, name=u'Unnamed', fields=()):
+        id = get_id_string(name)
+        self.id = id
+        if not isinstance(name, unicode):
+            name = unicode(name, 'utf-8')
+        self.name = name
+        for field in fields:
+            ftype = field.get('type', None)
+            ftitle = field.get('title')
+            del field['type']
+            del field['title']
+            if ftype == 'TextLine':
+                item = TextLineField(ftitle, **field)
+            self.add(item)
+        return
+
+    def add(self, item):
+        key = item.id
         self.data[key] = item
         self._keys = self._keys + (key,)
         return
@@ -56,3 +70,24 @@ class MetadataSet(object):
     def get(self, key):
         return self.data[key]
 
+
+class BaseField(object):
+
+    def __init__(self, title):
+        self.title = unicode(title)
+        self.id = get_id_string(self.title)
+        return
+
+
+class TextLineField(object):
+
+    default = None
+
+    def __init__(self, title, **kw):
+        self.title = unicode(title)
+        self.id = get_id_string(self.title)
+        default = kw.get('default', None)
+        if default is not None:
+            self.default = unicode(default)
+        return
+    

@@ -9,50 +9,133 @@ PSJ supports metadata for content objects. This support is extremely
 flexible, as it allows changing of metadata sets for certain content
 types.
 
-In this context Metadata is mostly handled as a set of metadata items,
+In this context Metadata is mostly handled as a set of metadata fields,
 which are collected in a metadata set.
+
+Metadata Fields
+===============
+
+Metadata fields represent one entry in a metadata set. Typical fields
+are such as 'title', 'author' or 'publisher'. They do _not_ contain
+any data, i.e. they describe a field, but do not provide its content.
+
+Every metadata field must provide an identifier (the 'title').
+
+We create a simple field like this::
+
+  >>> from psj.content.metadata import BaseField
+  >>> field = BaseField('title')
+
+  >>> field.title
+  u'title'
+
+Because we want to support different types of fields, which might
+require different attributes, we defined a class for every supported
+field type, all derived from `BaseField`.
+
+Currently, only the TextLineField is provided::
+
+  >>> from psj.content.metadata import TextLineField
+  >>> field = TextLineField('title')
+
+TextLineFields provide a default value to set, which is `None` by
+default::
+
+  >>> field.default is None
+  True
+
+We can set a default by passing it to the constructor::
+
+  >>> field = TextLineField('title', default='foo')
+  >>> field.title
+  u'title'
+
+  >>> field.default
+  u'foo'
+
+Of couse we can also pass unicode values for title and default::
+
+  >>> field = TextLineField(u'title', default=u'bar')
+  >>> field.title
+  u'title'
+
+  >>> field.default
+  u'bar'
 
 
 MetadataSets
 ============
 
-We create a metadata set like this::
+Creating Metadata Sets
+----------------------
+
+Metadatasets contain a name, an id and an ordered list of fields.
+
+We create a simple, empty metadata set like this::
 
    >>> from psj.content.metadata import MetadataSet
    >>> mset = MetadataSet()
 
-A metadata set describes an (ordered) list of MetadataItem
-instances. In the beginning, the set is empty::
+This set is empty::
 
    >>> list(mset)
    []
+
+This metadata set is unnamed::
+
+   >>> mset.id
+   'unnamed'
+
+   >>> mset.name
+   u'Unnamed'
+
+We can pass a name using the `name` keyword::
+
+   >>> mset = MetadataSet(name='MyName')
+   >>> mset.name
+   u'MyName'
+
+   >>> mset = MetadataSet(name=u'MyName')
+   >>> mset.name
+   u'MyName'
+
+We can also populate a metadata set on creation time with values::
+
+   >>> mset = MetadataSet(name='myset1', fields=(
+   ...          dict(title='title', type='TextLine'),
+   ...          dict(title='description', type='TextLine')
+   ...        ))
+
+   >>> sorted(list(mset))
+   ['description', 'title']   
+   
+
+Modifying Metadata Sets
+------------------------
 
 The basic things we can do with metadata sets are to add and remove
 metadata items::
 
-   >>> from psj.content.metadata import Value
-   >>> item = Value()
-   >>> mset.add('title', item)
+   >>> from psj.content.metadata import TextLineField
+   >>> mset = MetadataSet()
+   >>> item = TextLineField('address')
+   >>> mset.add(item)
    >>> list(mset)
-   [u'title']
+   ['address']
 
 We can also get a certain entry by key::
 
    >>> mset.get('title')
-   <psj.content.metadata.Value object at 0x...>
-
-Removing Metadata Set Entries
------------------------------
+   <psj.content.metadata.TextLineField object at 0x...>
 
 We can remove an entry by name (key)::
 
-   >>> mset.add('title', item)
+   >>> item = TextLineField('title')
+   >>> mset.add(item)
+   >>> list(mset)
+   ['address', 'title']
+
    >>> mset.remove('title')
    >>> list(mset)
-   []
+   ['address']
 
-
-Metadata Value
-==============
-
-Values store the actual data of a metadata set.
