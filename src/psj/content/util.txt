@@ -1,0 +1,41 @@
+psj.content.util
+****************
+
+:Test-Layer: unit
+
+Utilities for content types and tools.
+
+`psj.content` provides some general helpers in the `util` module,
+which are presented here.
+
+get_id_string
+=============
+
+A function that turns a string into an id. Strings are formatted, so
+that it becomes a simple plain string.
+
+ID strings should not contain spaces::
+
+  >>> from psj.content.util import get_id_string
+  >>> get_id_string('Hello there!')
+  'hello_there'
+
+ID strings should be all lowercase::
+
+  >>> get_id_string('MiXeDcAsE')
+  'mixedcase'
+
+ID strings must not contain non-ASCII chars::
+
+  >>> get_id_string('Hällö')
+  'hll'
+
+ID strings should only contain chars, digits and underscores::
+
+  >>> get_id_string('Very Important!')
+  'very_important'
+
+The given strings can be unicode::
+
+  >>> get_id_string(u'MixedCase with Ümlauts')
+  'mixedcase_with_mlauts'
