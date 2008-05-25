@@ -23,6 +23,17 @@
 			       'Untitled Schema');"/>
       </td>
       </tr><tr>
+      <td class="form-label">* Objecttype</td>
+      <td class="form-element">
+	<select name="objecttype">
+	  <option tal:repeat="ct_id context/listContentTypes"
+		  tal:attributes="value ct_id"
+		  tal:content="python:context.lookupContentType(ct_id)['title']">
+	    Object Type
+	  </option>
+	</select>
+      </td>
+      </tr><tr>
       <td class="form-label">Fields
       </td>
       <td class="form-element">

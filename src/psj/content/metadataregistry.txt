@@ -39,6 +39,7 @@ A special content type can also be looked up by id::
   >>> reg.lookupContentType('psj_document')
   {'dotted_path': ..., 'title': ..., 'schema': None}
 
+
 Adding schemata
 ===============
 
@@ -67,3 +68,9 @@ list of object types::
 
   >>> reg.lookupContentType('psj_document')['schema']
   'myschema'
+
+
+We can also ask, which content types are connected to a special schema::
+
+  >>> reg.getContentTypesForSchema('myschema')
+  ['psj_document']

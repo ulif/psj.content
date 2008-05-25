@@ -92,13 +92,16 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
     def lookupContentType(self, id):
         return self._content_types.get(id, None)
 
+    def getContentTypesForSchema(self, schema_id):
+        return [x for x in self._content_types.keys()
+                if self._content_types[x]['schema'] == schema_id]
+
     def manage_addMetadataSchema(self, id, objecttype, fields=(),
                                  REQUEST=None):
         mset = MetadataSet(id, fields)
         self._schemas[mset.id] = mset
-        ctype = self.lookupContentType(objecttype)
-        if ctype:
-            ctype['schema'] = mset.id
+        if objecttype in self._content_types.keys():
+            self._content_types[objecttype]['schema'] = mset.id
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
         return

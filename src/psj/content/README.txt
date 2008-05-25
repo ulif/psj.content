@@ -311,6 +311,14 @@ Back on the metadata schemas overview, our new entry is listed::
    Registered metadata schemata (1).
    ...
 
+The listing also includes the objecttype and the fields::
+
+   >>> print browser.contents
+   <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"...
+   ...
+       <td>PSJ Document</td>
+       <td>title</td>
+   ...
 
 Deleting a schema
 -----------------
