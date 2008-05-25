@@ -62,6 +62,11 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
 
     def __init__(self,):
         self._schemas = PersistentMapping()
+        self._content_types = PersistentMapping()
+        self._content_types['psj_document'] = dict(
+            dotted_path='psj.content.content.psjdocument.PSJDocument',
+            title='PSJ Document',
+            schema=None)
         return
 
     def unregister(self, metadataset):
@@ -71,16 +76,29 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
 
     def schemas(self):
         return self._schemas
+
+    def contentTypes(self):
+        return self._content_types
         
     def listSchemas(self):
         return [str(schema) for schema in self.schemas()]
 
+    def listContentTypes(self):
+        return self._content_types.keys()
+
     def lookup(self, id):
         return [self._schemas[x] for x in self._schemas.keys() if x == id]
 
-    def manage_addMetadataSchema(self, id, fields=(), REQUEST=None):
+    def lookupContentType(self, id):
+        return self._content_types.get(id, None)
+
+    def manage_addMetadataSchema(self, id, objecttype, fields=(),
+                                 REQUEST=None):
         mset = MetadataSet(id, fields)
         self._schemas[mset.id] = mset
+        ctype = self.lookupContentType(objecttype)
+        if ctype:
+            ctype['schema'] = mset.id
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
         return
@@ -95,6 +113,7 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
     def process_addForm(self, request):
         result = ()
         fields = request.form.get('fields', [])
+        objecttype = request.form.get('objecttype', None)
         for field in fields:
             result += (field,)
         if request.get('add_text_line', None) is not None:
@@ -111,7 +130,8 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
                     new_elem[attr] = elem[attr]
                 new_result += (new_elem,)
             name = request.get('id', 'Untitled Schema')
-            self.manage_addMetadataSchema(name, new_result, REQUEST=request)
+            self.manage_addMetadataSchema(name, objecttype, new_result,
+                                          REQUEST=request)
         return result
 
 

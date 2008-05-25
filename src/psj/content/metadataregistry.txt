@@ -14,21 +14,44 @@ metadata schemata for content objects::
   >>> reg
   <MetadataSchemaRegistry at /plone/metadataschemas_registry>
 
-This registry stores available schemata. It comes with some
-ready-for-use schemata out of the box::
+This registry stores available schemata and knows, which content types
+are linked to a specific schema. It comes with some ready-for-use
+schemata out of the box::
 
   >>> reg.listSchemas()
   [...]
 
+Metadata schemata are connected to special content types in the
+metadata registry. The registry therefore manages a list of supported
+object types::
+
+  >>> reg.listContentTypes()
+  ['psj_document']
+
+We can get dict of content types directly::
+
+  >>> from pprint import pprint
+  >>> pprint(reg.contentTypes())
+  {'psj_document': {'dotted_path': ..., 'title': ..., 'schema': None}}
+
+A special content type can also be looked up by id::
+
+  >>> reg.lookupContentType('psj_document')
+  {'dotted_path': ..., 'title': ..., 'schema': None}
+
+Adding schemata
+===============
+
 We can add a new schema::
 
   >>> reg.manage_addMetadataSchema(
-  ...   'myschema', fields=(dict(title='title',
-  ...                            type='TextLine',
-  ...                            default=None),
-  ...                       dict(title='place',
-  ...                            type='TextLine',
-  ...                            default=None))
+  ...   'myschema', objecttype='psj_document',
+  ...   fields=(dict(title='title',
+  ...                type='TextLine',
+  ...                default=None),
+  ...                dict(title='place',
+  ...                     type='TextLine',
+  ...                     default=None))
   ...   )
 
   >>> reg.listSchemas()
@@ -38,3 +61,9 @@ The new schema can be retrieved directly::
 
   >>> reg.schemas()['myschema']
   <psj.content.metadata.MetadataSet object at 0x...>
+
+The link to the objecttype is not stored with the schema, but in the
+list of object types::
+
+  >>> reg.lookupContentType('psj_document')['schema']
+  'myschema'
