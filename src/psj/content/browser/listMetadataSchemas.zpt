@@ -24,6 +24,7 @@
     <table width="90%">
       <tr class="form-label">
         <th colspan="3">Name</th>
+	<th>for Objecttype</th>
         <th>Fields</th>
       </tr>
 
@@ -37,9 +38,9 @@
                    tal:attributes="value ms/id"/>
           </td>
 	  <td></td>
-          <td>
-	    <span tal:replace= "ms/name">Name</span>
-	  </td>
+          <td tal:content="ms/name">Name</td>
+	  <td tal:content="python: 
+			   here.lookupContentType('psj_document')['title']" />
 	  <td tal:content="python:', '.join(list(ms))"/>
 	</tal:block>
 
