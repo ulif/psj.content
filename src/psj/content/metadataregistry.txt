@@ -61,7 +61,7 @@ We can add a new schema::
 The new schema can be retrieved directly::
 
   >>> reg.schemas()['myschema']
-  <psj.content.metadata.MetadataSet object at 0x...>
+  <psj.content.metadata.metadata.MetadataSet object at 0x...>
 
 The link to the objecttype is not stored with the schema, but in the
 list of object types::

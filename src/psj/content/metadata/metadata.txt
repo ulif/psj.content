@@ -126,7 +126,7 @@ metadata items::
 We can also get a certain entry by key::
 
    >>> mset.get('title')
-   <psj.content.metadata.TextLineField object at 0x...>
+   <psj.content.metadata.metadata.TextLineField object at 0x...>
 
 We can remove an entry by name (key)::
 
