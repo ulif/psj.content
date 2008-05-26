@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
 <tool-setup>
  <required tool_id="metadataschemas_registry"
-           class="psj.content.metadataregistry.MetadataSchemaRegistry"/>
+           class="psj.content.metadata.metadataregistry.MetadataSchemaRegistry"/>
 </tool-setup>

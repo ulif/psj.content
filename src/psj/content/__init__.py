@@ -1,6 +1,6 @@
 from zope.i18nmessageid import MessageFactory
 from psj.content import config
-from psj.content import metadataregistry
+from psj.content.metadata import metadataregistry
 
 from Products.Archetypes import atapi
 from Products.CMFCore import utils
