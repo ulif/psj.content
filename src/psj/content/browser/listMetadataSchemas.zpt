@@ -40,7 +40,7 @@
 	  <td></td>
           <td tal:content="ms/name">Name</td>
 	  <td tal:content="python: 
-			   here.lookupContentType('psj_document')['title']" />
+			   ', '.join([here.lookupContentType(x)['title'] for x in here.getContentTypesForSchema(ms_id)])" />
 	  <td tal:content="python:', '.join(list(ms))"/>
 	</tal:block>
 
