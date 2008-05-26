@@ -26,17 +26,17 @@ metadata registry. The registry therefore manages a list of supported
 object types::
 
   >>> reg.listContentTypes()
-  ['psj_document']
+  ['psjdocument']
 
 We can get dict of content types directly::
 
   >>> from pprint import pprint
   >>> pprint(reg.contentTypes())
-  {'psj_document': {'dotted_path': ..., 'title': ..., 'schema': None}}
+  {'psjdocument': {'dotted_path': ..., 'title': ..., 'schema': None}}
 
 A special content type can also be looked up by id::
 
-  >>> reg.lookupContentType('psj_document')
+  >>> reg.lookupContentType('psjdocument')
   {'dotted_path': ..., 'title': ..., 'schema': None}
 
 
@@ -46,7 +46,7 @@ Adding schemata
 We can add a new schema::
 
   >>> reg.manage_addMetadataSchema(
-  ...   'myschema', objecttype='psj_document',
+  ...   'myschema', objecttype='psjdocument',
   ...   fields=(dict(title='title',
   ...                type='TextLine',
   ...                default=None),
@@ -66,11 +66,27 @@ The new schema can be retrieved directly::
 The link to the objecttype is not stored with the schema, but in the
 list of object types::
 
-  >>> reg.lookupContentType('psj_document')['schema']
+  >>> reg.lookupContentType('psjdocument')['schema']
   'myschema'
 
+
+Retrieving MetadataSets
+=======================
 
 We can also ask, which content types are connected to a special schema::
 
   >>> reg.getContentTypesForSchema('myschema')
-  ['psj_document']
+  ['psjdocument']
+
+For the handling of object attributes (see extenders.txt), it is
+crucial to have a possibility, to retrieve a metadata sets for a
+certain object type. Typically, the object handler will pass a certain
+object and ask for a metadata schema that 'fits'::
+
+  >>> from psj.content.content.psjdocument import PSJDocument
+  >>> d = PSJDocument('Wierd Title')
+
+  >>> reg.getSchemaForObject(d)
+  <psj.content.metadata.metadata.MetadataSet object at 0x...>
+
+

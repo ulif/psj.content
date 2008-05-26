@@ -63,7 +63,7 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
     def __init__(self,):
         self._schemas = PersistentMapping()
         self._content_types = PersistentMapping()
-        self._content_types['psj_document'] = dict(
+        self._content_types['psjdocument'] = dict(
             dotted_path='psj.content.content.psjdocument.PSJDocument',
             title='PSJ Document',
             schema=None)
@@ -91,6 +91,21 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
 
     def lookupContentType(self, id):
         return self._content_types.get(id, None)
+
+    def getSchemaForObject(self, obj):
+        dotted_path = None
+        try:
+            dotted_path = '%s.%s' % (obj.__module__,
+                                     obj.__class__.__name__)
+        except:
+            return None
+        ct = None
+        for key, content_type in self._content_types.items():
+            if content_type['dotted_path'] == dotted_path:
+                schema_id = content_type['schema']
+                return self._schemas.get(schema_id, None)
+        return None
+            
 
     def getContentTypesForSchema(self, schema_id):
         return [x for x in self._content_types.keys()
