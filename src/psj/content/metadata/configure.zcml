@@ -1,11 +1,7 @@
 <configure xmlns="http://namespaces.zope.org/zope"
            xmlns:browser="http://namespaces.zope.org/browser"
            xmlns:five="http://namespaces.zope.org/five">
-    <browser:page
-        for=".interfaces.IMetadataAnnotatable"
-        name="edit_metadata_view"
-        class=".views.EditMetadata"
-        template="../browser/metadata_edit.pt"
-        permission="zope2.View"
-        />
+
+  <include package="archetypes.schemaextender" />
+  <adapter factory=".extenders.PageExtender" />
 </configure>

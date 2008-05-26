@@ -42,6 +42,7 @@ setup(
         'setuptools',
         'ulif.plone.testsetup',
         # -*- Extra requirements: -*-
+        'archetypes.schemaextender',
         ],
     entry_points="""
       # -*- Entry points: -*-
