@@ -28,7 +28,9 @@ from archetypes.schemaextender.interfaces import ISchemaExtender
 from Products.Archetypes.public import StringWidget, BooleanWidget
 from Products.ATContentTypes.content.document import ATDocument
 from Products.ATContentTypes.content import folder
+from Products.CMFCore.utils import getToolByName
 from psj.content.metadata.fields import PSJTextLineField, PSJBooleanField
+from psj.content.metadata.metadata import TextLineField as LineEntry
 
 class PageExtender(object):
     adapts(folder.ATFolder)
@@ -52,4 +54,25 @@ class PageExtender(object):
         self.context = context
 
     def getFields(self):
+        if not hasattr(self, 'md_reg'):
+            try:
+                self.md_reg = getToolByName(self.context,
+                                            'metadataschemas_registry')
+            except AttributeError:
+                # This can happen during tests...
+                return []
+        md_schema = self.md_reg.getSchemaForObject(self.context)
+        if md_schema is None:
+            return []
+        new_fields = []
+        for key in md_schema:
+            entry = md_schema.get(key)
+            if isinstance(entry, LineEntry):
+                new_fields.append(PSJTextLineField(
+                    str('md_' + key),
+                    schemata='metadata',
+                    widget=StringWidget(label=entry.title)
+                    ))
+        return new_fields
+        #print dir(md_schema)
         return self.fields

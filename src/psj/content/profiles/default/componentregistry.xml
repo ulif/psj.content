@@ -4,6 +4,6 @@
  <utilities>
   <utility
      interface="psj.content.interfaces.IMetadataSchemaRegistryTool"
-     object="mimetypes_registry"/>
+     object="metadataschemas_registry"/>
  </utilities>
 </componentregistry>
