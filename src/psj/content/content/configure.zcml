@@ -49,5 +49,15 @@
             set_schema="..interfaces.IMagazine"
             />
     </class>
+    <class class=".book.PSJBook">
+        <require
+            permission="zope2.View"
+            interface="..interfaces.IBook"
+            />
+        <require
+            permission="cmf.ModifyPortalContent"
+            set_schema="..interfaces.IBook"
+            />
+    </class>
     
 </configure>
