@@ -5,10 +5,22 @@ psj.content
 
 Content types for the Plone Scientific Journal.
 
-The only content type currently supported is ``PSJDocument``.
+The `psj.content` package currently supports the following content
+types:
+
+- ``PSJDocument``
+
+  A document containing metadata and a word or OpenOffice.org
+  document.
+
+- ``PSJIssue``
+
+  A representation of a magazine issue. It is folderish and accepts
+  only PSJDocuments as content.
+
 
 Setting up and logging in
--------------------------
+=========================
 
 We use zope.testbrowser to simulate browser interaction in order to
 show the main flow of pages. This is not a true functional test,
@@ -34,7 +46,10 @@ do this from the login page::
 
 
 Addable content
----------------
+===============
+
+Adding PSJDocuments
+-------------------
 
 PSJ documents can be added anywhere and contain the real documents
 (office documents in odf or PDF-A format)::
@@ -61,8 +76,38 @@ The created document should be available in the ZODB now::
    True
 
 
+Adding PSJIssues
+----------------
+
+We can add a PSJIssue object::
+
+   >>> browser.open(portal_url)
+
+Verify, that we have the links to create PSJ documents, from the 'add
+item menu'::
+
+   >>> browser.getLink(id='psj-issue').url.endswith(
+   ...   'createObject?type_name=PSJ+Issue')
+   True
+
+Now let us add a PSJ issue::
+
+   >>> browser.getLink(id='psj-issue').click()
+   >>> browser.getControl(name='title').value = "My first issue"
+   >>> browser.getControl(name='description').value = "The description"
+   >>> browser.getControl(name='form_submit').click()
+
+The created issue should be available in the ZODB now::
+
+   >>> 'my-first-issue' in list(self.portal.keys())
+   True
+
+Get back to the portal root::
+
+   >>> browser.open(portal_url)
+
 Modifying content
------------------
+=================
 
 The document we added was created without an 'internal' office
 document to display. We now want to upload a real document and see,
@@ -70,6 +115,7 @@ whether it is displayed as HTML in default view.
 
 For this, we first browse the edit view::
 
+   >>> browser.open(portal_url + '/my-first-document')
    >>> doc_url = self.portal['my-first-document'].absolute_url()
    >>> browser.getLink('Edit').url == doc_url + '/edit'
    True
@@ -141,7 +187,7 @@ page::
 
 
 Embedded subobjects
--------------------
+===================
 
 Office documents often contain other media, preferably images, that
 have to be stored separate from the main document. We prepared a
@@ -195,7 +241,7 @@ The picure was directly delivered.
 
 
 Replacing subobjects upon new upload
-------------------------------------
+====================================
 
 When uploading a new document or version of a document, the old
 subobjects should be removed. We upload `input3.doc` which includes

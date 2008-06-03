@@ -27,10 +27,22 @@
         file="psjdocument_icon.gif"
 	/>
 
+    <browser:resource
+	name="psjissue_icon.gif"
+        file="psjissue_icon.gif"
+	/>
+
     <browser:page
 	for="..interfaces.IDocument"
 	name="view"
 	class=".psjdocument.PSJDocumentView"
+	permission="zope2.View"
+	/>
+
+    <browser:page
+	for="..interfaces.IIssue"
+	name="view"
+	class=".psjissue.PSJIssueView"
 	permission="zope2.View"
 	/>
 
@@ -40,6 +52,14 @@
 	title="PSJ document view"
 	action="@@view"
 	description="Default representation of a PSJ document"
+	/>
+
+    <browser:menuItem
+	for="..interfaces.IIssue"
+	menu="plone_displayviews"
+	title="PSJ issue view"
+	action="@@view"
+	description="Default representation of a PSJ issue"
 	/>
     
 </configure>

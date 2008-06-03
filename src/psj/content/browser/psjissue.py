@@ -1,7 +1,7 @@
 ##
-## config.py
+## psjissue.py
 ## Login : <uli@pu.smp.net>
-## Started on  Sun Mar 30 17:20:15 2008 Uli Fouquet
+## Started on  Tue Jun  3 23:17:56 2008 Uli Fouquet
 ## $Id$
 ## 
 ## Copyright (C) 2008 Uli Fouquet
@@ -19,22 +19,13 @@
 ## along with this program; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 ##
-"""Common configuration constants
+"""Views for PSJ documents.
 """
+from Products.Five.browser import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 
-PROJECTNAME = "psj.content"
+class PSJIssueView(BrowserView):
+    """Default view of a PSJ issue.
+    """
+    __call__ = ViewPageTemplateFile('psjissue.pt')
 
-# This maps portal types to their corresponding add permissions.
-# These are referenced in the root product __init__.py, during
-# Archetypes/CMF type initialisation. The permissions here are
-# also defined in content/configure.zcml, so that they can be
-# looked up as a Zope 3-style IPermission utility.
-
-# We prefix the permission names with our product name to group
-# them sensibly. This is good practice, because it makes it
-# easier to find permissions in the Security tab in the ZMI.
-
-ADD_PERMISSIONS = {
-    "PSJDocument"  : "PSJ: Add PSJ Document",
-    "PSJIssue" : "PSJ: Add PSJ Issue",
-}

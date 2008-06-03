@@ -33,7 +33,14 @@ class IDocument(Interface):
     def rebuild():
         """This method is called, everytime a document is updated.
         """
-        pass
+
+class IIssue(Interface):
+    """A PSJ issue.
+    """
+    def rebuild():
+        """This method is called, everytime an issue is updated.
+        """
+    
 
 class IMetadataItem(Interface):
     """An item in a metadata set.
