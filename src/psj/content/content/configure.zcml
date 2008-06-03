@@ -19,5 +19,15 @@
             set_schema="..interfaces.IDocument"
             />
     </class>
+    <class class=".issue.PSJIssue">
+        <require
+            permission="zope2.View"
+            interface="..interfaces.IIssue"
+            />
+        <require
+            permission="cmf.ModifyPortalContent"
+            set_schema="..interfaces.IIssue"
+            />
+    </class>
     
 </configure>
