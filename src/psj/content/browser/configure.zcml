@@ -37,6 +37,11 @@
         file="psjvolume_icon.gif"
 	/>
 
+    <browser:resource
+	name="psjmagazine_icon.gif"
+        file="psjmagazine_icon.gif"
+	/>
+
     <browser:page
 	for="..interfaces.IDocument"
 	name="view"
@@ -55,6 +60,13 @@
 	for="..interfaces.IVolume"
 	name="view"
 	class=".psjvolume.PSJVolumeView"
+	permission="zope2.View"
+	/>
+
+    <browser:page
+	for="..interfaces.IMagazine"
+	name="view"
+	class=".psjmagazine.PSJMagazineView"
 	permission="zope2.View"
 	/>
 
@@ -80,6 +92,14 @@
 	title="PSJ volume view"
 	action="@@view"
 	description="Default representation of a PSJ volume"
+	/>
+
+    <browser:menuItem
+	for="..interfaces.IMagazine"
+	menu="plone_displayviews"
+	title="PSJ magazine view"
+	action="@@view"
+	description="Default representation of a PSJ magazine"
 	/>
     
 </configure>
