@@ -11,4 +11,6 @@
     meta_type="Factory-based Type Information with dynamic views"/>
  <object name="PSJ Issue"
     meta_type="Factory-based Type Information with dynamic views"/>
+ <object name="PSJ Volume"
+    meta_type="Factory-based Type Information with dynamic views"/>
 </object>
