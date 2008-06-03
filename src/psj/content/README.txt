@@ -131,6 +131,34 @@ The created volume should be available in the ZODB now::
    >>> 'my-first-volume' in list(self.portal.keys())
    True
 
+Adding PSJMagazines
+-------------------
+
+PSJMagazines contain PSJVolumes or PSJIssues
+
+We can add a PSJMagazine object::
+
+   >>> browser.open(portal_url)
+
+Verify, that we have the links to create PSJ documents, from the 'add
+item menu'::
+
+   >>> browser.getLink(id='psj-magazine').url.endswith(
+   ...   'createObject?type_name=PSJ+Magazine')
+   True
+
+Now let us add a PSJ magazine::
+
+   >>> browser.getLink(id='psj-magazine').click()
+   >>> browser.getControl(name='title').value = "My first magazine"
+   >>> browser.getControl(name='description').value = "The description"
+   >>> browser.getControl(name='form_submit').click()
+
+The created magazine should be available in the ZODB now::
+
+   >>> 'my-first-magazine' in list(self.portal.keys())
+   True
+
 Get back to the portal root::
 
    >>> browser.open(portal_url)
