@@ -29,5 +29,15 @@
             set_schema="..interfaces.IIssue"
             />
     </class>
+    <class class=".volume.PSJVolume">
+        <require
+            permission="zope2.View"
+            interface="..interfaces.IVolume"
+            />
+        <require
+            permission="cmf.ModifyPortalContent"
+            set_schema="..interfaces.IVolume"
+            />
+    </class>
     
 </configure>
