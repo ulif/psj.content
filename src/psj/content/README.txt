@@ -18,6 +18,19 @@ types:
   A representation of a magazine issue. It is folderish and accepts
   only PSJDocuments as content.
 
+- ``PSJVolume``
+
+  A representation of a collection of issues, most often a
+  year. PSJVolumes are folderish and accept issues as content.
+
+- ``PSJMagazine``
+
+  A representation of a magazine or series. It is folderish and
+  accepts volumes, issues and documents as content.
+
+- ``PSJBook``
+
+  A representation of a book (review).
 
 Setting up and logging in
 =========================
@@ -157,6 +170,36 @@ Now let us add a PSJ magazine::
 The created magazine should be available in the ZODB now::
 
    >>> 'my-first-magazine' in list(self.portal.keys())
+   True
+
+
+Adding PSJBooks
+---------------
+
+PSJBooks are plain content types that do not contain any other
+objects.
+
+We can add a PSJBook object::
+
+   >>> browser.open(portal_url)
+
+Verify, that we have the links to create PSJ documents, from the 'add
+item menu'::
+
+   >>> browser.getLink(id='psj-book').url.endswith(
+   ...   'createObject?type_name=PSJ+Book')
+   True
+
+Now let us add a PSJ book::
+
+   >>> browser.getLink(id='psj-book').click()
+   >>> browser.getControl(name='title').value = "My first book"
+   >>> browser.getControl(name='description').value = "The description"
+   >>> browser.getControl(name='form_submit').click()
+
+The created book should be available in the ZODB now::
+
+   >>> 'my-first-book' in list(self.portal.keys())
    True
 
 Get back to the portal root::
