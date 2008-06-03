@@ -54,6 +54,12 @@ class IMagazine(Interface):
     def rebuild():
         """This method is called, everytime an issue is updated.
         """
+class IBook(Interface):
+    """A PSJ book (review).
+    """
+    def rebuild():
+        """This method is called, everytime an issue is updated.
+        """
 
 
 class IMetadataItem(Interface):
