@@ -39,7 +39,7 @@
             set_schema="..interfaces.IVolume"
             />
     </class>
-    <class class=".volume.PSJMagazine">
+    <class class=".magazine.PSJMagazine">
         <require
             permission="zope2.View"
             interface="..interfaces.IMagazine"
