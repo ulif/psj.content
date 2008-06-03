@@ -39,5 +39,15 @@
             set_schema="..interfaces.IVolume"
             />
     </class>
+    <class class=".volume.PSJMagazine">
+        <require
+            permission="zope2.View"
+            interface="..interfaces.IMagazine"
+            />
+        <require
+            permission="cmf.ModifyPortalContent"
+            set_schema="..interfaces.IMagazine"
+            />
+    </class>
     
 </configure>
