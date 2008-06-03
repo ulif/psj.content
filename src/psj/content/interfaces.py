@@ -35,12 +35,19 @@ class IDocument(Interface):
         """
 
 class IIssue(Interface):
-    """A PSJ issue.
+    """A PSJ issue. Issues contain documents/articles.
     """
     def rebuild():
         """This method is called, everytime an issue is updated.
         """
-    
+
+class IVolume(Interface):
+    """A PSJ volume. Volumes contain issues.
+    """
+    def rebuild():
+        """This method is called, everytime an issue is updated.
+        """
+
 
 class IMetadataItem(Interface):
     """An item in a metadata set.
