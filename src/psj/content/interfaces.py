@@ -48,6 +48,13 @@ class IVolume(Interface):
         """This method is called, everytime an issue is updated.
         """
 
+class IMagazine(Interface):
+    """A PSJ magazine or series. Magazines contain volumes
+    """
+    def rebuild():
+        """This method is called, everytime an issue is updated.
+        """
+
 
 class IMetadataItem(Interface):
     """An item in a metadata set.
