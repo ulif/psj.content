@@ -102,12 +102,44 @@ The created issue should be available in the ZODB now::
    >>> 'my-first-issue' in list(self.portal.keys())
    True
 
+
+Adding PSJVolumes
+-----------------
+
+PSJVolumes contain PSJIssues
+
+We can add a PSJVolume object::
+
+   >>> browser.open(portal_url)
+
+Verify, that we have the links to create PSJ documents, from the 'add
+item menu'::
+
+   >>> browser.getLink(id='psj-volume').url.endswith(
+   ...   'createObject?type_name=PSJ+Volume')
+   True
+
+Now let us add a PSJ volume::
+
+   >>> browser.getLink(id='psj-volume').click()
+   >>> browser.getControl(name='title').value = "My first volume"
+   >>> browser.getControl(name='description').value = "The description"
+   >>> browser.getControl(name='form_submit').click()
+
+The created volume should be available in the ZODB now::
+
+   >>> 'my-first-volume' in list(self.portal.keys())
+   True
+
 Get back to the portal root::
 
    >>> browser.open(portal_url)
 
 Modifying content
 =================
+
+Modifying PSJ documents
+-----------------------
 
 The document we added was created without an 'internal' office
 document to display. We now want to upload a real document and see,
@@ -187,7 +219,7 @@ page::
 
 
 Embedded subobjects
-===================
+-------------------
 
 Office documents often contain other media, preferably images, that
 have to be stored separate from the main document. We prepared a
@@ -241,7 +273,7 @@ The picure was directly delivered.
 
 
 Replacing subobjects upon new upload
-====================================
+------------------------------------
 
 When uploading a new document or version of a document, the old
 subobjects should be removed. We upload `input3.doc` which includes
@@ -311,6 +343,7 @@ If we now try to get the a picture, this should fail::
 
    >>> browser.headers['status']
    '404 Not Found'
+
 
 Handling Metadata
 =================
