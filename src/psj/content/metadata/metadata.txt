@@ -148,11 +148,21 @@ We can also populate a metadata set on creation time with values::
 
    >>> mset = MetadataSet(name='myset1', fields=(
    ...          dict(title='title', type='TextLine'),
-   ...          dict(title='description', type='TextLine')
+   ...          dict(title='description', type='TextLine'),
+   ...          dict(title='important', type='Boolean', default=True),
    ...        ))
 
    >>> sorted(list(mset))
-   ['description', 'title']   
+   ['description', 'important', 'title']   
+
+The `important` field is of type boolean::
+
+   >>> field = mset.get('important')
+   >>> field
+   <psj.content.metadata.metadata.BooleanField object at 0x...>
+
+   >>> field.default
+   True
    
 
 Modifying Metadata Sets
