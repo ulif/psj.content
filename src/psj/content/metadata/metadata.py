@@ -78,6 +78,15 @@ class BaseField(object):
         self.id = get_id_string(self.title)
         return
 
+class BooleanField(object):
+
+    default = False
+
+    def __init__(self, title, **kw):
+        self.title = unicode(title)
+        self.id = get_id_string(self.title)
+        self.default = kw.get('default', False)
+        return
 
 class TextLineField(object):
 

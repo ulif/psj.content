@@ -33,7 +33,17 @@ Because we want to support different types of fields, which might
 require different attributes, we defined a class for every supported
 field type, all derived from `BaseField`.
 
-Currently, only the TextLineField is provided::
+Currently, the following field types are supported:
+
+* TextLineField
+
+* BooleanField
+
+TextLine fields
+---------------
+
+A TextLineField holds a line of unicode text. It has a title and a
+default value::
 
   >>> from psj.content.metadata import TextLineField
   >>> field = TextLineField('title')
@@ -61,6 +71,41 @@ Of couse we can also pass unicode values for title and default::
 
   >>> field.default
   u'bar'
+
+
+Boolean fields
+--------------
+
+A BooleanField holds a boolean value, of curse. It has a title and a
+default value::
+
+  >>> from psj.content.metadata import BooleanField
+  >>> field = BooleanField('My Title')
+
+Boolean fields provide a default value to set, which is `False` by
+default::
+
+  >>> field.default
+  False
+
+We can set a default by passing it to the constructor. The default
+value naturally can only be `True` or `False`::
+
+  >>> field = BooleanField('My Title', default=True)
+  >>> field.title
+  u'My Title'
+
+  >>> field.default
+  True
+
+Of couse we can also pass unicode values for the title::
+
+  >>> field = BooleanField(u'title', default=True)
+  >>> field.title
+  u'title'
+
+  >>> field.default
+  True
 
 
 MetadataSets
