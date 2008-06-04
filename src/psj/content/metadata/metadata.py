@@ -40,8 +40,13 @@ class MetadataSet(object):
             ftitle = field.get('title')
             del field['type']
             del field['title']
+            item = None
             if ftype == 'TextLine':
                 item = TextLineField(ftitle, **field)
+            if ftype == 'Boolean':
+                item = BooleanField(ftitle, **field)
+            if item is None:
+                continue
             self.add(item)
         return
 
