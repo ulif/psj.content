@@ -37,18 +37,7 @@ class PageExtender(object):
     implements(ISchemaExtender)
 
 
-    fields = [
-        PSJBooleanField(
-            "super_power",
-            schemata='metadata',
-            widget = BooleanWidget(label="This page has super powers")
-            ),
-        PSJTextLineField(
-            "some_text",
-            schemata='metadata',
-            widget = StringWidget(label="Enter text or so")
-            ),
-            ]
+    fields = []
 
     def __init__(self, context):
         self.context = context
@@ -74,5 +63,4 @@ class PageExtender(object):
                     widget=StringWidget(label=entry.title)
                     ))
         return new_fields
-        #print dir(md_schema)
-        return self.fields
+
