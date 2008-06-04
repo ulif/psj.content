@@ -137,7 +137,11 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
         if request.get('add_text_line', None) is not None:
             result += ((dict(type='TextLine',
                             title=request.get('text_line.title', 'unnamed'),
-                            default=request.get('text_line.title', None))),)
+                            default=request.get('text_line.default', None))),)
+        if request.get('add_boolean', None) is not None:
+            result += ((dict(type='Boolean',
+                            title=request.get('boolean.title', 'unnamed'),
+                            default=request.get('boolean.default', False))),)
         if request.get('add_schema', None) is not None:
             new_result = ()
             for elem in result:
