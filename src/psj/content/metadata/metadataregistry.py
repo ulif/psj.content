@@ -67,6 +67,22 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
             dotted_path='psj.content.content.psjdocument.PSJDocument',
             title='PSJ Document',
             schema=None)
+        self._content_types['psjissue'] = dict(
+            dotted_path='psj.content.content.issue.PSJIssue',
+            title='PSJ Issue',
+            schema=None)
+        self._content_types['psjvolume'] = dict(
+            dotted_path='psj.content.content.volume.PSJVolume',
+            title='PSJ Volume',
+            schema=None)
+        self._content_types['psjmagazine'] = dict(
+            dotted_path='psj.content.content.volume.PSJMagazine',
+            title='PSJ Magazine',
+            schema=None)
+        self._content_types['psjbook'] = dict(
+            dotted_path='psj.content.content.volume.PSJBook',
+            title='PSJ Book (review)',
+            schema=None)
         return
 
     def unregister(self, metadataset):

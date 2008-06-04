@@ -25,14 +25,16 @@ Metadata schemata are connected to special content types in the
 metadata registry. The registry therefore manages a list of supported
 object types::
 
-  >>> reg.listContentTypes()
-  ['psjdocument']
+  >>> sorted(reg.listContentTypes())
+  ['psjbook', 'psjdocument', 'psjissue', 'psjmagazine', 'psjvolume']
 
 We can get dict of content types directly::
 
   >>> from pprint import pprint
   >>> pprint(reg.contentTypes())
-  {'psjdocument': {'dotted_path': ..., 'title': ..., 'schema': None}}
+  {'psjvolume': {...}, 'psjdocument': {...}, 'psjissue': {...}, ...}
+
+XXX: Apparently, pprint does not work here. Why?
 
 A special content type can also be looked up by id::
 
