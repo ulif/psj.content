@@ -52,9 +52,12 @@ We can add a new schema::
   ...   fields=(dict(title='title',
   ...                type='TextLine',
   ...                default=None),
-  ...                dict(title='place',
-  ...                     type='TextLine',
-  ...                     default=None))
+  ...           dict(title='is great',
+  ...                type='Boolean',
+  ...                default=True),
+  ...           dict(title='A link',
+  ...                type='Relation'),
+  ...          )
   ...   )
 
   >>> reg.listSchemas()
@@ -88,7 +91,10 @@ object and ask for a metadata schema that 'fits'::
   >>> from psj.content.content.psjdocument import PSJDocument
   >>> d = PSJDocument('Wierd Title')
 
-  >>> reg.getSchemaForObject(d)
+  >>> data = reg.getSchemaForObject(d)
+  >>> data
   <psj.content.metadata.metadata.MetadataSet object at 0x...>
 
+  >>> sorted(list(data))
+  ['is_great', 'title']
 
