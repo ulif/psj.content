@@ -445,6 +445,12 @@ We fill in the values for a text line field::
    >>> browser.getControl(name="text_line.default").value='Untitled'
    >>> browser.getControl("Add text line field").click()
 
+Afterwards we add a boolean field::
+
+   >>> browser.getControl(name="boolean.title").value='Is Important'
+   >>> browser.getControl(name="boolean.default").value=True
+   >>> browser.getControl("Add boolean field").click()
+
 We then set a name for the whole metadataset::
 
    >>> browser.getControl(name="id").value='My new Schema'
@@ -467,14 +473,43 @@ The listing also includes the objecttype and the fields::
    <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"...
    ...
        <td>PSJ Document</td>
-       <td>title</td>
+       <td>title, is_important</td>
    ...
+
+When we go back to the document we created before, this should display
+the new metadata fields. We go to the document and choose the edit
+tab::
+
+   >>> browser.open(portal_url + '/my-first-document')
+   >>> browser.getLink('Edit').click()
+   >>> print browser.contents
+   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"...
+   ...
+   <fieldset id="fieldset-metadata">
+   <legend id="fieldsetlegend-metadata">Metadata</legend>
+   ...
+   <input type="text" name="md_title"
+   ...
+   <input class="noborder" type="checkbox" value="on"
+          checked="checked"
+          name="md_is_important:boolean"
+          id="md_is_important" />
+   ...
+
+Here we can find the textline entry ('md_title') and the boolean
+checkbox entry ('md_is_important'). All field names are preceded by
+'md_' internally to avoid clashes with already existing fieldnames and
+to distuingish metadata fields from others.
+
+
 
 Deleting a schema
 -----------------
 
-We select the only one schema and click on the delete button::
+We go to the registry screen and select the only one schema and click
+on the delete button::
 
+   >>> browser.open(portal_url + '/metadataschemas_registry/manage_main')
    >>> browser.getControl(name='ids:list', index=0).value=True
    >>> browser.getControl("Delete Selected Items").click()
    >>> print browser.contents
