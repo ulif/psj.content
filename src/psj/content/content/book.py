@@ -38,7 +38,7 @@ PSJBookSchema = ATContentTypeSchema.copy()
 PSJBookSchema['title'].storage = atapi.AnnotationStorage()
 PSJBookSchema['description'].storage = atapi.AnnotationStorage()
 
-finalizeATCTSchema(PSJBookSchema, folderish=True, moveDiscussion=False)
+finalizeATCTSchema(PSJBookSchema)
 
 class PSJBook(base.ATCTContent):
     implements(IBook)
@@ -52,5 +52,3 @@ class PSJBook(base.ATCTContent):
         pass
 
 atapi.registerType(PSJBook, PROJECTNAME)
-
-
