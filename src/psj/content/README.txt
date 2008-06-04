@@ -455,7 +455,11 @@ We then set a name for the whole metadataset::
 
    >>> browser.getControl(name="id").value='My new Schema'
 
-And then submit the whole schema as a new one::
+and the type of object, this schema should apply to::
+
+   >>> browser.getControl(name="objecttype").displayValue = ['PSJ Document']
+
+Finally, we submit the whole schema as a new one::
 
    >>> browser.getControl("Create new schema").click()
 
