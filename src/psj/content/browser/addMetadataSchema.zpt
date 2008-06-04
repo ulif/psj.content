@@ -85,6 +85,24 @@
     <input type="submit" name="add_text_line" value="Add text line field" />
   </fieldset>
 
+  <fieldset>
+    <legend>Add a boolean field</legend>
+    <table width="50%">
+      <tr>
+	<td class="form-label">* Field Name</td>
+	<td class="form-element">
+	  <input name="boolean.title" value="Unnamed" />
+	</td>
+	</tr><tr>
+	<td class="form-label">Default Value</td>
+	<td class="form-element">
+	  <input type="checkbox" name="boolean.default" />
+	</td>
+      </tr>
+    </table>
+    <input type="submit" name="add_boolean" value="Add boolean field" />
+  </fieldset>
+
   <div>
     <input type="submit" name="add_schema" value="Create new schema" />
   </div>
