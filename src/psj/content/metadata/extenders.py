@@ -31,6 +31,7 @@ from Products.ATContentTypes.content import folder
 from Products.CMFCore.utils import getToolByName
 from psj.content.metadata.fields import PSJTextLineField, PSJBooleanField
 from psj.content.metadata.metadata import TextLineField as LineEntry
+from psj.content.metadata.metadata import BooleanField as BoolEntry
 
 class PageExtender(object):
     adapts(folder.ATFolder)
@@ -62,5 +63,13 @@ class PageExtender(object):
                     schemata='metadata',
                     widget=StringWidget(label=entry.title)
                     ))
+            if isinstance(entry, BoolEntry):
+                new_fields.append(PSJBooleanField(
+                    str('md_' + key),
+                    schemata='metadata',
+                    widget=BooleanWidget(label=entry.title),
+                    default = entry.default,
+                    ))
+
         return new_fields
 
