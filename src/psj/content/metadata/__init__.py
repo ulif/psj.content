@@ -1,5 +1,6 @@
 
-from metadata import MetadataSet, BaseField, TextLineField, BooleanField
+from metadata import (MetadataSet, BaseField, TextLineField, BooleanField,
+                      RelationField,)
 
 
 __all__ = (
@@ -7,4 +8,5 @@ __all__ = (
     BaseField,
     TextLineField,
     BooleanField,
+    RelationField,
     )

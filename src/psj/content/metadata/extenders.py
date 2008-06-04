@@ -32,6 +32,7 @@ from Products.CMFCore.utils import getToolByName
 from psj.content.metadata.fields import PSJTextLineField, PSJBooleanField
 from psj.content.metadata.metadata import TextLineField as LineEntry
 from psj.content.metadata.metadata import BooleanField as BoolEntry
+from psj.content.metadata.metadata import RelationField as RelationEntry
 
 class PageExtender(object):
     adapts(folder.ATFolder)

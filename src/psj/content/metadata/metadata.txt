@@ -39,6 +39,8 @@ Currently, the following field types are supported:
 
 * BooleanField
 
+* RelationField
+
 TextLine fields
 ---------------
 
@@ -106,6 +108,20 @@ Of couse we can also pass unicode values for the title::
 
   >>> field.default
   True
+
+Relation Fields
+---------------
+
+Relation fields represent someway links to other objects. They have
+only a title attribute.
+
+We create a relation field like this::
+
+  >>> from psj.content.metadata import RelationField
+  >>> field = RelationField('title')
+
+  >>> field.title
+  u'title'
 
 
 MetadataSets

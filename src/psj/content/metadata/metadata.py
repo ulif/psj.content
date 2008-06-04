@@ -105,3 +105,5 @@ class TextLineField(object):
             self.default = unicode(default)
         return
     
+class RelationField(BaseField):
+    pass
