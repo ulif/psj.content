@@ -96,5 +96,5 @@ object and ask for a metadata schema that 'fits'::
   <psj.content.metadata.metadata.MetadataSet object at 0x...>
 
   >>> sorted(list(data))
-  ['is_great', 'title']
+  ['a_link', 'is_great', 'title']
 

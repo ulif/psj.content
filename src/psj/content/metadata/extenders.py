@@ -25,7 +25,8 @@ Schema extenders, that add metadata to existing types.
 from zope.component import adapts
 from zope.interface import implements
 from archetypes.schemaextender.interfaces import ISchemaExtender
-from Products.Archetypes.public import StringWidget, BooleanWidget
+from Products.Archetypes.public import (StringWidget, BooleanWidget,
+                                        ReferenceWidget)
 from Products.ATReferenceBrowserWidget.ATReferenceBrowserWidget import (
     ReferenceBrowserWidget)
 from Products.ATContentTypes.content.document import ATDocument
@@ -36,6 +37,9 @@ from psj.content.metadata.fields import (PSJTextLineField, PSJBooleanField,
 from psj.content.metadata.metadata import TextLineField as LineEntry
 from psj.content.metadata.metadata import BooleanField as BoolEntry
 from psj.content.metadata.metadata import RelationField as RelationEntry
+
+PSJ_TYPES = ('PSJ Document', 'PSJ Volume', 'PSJ Issue',
+             'PSJ Magazine', 'PSJ Book')
 
 class PageExtender(object):
     adapts(folder.ATFolder)
@@ -76,11 +80,19 @@ class PageExtender(object):
                     ))
             if isinstance(entry, RelationEntry):
                 new_fields.append(PSJRelationField(
-                    str('md_' + key),
-                    schemata='metadata',
-                    widget=ReferenceBrowserWidget(
-                        label=entry.title,
-                        ),
+                    str('md_'+key),
+                    relationship = 'Rel1',
+                    multivalued = 0,
+                    # XXX Exmamine, why reference fields cannot appear
+                    # in metadata.
+                    #schemata='metadata',
+                    allowed_types=PSJ_TYPES,
+                    addable = True,
+                    widget = ReferenceBrowserWidget(
+                        destination = ".",
+                        destination_types = PSJ_TYPES,
+                        label = entry.title,
+                    ),
                     ))
         return new_fields
 

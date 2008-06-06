@@ -451,6 +451,11 @@ Afterwards we add a boolean field::
    >>> browser.getControl(name="boolean.default").value=True
    >>> browser.getControl("Add boolean field").click()
 
+We also add a relation field::
+
+   >>> browser.getControl(name="relation.title").value='Reviewed Book'
+   >>> browser.getControl("Add link field").click()
+
 We then set a name for the whole metadataset::
 
    >>> browser.getControl(name="id").value='My new Schema'
@@ -477,7 +482,7 @@ The listing also includes the objecttype and the fields::
    <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"...
    ...
        <td>PSJ Document</td>
-       <td>title, is_important</td>
+       <td>title, is_important, reviewed_book</td>
    ...
 
 When we go back to the document we created before, this should display
@@ -499,6 +504,14 @@ tab::
           name="md_is_important:boolean"
           id="md_is_important" />
    ...
+   <input id="md_reviewed_book_label" size="50"
+          type="text"
+          value="No reference set. Click the browse button to select."
+          readonly="readonly" />
+   ...
+
+   >>> browser.getControl('Save').click()
+
 
 Here we can find the textline entry ('md_title') and the boolean
 checkbox entry ('md_is_important'). All field names are preceded by

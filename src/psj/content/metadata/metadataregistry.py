@@ -158,6 +158,10 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
             result += ((dict(type='Boolean',
                             title=request.get('boolean.title', 'unnamed'),
                             default=request.get('boolean.default', False))),)
+        if request.get('add_relation', None) is not None:
+            result += ((dict(type='Relation',
+                            title=request.get('relation.title', 'unnamed'),
+                            )),)
         if request.get('add_schema', None) is not None:
             new_result = ()
             for elem in result:

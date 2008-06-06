@@ -45,6 +45,8 @@ class MetadataSet(object):
                 item = TextLineField(ftitle, **field)
             if ftype == 'Boolean':
                 item = BooleanField(ftitle, **field)
+            if ftype == 'Relation':
+                item = RelationField(ftitle, **field)
             if item is None:
                 continue
             self.add(item)
