@@ -50,6 +50,12 @@ PSJDocumentSchema = folder.ATFolderSchema.copy() + atapi.Schema((
             label=_(u'Document'),
             description=_(u'Upload an office document here'))
        ),
+    atapi.FileField(
+        'pdfdocument',
+        required=False,
+        seachable=False,
+        primary=False,
+        ),
     ))
 
 # Switch default attributes storage to annotation (instead attribute)
