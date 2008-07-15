@@ -83,9 +83,8 @@ class PageExtender(object):
                     str('md_'+key),
                     relationship = 'Rel1',
                     multivalued = 0,
-                    # XXX Exmamine, why reference fields cannot appear
-                    # in metadata.
-                    #schemata='metadata',
+                    schemata='metadata',
+                    isMetadata=1,
                     allowed_types=PSJ_TYPES,
                     addable = True,
                     widget = ReferenceBrowserWidget(
