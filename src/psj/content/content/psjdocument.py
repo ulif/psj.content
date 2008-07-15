@@ -110,6 +110,8 @@ class PSJDocument(folder.ATFolder):
             annotations[self.annotations_key] = OOBTree()
         if not 'html' in annotations[self.annotations_key].keys():
             annotations[self.annotations_key]['html'] = None
+        if not 'pdf' in annotations[self.annotations_key].keys():
+            annotations[self.annotations_key]['pdf'] = None
         if not 'subobjects' in annotations[self.annotations_key].keys():
             annotations[self.annotations_key]['subobjects'] = OOBTree()
         self.annotations = annotations
@@ -150,6 +152,17 @@ class PSJDocument(folder.ATFolder):
         """
         return self.annotations[self.annotations_key]['html']
 
+    def setPdf(self, data):
+        """Set the PDF transformation of the office document stored.
+        """
+        self.annotations[self.annotations_key]['pdf'] = data
+        return
+
+    def getPdf(self):
+        """Get the current PDF represenatation of the document.
+        """
+        return self.annotations[self.annotations_key]['pdf']
+
     def rebuild(self):
         """Convert local document to HTML and store it.
 
@@ -166,8 +179,10 @@ class PSJDocument(folder.ATFolder):
         raw_file = self['document']
         if raw_file.filename == '':
             self.setHtml(u'')
+            self.setPdf('')
             return
 
+        # Create HTML representation...
         data = transforms.convertTo('text/html', str(raw_file.data),
                                     filename=raw_file.filename)
         if data is None:
@@ -183,6 +198,15 @@ class PSJDocument(folder.ATFolder):
                 self.setSubObject(id, data)
             html = self._re_imgsrc.sub(_Replacer(subobjs.keys(), self), html)
         self.setHtml(html.decode('utf-8'))
+
+        # Create PDF/A representation...
+        data = transforms.convertTo('application/pdf', str(raw_file.data),
+                                    filename=raw_file.filename)
+        if data is None:
+            self.setPdf(u'')
+            return
+        pdf = data.getData()
+        self.setPdf(pdf)
         return
         
         
