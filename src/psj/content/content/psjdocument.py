@@ -174,10 +174,14 @@ class PSJDocument(folder.ATFolder):
         filename = os.path.splitext(filename)[0] + '.pdf'
         pdffield = self.getField('pdfdocument')
         mutator = pdffield.getMutator(self)
-        mutator(
-            StringIO.StringIO(data),
-            filename=filename,
-            content_type='application/pdf')
+        if not len(data):
+            # The document might not be available as PDF...
+            mutator(None)
+        else:
+            mutator(
+                StringIO.StringIO(data),
+                filename=filename,
+                content_type='application/pdf')
         return
 
     def getPdf(self):
