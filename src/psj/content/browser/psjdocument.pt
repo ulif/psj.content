@@ -32,9 +32,13 @@
 
 	<div metal:use-macro="python: 
 			         context.widget('document', mode='view')"/>
+	<div>
+	  <div metal:use-macro="python: 
+				context.widget('pdfdocument', mode='view')"/>
+	</div>
 
         <div tal:replace="structure view/getDocument" />
-        
+
         <div metal:use-macro="context/document_relateditems/macros/relatedItems">
             show related items if they exist
         </div>

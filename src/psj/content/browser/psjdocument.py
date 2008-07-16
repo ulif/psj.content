@@ -23,6 +23,7 @@
 """
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from Products.Archetypes import atapi
 
 class PSJDocumentView(BrowserView):
     """Default view of a PSJ document.
@@ -34,4 +35,3 @@ class PSJDocumentView(BrowserView):
         """
         html = self.context.annotations['psj.content']['html']
         return html
-    

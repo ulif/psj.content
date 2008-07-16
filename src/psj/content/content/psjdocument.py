@@ -22,7 +22,9 @@
 """
 Definition of PSJ document type.
 """
+import os
 import re
+import StringIO
 
 from zope.interface import implements
 from zope.component import adapts
@@ -53,15 +55,22 @@ PSJDocumentSchema = folder.ATFolderSchema.copy() + atapi.Schema((
     atapi.FileField(
         'pdfdocument',
         required=False,
-        seachable=False,
+        searchable=False,
         primary=False,
-        ),
+        widget=atapi.FileWidget(
+            label=_(u'PDFDocument'),
+            visible=dict(edit='invisible',
+                         view='visible'),
+            description=_(u'This field is automatically updated.'))
+
+       ),
     ))
 
 # Switch default attributes storage to annotation (instead attribute)
 PSJDocumentSchema['title'].storage = atapi.AnnotationStorage()
 PSJDocumentSchema['description'].storage = atapi.AnnotationStorage()
 PSJDocumentSchema['document'].storage = atapi.AnnotationStorage()
+PSJDocumentSchema['pdfdocument'].storage = atapi.AnnotationStorage()
 
 finalizeATCTSchema(PSJDocumentSchema, folderish=True, moveDiscussion=False)
 
@@ -161,7 +170,14 @@ class PSJDocument(folder.ATFolder):
     def setPdf(self, data):
         """Set the PDF transformation of the office document stored.
         """
-        self.annotations[self.annotations_key]['pdf'] = data
+        filename = self.getField('document').getFilename(self)
+        filename = os.path.splitext(filename)[0] + '.pdf'
+        pdffield = self.getField('pdfdocument')
+        mutator = pdffield.getMutator(self)
+        mutator(
+            StringIO.StringIO(data),
+            filename=filename,
+            content_type='application/pdf')
         return
 
     def getPdf(self):
@@ -212,6 +228,8 @@ class PSJDocument(folder.ATFolder):
             self.setPdf(u'')
             return
         pdf = data.getData()
+        if isinstance(pdf, list):
+            pdf = ''.join(pdf)
         self.setPdf(pdf)
         return
         
