@@ -139,14 +139,3 @@ generated text::
    u'<p>My Content<br />on different lines</p>'
 
 
-PDF representations of a PSJ document
--------------------------------------
-
-We can also get PDF/A representations of a document, if an appropriate
-transformation is available. The latter is not the case with the stock
-``psj.content`` package, but there is one available from
-``psj.policy``. We can see, that ther is at least a place to store
-that PDF::
-
-   >>> doc.annotations['psj.content']['pdf']
-   u''
