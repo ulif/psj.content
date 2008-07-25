@@ -105,7 +105,8 @@ class BooleanField(object):
         return dict(
             title = self.title,
             id = self.id,
-            default = self.default)
+            default = self.default,
+            type = 'Boolean',)
 
 class TextLineField(object):
 
@@ -123,7 +124,8 @@ class TextLineField(object):
         return dict(
             title = self.title,
             id = self.id,
-            default = self.default)
+            default = self.default,
+            type = 'TextLine',)
     
 class RelationField(BaseField):
 
@@ -134,5 +136,6 @@ class RelationField(BaseField):
     def getDict(self):
         return dict(
             title = self.title,
-            id = self.id)
+            id = self.id,
+            type = 'Relation',)
 
