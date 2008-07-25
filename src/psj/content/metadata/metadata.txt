@@ -23,6 +23,7 @@ Every metadata field must provide an identifier (the 'title').
 
 We create a simple field like this::
 
+  >>> from pprint import pprint as pp
   >>> from psj.content.metadata import BaseField
   >>> field = BaseField('title')
 
@@ -76,8 +77,8 @@ Of couse we can also pass unicode values for title and default::
 
 We can get a dict representation of `TextFields`::
 
-  >>> from pprint import pprint
-  >>> pprint(field.getDict(), width=20)
+
+  >>> pp(field.getDict(), width=20)
   {'default': u'bar',
    'id': 'title',
    'title': u'title',
@@ -121,8 +122,7 @@ Of couse we can also pass unicode values for the title::
 
 We can get a dict representation of `BooleanField`s::
 
-  >>> from pprint import pprint
-  >>> pprint(field.getDict(), width=20)
+  >>> pp(field.getDict(), width=20)
   {'default': True,
    'id': 'title',
    'title': u'title',
@@ -146,7 +146,7 @@ We create a relation field like this::
 
 We can get a dict representation of `RelationField`s::
 
-  >>> pprint(field.getDict(), width=20)
+  >>> pp(field.getDict(), width=20)
   {'id': 'title',
    'title': u'title',
    'type': 'Relation'}
