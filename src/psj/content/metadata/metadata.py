@@ -23,13 +23,17 @@
 Metadata for content objects.
 """
 from psj.content.util import get_id_string
+from persistent.mapping import PersistentMapping
+from persistent import Persistent
 
-class MetadataSet(object):
+class MetadataSet(PersistentMapping):
     data = dict()
     _keys = () # To keep an ordering, we maintain the keys in a tuple.
     index = 0
 
     def __init__(self, name=u'Unnamed', fields=()):
+        super(MetadataSet, self).__init__()
+        self.data = dict()
         id = get_id_string(name)
         self.id = id
         if not isinstance(name, unicode):
@@ -74,8 +78,10 @@ class MetadataSet(object):
         self.index = 0
         raise StopIteration
 
-    def get(self, key):
-        return self.data[key]
+    def get(self, key, default=None):
+        if key in self.data.keys():
+            return self.data[key]
+        return default
 
 
 class BaseField(object):
@@ -95,6 +101,12 @@ class BooleanField(object):
         self.default = kw.get('default', False)
         return
 
+    def getDict(self):
+        return dict(
+            title = self.title,
+            id = self.id,
+            default = self.default)
+
 class TextLineField(object):
 
     default = None
@@ -106,6 +118,21 @@ class TextLineField(object):
         if default is not None:
             self.default = unicode(default)
         return
+
+    def getDict(self):
+        return dict(
+            title = self.title,
+            id = self.id,
+            default = self.default)
     
 class RelationField(BaseField):
-    pass
+
+    def __init__(self, title, **kw):
+        self.title = unicode(title)
+        self.id = get_id_string(self.title)
+
+    def getDict(self):
+        return dict(
+            title = self.title,
+            id = self.id)
+
