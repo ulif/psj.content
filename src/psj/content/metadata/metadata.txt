@@ -74,6 +74,16 @@ Of couse we can also pass unicode values for title and default::
   >>> field.default
   u'bar'
 
+We can get a dict representation of `TextFields`::
+
+  >>> from pprint import pprint
+  >>> pprint(field.getDict(), width=20)
+  {'default': u'bar',
+   'id': 'title',
+   'title': u'title',
+   'type': 'TextLine'}
+
+
 
 Boolean fields
 --------------
@@ -109,6 +119,16 @@ Of couse we can also pass unicode values for the title::
   >>> field.default
   True
 
+We can get a dict representation of `BooleanField`s::
+
+  >>> from pprint import pprint
+  >>> pprint(field.getDict(), width=20)
+  {'default': True,
+   'id': 'title',
+   'title': u'title',
+   'type': 'Boolean'}
+
+
 Relation Fields
 ---------------
 
@@ -122,6 +142,17 @@ We create a relation field like this::
 
   >>> field.title
   u'title'
+
+
+We can get a dict representation of `RelationField`s::
+
+  >>> pprint(field.getDict(), width=20)
+  {'id': 'title',
+   'title': u'title',
+   'type': 'Relation'}
+
+
+
 
 
 MetadataSets
@@ -196,8 +227,14 @@ metadata items::
 
 We can also get a certain entry by key::
 
-   >>> mset.get('title')
+   >>> mset.get('address')
    <psj.content.metadata.metadata.TextLineField object at 0x...>
+
+If we specify a default value, this will be returned instead of `None`
+if an entry cannot be found::
+
+   >>> mset.get('foo', 'DefaultStuff')
+   'DefaultStuff'
 
 We can remove an entry by name (key)::
 
