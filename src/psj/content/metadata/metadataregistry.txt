@@ -9,7 +9,7 @@ A tool for creating metadata schemas.
 psj.content provides a `metadataschemas_registry` which manages
 metadata schemata for content objects::
 
-  >>> from pprint import pprint
+  >>> from pprint import pprint as pp
   >>> reg = self.portal['metadataschemas_registry']
   >>> reg
   <MetadataSchemaRegistry at /plone/metadataschemas_registry>
@@ -30,16 +30,17 @@ object types::
 
 We can get dict of content types directly::
 
-  >>> from pprint import pprint
-  >>> pprint(reg.contentTypes())
+  >>> reg.contentTypes()
   {'psjvolume': {...}, 'psjdocument': {...}, 'psjissue': {...}, ...}
 
 XXX: Apparently, pprint does not work here. Why?
 
 A special content type can also be looked up by id::
 
-  >>> reg.lookupContentType('psjdocument')
-  {'dotted_path': ..., 'title': ..., 'schema': None}
+  >>> pp(reg.lookupContentType('psjdocument'), width=10)
+  {'dotted_path': ..., 
+   'schema': None,
+   'title': ...}
 
 
 Adding schemata
@@ -48,7 +49,7 @@ Adding schemata
 We can add a new schema::
 
   >>> reg.manage_addMetadataSchema(
-  ...   'myschema', objecttype='psjdocument',
+  ...   'myschema', objecttype='psjissue',
   ...   fields=(dict(title='title',
   ...                type='TextLine',
   ...                default=None),
@@ -65,23 +66,55 @@ We can add a new schema::
 
 The new schema can be retrieved directly::
 
-  >>> reg.schemas()['myschema']
-  <psj.content.metadata.metadata.MetadataSet object at 0x...>
+  >>> schema = reg.schemas()['myschema']
+  >>> pp(schema, width=5)
+  {'is_great': <psj.content.metadata.metadata.BooleanField object at 0x...>,
+   'a_link': <psj.content.metadata.metadata.RelationField object at 0x...>,
+   'title': <psj.content.metadata.metadata.TextLineField object at 0x...>}
+
 
 The link to the objecttype is not stored with the schema, but in the
 list of object types::
 
-  >>> reg.lookupContentType('psjdocument')['schema']
+  >>> reg.lookupContentType('psjissue')['schema']
   'myschema'
 
 
-Retrieving MetadataSets
-=======================
+Editing schemata
+================
+
+We can edit existing metadata sets::
+
+  >>> reg.manage_editMetadataSchema(
+  ...   'myschema', name='My new schema',
+  ...   objecttypes=['psjdocument',],
+  ...   fields=(dict(title='title',
+  ...                type='TextLine',
+  ...                default=None),
+  ...           dict(title='is great',
+  ...                type='Boolean',
+  ...                default=True),
+  ...           dict(title='A link',
+  ...                type='Relation'),
+  ...          )
+  ...   )
+
+  >>> schema = reg.schemas()['myschema']
+  >>> schema.name
+  u'My new schema'
+
+  >>> schema.id
+  'myschema'
 
 We can also ask, which content types are connected to a special schema::
 
   >>> reg.getContentTypesForSchema('myschema')
   ['psjdocument']
+
+
+Retrieving MetadataSets
+=======================
+
 
 For the handling of object attributes (see extenders.txt), it is
 crucial to have a possibility, to retrieve a metadata sets for a
@@ -93,6 +126,10 @@ object and ask for a metadata schema that 'fits'::
 
   >>> data = reg.getSchemaForObject(d)
   >>> data
+  {'is_great': <psj.content.metadata.metadata.BooleanField object at 0x...>,
+   'a_link': <psj.content.metadata.metadata.RelationField object at 0x...>,
+   'title': <psj.content.metadata.metadata.TextLineField object at 0x...>}
+
   <psj.content.metadata.metadata.MetadataSet object at 0x...>
 
   >>> sorted(list(data))
