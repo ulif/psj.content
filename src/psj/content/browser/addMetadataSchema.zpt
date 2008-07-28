@@ -14,6 +14,7 @@
        tal:content="status"
        />
 
+
   <table width="50%">
     <tr>
       <td class="form-label">* Name of new schema</td>
@@ -23,17 +24,22 @@
 			       'Untitled Schema');"/>
       </td>
       </tr><tr>
+
       <td class="form-label">* Objecttype</td>
       <td class="form-element">
 	<select name="objecttype">
 	  <option tal:repeat="ct_id context/listContentTypes"
-		  tal:attributes="value ct_id"
-		  tal:content="python:context.lookupContentType(ct_id)['title']">
-	    Object Type
+		  tal:attributes="value ct_id">
+	    <span 
+		tal:define="ct python:context.lookupContentType(ct_id)"
+		tal:replace="ct/title">Object Type</span>
 	  </option>
 	</select>
       </td>
-      </tr><tr>
+
+      </tr>
+
+      <tr>
       <td class="form-label">Fields
       </td>
       <td class="form-element">
@@ -64,7 +70,9 @@
 	</table>
       </td>
     </tr>
+
   </table>
+
 
 
   <fieldset>
