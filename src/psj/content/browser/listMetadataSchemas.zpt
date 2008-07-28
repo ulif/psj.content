@@ -9,7 +9,7 @@
   </div>
 
   <div align="right">
-    <form method="POST" action="manage_addMimeTypeForm">
+    <form method="POST" action="manage_addMetadataSchemaForm">
       <input type="submit" value="Add a new metadata schema"/>
     </form>
   </div>
@@ -38,9 +38,14 @@
                    tal:attributes="value ms/id"/>
           </td>
 	  <td></td>
-          <td tal:content="ms/name">Name</td>
-	  <td tal:content="python: 
-			   ', '.join([here.lookupContentType(x)['title'] for x in here.getContentTypesForSchema(ms_id)])" />
+          <td>
+	    <a href="" 
+	       tal:attributes="href string:manage_editMetadataSchemaForm?ms_id=${ms_id}"
+	       tal:content="ms/name">
+	      Name
+	    </a>
+	  </td>
+	  <td tal:content="python: ', '.join(here.lookupContentTypesForSchema(ms_id))" />
 	  <td tal:content="python:', '.join(list(ms))"/>
 	</tal:block>
 
