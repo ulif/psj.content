@@ -2,13 +2,11 @@
 <h2 tal:define="manage_tabs_message options/manage_tabs_message | nothing"
     tal:replace="structure here/manage_tabs">Tabs</h2>
 
-
 <form method="POST" action=""
-      tal:attributes="action string:${here/absolute_url}/manage_editMimeType;"
-      tal:define="mt python:here.lookup(request.form.get('mt_name'))[0]">
-
+      tal:define="data python:context.process_addForm(request);
+		  data2 python:context.process_editForm(request);" >
   <div class="form-title">
-    Edit mime type <b tal:content="mt/name"/>.
+    Edit metadata schema
   </div>
 
   <div tal:define="status python:request.get('portal_status', '')"
@@ -17,53 +15,112 @@
        tal:content="status"
        />
 
-  <input type="hidden" name="name" tal:attributes="value request/mt_name"/>
-
   <table width="50%">
     <tr>
-      <td>Name</td>
-      <td>
-        <input name="new_name"
-               tal:attributes="value python:request.get('new_name', mt.name());"/>
+      <input type="hidden" name='ms_id' tal:attributes="value request/ms_id" />
+
+      <td class="form-label">* Name of schema</td>
+      <td class="form-element">
+        <input name="name"
+               tal:attributes="value data2/name"/>
+
       </td>
       </tr><tr>
-      <td>Icon path</td>
-      <td>
-        <input name="icon_path"
-               tal:attributes="value python:request.get('icon_path', mt.icon_path);"/>
+      <td class="form-label">* Objecttype</td>
+      <td class="form-element">
+	<select name="objecttype">
+	  <option tal:repeat="ct_id context/listContentTypes"
+		  tal:attributes="value ct_id; selected python:ct_id in data2['objecttypes'] and 'selected';"
+		  tal:content="python:context.lookupContentTypeTitle(ct_id)">
+	    Object Type
+	  </option>
+	</select>
       </td>
       </tr><tr>
-      <td>Binary?
+      <td class="form-label">Fields
       </td>
-      <td>
-        <input name="binary" type="checkbox"
-               tal:attributes="checked python:request.get('binary', mt.binary) and 1 or 0;"/>
-      </td>
-      </tr><tr>
-      <td>Mime-types
-      </td>
-      <td>
-        <textarea name="mimetypes"
-                  tal:content="python:request.get('mimetypes', '\n'.join(mt.mimetypes))"/>
-      </td>
-      </tr><tr>
-      <td>Extensions
-      </td>
-      <td>
-        <textarea name="extensions"
-                  tal:content="python:request.get('extensions', '\n'.join(mt.extensions))"/>
-      </td>
-      </tr><tr>
-      <td>Globs
-      </td>
-      <td>
-        <textarea name="globs"
-                  tal:content="python:request.get('globs', '\n'.join(mt.globs))"/>
+      <td class="form-element">
+	<div tal:condition="not: python:len(data)">
+	  No fields defined yet.
+	</div>
+	<table tal:condition="python:len(data2['fields'])">
+	  <tr>
+	    <td></td>
+	    <td class="form-label">name</td>
+	    <td class="form-label">type</td>
+	  </tr>
+	  <tr tal:repeat="field data2/fields">
+	    <td class="form-element">
+	      <input type="checkbox" name="del_field" />
+	    </td>
+	    <td class="form-element">
+	      <span tal:content="field/title">Fieldname</span>
+	    </td><td class="form-element">
+	      <span tal:content="field/type">Type of Field</span>
+	    </td>
+
+	    <input type="hidden" 
+		   tal:repeat="attr python:field.keys()"
+		   tal:attributes="name python:'fields.%s:records' % attr;
+				   value python: field[attr]" />
+	  </tr>
+	</table>
       </td>
     </tr>
   </table>
 
-  <input type="submit"/>
-</form>
 
+  <fieldset>
+    <legend>Add a textline field</legend>
+    <table width="50%">
+      <tr>
+	<td class="form-label">* Field Name</td>
+	<td class="form-element">
+	  <input name="text_line.title" value="Unnamed" />
+	</td>
+	</tr><tr>
+	<td class="form-label">Default Value</td>
+	<td class="form-element">
+	  <input name="text_line.default" />
+	</td>
+      </tr>
+    </table>
+    <input type="submit" name="add_text_line" value="Add text line field" />
+  </fieldset>
+
+  <fieldset>
+    <legend>Add a boolean field</legend>
+    <table width="50%">
+      <tr>
+	<td class="form-label">* Field Name</td>
+	<td class="form-element">
+	  <input name="boolean.title" value="Unnamed" />
+	</td>
+	</tr><tr>
+	<td class="form-label">Default Value</td>
+	<td class="form-element">
+	  <input type="checkbox" name="boolean.default" />
+	</td>
+      </tr>
+    </table>
+    <input type="submit" name="add_boolean" value="Add boolean field" />
+  </fieldset>
+
+  <fieldset>
+    <legend>Add a link field</legend>
+    <table width="50%">
+      <tr>
+	<td class="form-label">* Field Name</td>
+	<td class="form-element">
+	  <input name="relation.title" value="Unnamed" />
+	</td>
+      </tr>
+    </table>
+    <input type="submit" name="add_relation" value="Add link field" />
+  </fieldset>
+
+  <div>
+    <input type="submit" name="edit_schema" value="Save schema" />
+  </div>
+</form>
 <tal:footer tal:replace="structure here/manage_page_footer|nothing">footer</tal:footer>
