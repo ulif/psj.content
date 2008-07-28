@@ -22,12 +22,15 @@
 import os
 from OFS.Folder import Folder
 from Globals import InitializeClass, PersistentMapping
+from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
+from persistent.mapping import PersistentMapping
 
-from Products.CMFCore.utils import registerToolInterface
+from Products.CMFCore.utils import registerToolInterface, UniqueObject
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
-from Products.CMFCore.utils import UniqueObject
+from Products.CMFCore.permissions import ManagePortal
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+
 
 from zope.interface import implements
 
@@ -36,8 +39,13 @@ from psj.content.metadata import MetadataSet
 
 _www = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'browser')
 
+class TypeMap(PersistentMapping):
+    security = ClassSecurityInfo()
+    security.declareObjectProtected(ManagePortal)
+
 class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
     implements(IMetadataSchemaRegistryTool)
+    security = ClassSecurityInfo()
 
     id = 'metadataschemas_registry'
     meta_type = 'MetadataSchema Registry'
@@ -54,32 +62,32 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
         Folder.manage_options[2:]
         )
 
-    manage_addMimeTypeForm = PageTemplateFile('addMetadataSchema', _www)
+    manage_addMetadataSchemaForm = PageTemplateFile('addMetadataSchema', _www)
     manage_main = PageTemplateFile('listMetadataSchemas', _www)
-    manage_editMimeTypeForm = PageTemplateFile('editMetadataSchema', _www)
+    manage_editMetadataSchemaForm = PageTemplateFile('editMetadataSchema',
+                                                     _www)
 
-    #security = ClassSecurityInfo()
 
     def __init__(self,):
-        self._schemas = PersistentMapping()
-        self._content_types = PersistentMapping()
-        self._content_types['psjdocument'] = dict(
+        self._schemas = TypeMap()
+        self._content_types = TypeMap()
+        self._content_types['psjdocument'] = TypeMap(
             dotted_path='psj.content.content.psjdocument.PSJDocument',
             title='PSJ Document',
             schema=None)
-        self._content_types['psjissue'] = dict(
+        self._content_types['psjissue'] = TypeMap(
             dotted_path='psj.content.content.issue.PSJIssue',
             title='PSJ Issue',
             schema=None)
-        self._content_types['psjvolume'] = dict(
+        self._content_types['psjvolume'] = TypeMap(
             dotted_path='psj.content.content.volume.PSJVolume',
             title='PSJ Volume',
             schema=None)
-        self._content_types['psjmagazine'] = dict(
+        self._content_types['psjmagazine'] = TypeMap(
             dotted_path='psj.content.content.volume.PSJMagazine',
             title='PSJ Magazine',
             schema=None)
-        self._content_types['psjbook'] = dict(
+        self._content_types['psjbook'] = TypeMap(
             dotted_path='psj.content.content.volume.PSJBook',
             title='PSJ Book (review)',
             schema=None)
@@ -90,24 +98,40 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
         del self._schemas[id]
         return
 
+    security.declareProtected(ManagePortal, 'schemas')
     def schemas(self):
         return self._schemas
 
+    security.declareProtected(ManagePortal, 'contentTypes')
     def contentTypes(self):
         return self._content_types
-        
+
+    security.declareProtected(ManagePortal, 'listSchemas')
     def listSchemas(self):
         return [str(schema) for schema in self.schemas()]
 
+    security.declareProtected(ManagePortal, 'listContentTypes')
     def listContentTypes(self):
         return self._content_types.keys()
 
+    security.declareProtected(ManagePortal, 'lookup')
     def lookup(self, id):
         return [self._schemas[x] for x in self._schemas.keys() if x == id]
 
+    security.declareProtected(ManagePortal, 'lookupContentType')
     def lookupContentType(self, id):
         return self._content_types.get(id, None)
 
+    security.declareProtected(ManagePortal, 'lookupContentTypeTitle')
+    def lookupContentTypeTitle(self, id):
+        return str(self.lookupContentType(id)['title'])
+
+    def lookupContentTypesForSchema(self, id):
+        result = [str(self.lookupContentType(x)['title'])
+                  for x in self.getContentTypesForSchema(id)]
+        return result
+
+    security.declareProtected(ManagePortal, 'getSchemaForObject')
     def getSchemaForObject(self, obj):
         dotted_path = None
         try:
@@ -122,17 +146,39 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
                 return self._schemas.get(schema_id, None)
         return None
             
-
+    security.declareProtected(ManagePortal, 'getContentTypesForSchema')
     def getContentTypesForSchema(self, schema_id):
         return [x for x in self._content_types.keys()
                 if self._content_types[x]['schema'] == schema_id]
 
+    security.declareProtected(ManagePortal, 'setContentTypesForSchema')
+    def setContentTypesForSchema(self, objecttypes, schema_id):
+        """Set schema as handler for the objecttypes.
+        """
+        # Delete old entries
+        for objtype in self.getContentTypesForSchema(schema_id):
+            new_type = self._content_types[objtype]
+            new_type['schema'] = None
+            self._content_types[objtype] = new_type
+
+        for objtype in objecttypes:
+            if objtype in self._content_types.keys():
+                # Make sure the content type is placed so that the
+                # persistence machinery gets updated.
+                new_type = self._content_types[objtype]
+                new_type['schema'] = schema_id
+                self._content_types[objtype] = new_type
+        return
+
+    security.declareProtected(ManagePortal, 'manage_addMetadataSchema')
     def manage_addMetadataSchema(self, id, objecttype, fields=(),
                                  REQUEST=None):
-        mset = MetadataSet(id, fields)
-        self._schemas[mset.id] = mset
-        if objecttype in self._content_types.keys():
-            self._content_types[objecttype]['schema'] = mset.id
+        try:
+            mset = MetadataSet(id, fields)
+            self._schemas[mset.id] = mset
+            self.setContentTypesForSchema([objecttype,], mset.id)
+        except:
+            print "EIN DOOFER ERROR."
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
         return
@@ -144,9 +190,23 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
 
-    def process_addForm(self, request):
+    def formDictToDict(self, formdict):
+        """Transform a HTTP request dict into a real dict.
+        """
         result = ()
-        fields = request.form.get('fields', [])
+        for elem in formdict:
+            new_elem = dict()
+            for attr in dir(elem):
+                if attr.startswith('_'):
+                    continue
+                new_elem[attr] = elem[attr]
+            result += (new_elem,)
+        return result
+
+    security.declareProtected(ManagePortal, 'process_addForm')
+    def process_addForm(self, request, fields=[]):
+        result = ()
+        fields = request.form.get('fields', fields)
         objecttype = request.form.get('objecttype', None)
         for field in fields:
             result += (field,)
@@ -163,17 +223,46 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
                             title=request.get('relation.title', 'unnamed'),
                             )),)
         if request.get('add_schema', None) is not None:
-            new_result = ()
-            for elem in result:
-                new_elem = dict()
-                for attr in dir(elem):
-                    if attr.startswith('_'):
-                        continue
-                    new_elem[attr] = elem[attr]
-                new_result += (new_elem,)
+            new_result = self.formDictToDict(result)
             name = request.get('id', 'Untitled Schema')
             self.manage_addMetadataSchema(name, objecttype, new_result,
                                           REQUEST=request)
+        return result
+
+    security.declareProtected(ManagePortal, 'manage_editMetadataSchema')
+    def manage_editMetadataSchema(self, ms_id, name, objecttypes, fields=(),
+                                  REQUEST=None):
+        """Edit a meta data schema by id.
+        """
+        mset = self.lookup(ms_id)[0]
+        mset = MetadataSet(name, fields)
+        mset.id = ms_id
+        self._schemas[mset.id] = mset
+        self.setContentTypesForSchema(objecttypes, ms_id)
+
+        if REQUEST is not None:
+            REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
+
+    def process_editForm(self, request):
+        ms_id = request.form.get('ms_id', '')
+        ms = self.lookup(ms_id)[0]
+        old_name = ms.name
+        old_fields = []
+        if request.form.get('fields', None) is None:
+            # populate edit form with already defined fields...
+            old_fields = [ms.get(name).getDict() for name in ms]
+        old_contenttypes = self.getContentTypesForSchema(ms_id)
+        new_contenttypes = [request.form.get('objecttype', None)]
+        if not new_contenttypes:
+            new_contenttypes = old_contenttypes
+        new_fields = self.process_addForm(request, fields=old_fields)
+        new_name = request.form.get('name', old_name)
+        result = dict(name = new_name, objecttypes = new_contenttypes,
+                      fields = new_fields)
+        if request.get('edit_schema', None) is not None:
+            new_fields = self.formDictToDict(new_fields)
+            self.manage_editMetadataSchema(ms_id, new_name, new_contenttypes,
+                                           new_fields, REQUEST=request)
         return result
 
 
