@@ -70,6 +70,13 @@
 	permission="zope2.View"
 	/>
 
+    <browser:page
+	for="..interfaces.IRetroMagazine"
+	name="view"
+	class=".psjretromagazine.PSJRetroMagazineView"
+	permission="zope2.View"
+	/>
+
     <browser:menuItem
 	for="..interfaces.IDocument"
 	menu="plone_displayviews"
@@ -100,6 +107,14 @@
 	title="PSJ magazine view"
 	action="@@view"
 	description="Default representation of a PSJ magazine"
+	/>
+
+    <browser:menuItem
+	for="..interfaces.IRetroMagazine"
+	menu="plone_displayviews"
+	title="PSJ retro magazine view"
+	action="@@view"
+	description="Default representation of a PSJ retro magazine"
 	/>
     
 </configure>
