@@ -37,6 +37,7 @@ from psj.content.metadata.fields import (PSJTextLineField, PSJBooleanField,
 from psj.content.metadata.metadata import TextLineField as LineEntry
 from psj.content.metadata.metadata import BooleanField as BoolEntry
 from psj.content.metadata.metadata import RelationField as RelationEntry
+from psj.content.interfaces import IBook
 
 PSJ_TYPES = ('PSJ Document', 'PSJ Volume', 'PSJ Issue',
              'PSJ Magazine', 'PSJ Book')
@@ -95,3 +96,10 @@ class PageExtender(object):
                     ))
         return new_fields
 
+class BookExtender(PageExtender):
+    """Books are not inherited from `Folder`.
+
+    We need a specialized schema extender therefore.
+    """
+    adapts(IBook)
+    implements(ISchemaExtender)
