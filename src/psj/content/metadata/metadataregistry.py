@@ -89,7 +89,7 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
             schema=None)
         self._content_types['psjbook'] = TypeMap(
             dotted_path='psj.content.content.book.PSJBook',
-            title='PSJ Book (review)',
+            title='PSJ Book',
             schema=None)
         return
 
