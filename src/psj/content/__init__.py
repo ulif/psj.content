@@ -34,7 +34,7 @@ def initialize(context):
     # the module several times, it is only run once!
     
     from content import (psjdocument, issue, volume, magazine, book,
-                         retromagazine, retroarticle)
+                         retromagazine, retroarticle, review)
     content_types, constructors, ftis = atapi.process_types(
         atapi.listTypes(config.PROJECTNAME),
         config.PROJECTNAME)
