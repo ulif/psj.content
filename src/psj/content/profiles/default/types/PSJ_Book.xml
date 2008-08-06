@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <object name="PSJBook" meta_type="Factory-based Type Information"
    xmlns:i18n="http://xml.zope.org/namespaces/i18n">
- <property name="title">PSJ Book (Review)</property>
+ <property name="title">PSJ Book</property>
  <property name="description">A review of a book</property>
  <property name="content_icon">document_icon.gif</property>
  <property name="content_meta_type">PSJBook</property>
