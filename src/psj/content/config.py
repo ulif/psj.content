@@ -40,4 +40,6 @@ ADD_PERMISSIONS = {
     "PSJVolume" : "PSJ: Add PSJ Volume",
     "PSJMagazine" : "PSJ: Add PSJ Magazine",
     "PSJBook" : "PSJ: Add PSJ Book",
+    "PSJRetroMagazine" : "PSJ: Add PSJ Retro Magazine",
+    "PSJRetroArticle" : "PSJ: Add PSJ Retro Article",
 }

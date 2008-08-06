@@ -61,6 +61,22 @@ class IBook(Interface):
         """This method is called, everytime an issue is updated.
         """
 
+class IRetroMagazine(Interface):
+    """A PSJ retro magazine or series. Retro magazines contain
+       retro volumes.
+    """
+    def rebuild():
+        """This method is called, everytime an issue is updated.
+        """
+
+class IRetroArticle(Interface):
+    """A PSJ retro article.
+    """
+    def rebuild():
+        """This method is called, everytime a document is updated.
+        """
+
+
 
 class IMetadataItem(Interface):
     """An item in a metadata set.
