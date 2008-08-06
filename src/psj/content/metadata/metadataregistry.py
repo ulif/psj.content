@@ -99,6 +99,10 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
             dotted_path='psj.content.content.retroarticle.PSJRetroArticle',
             title='PSJ Retro Article',
             schema=None)
+        self._content_types['psjreview'] = TypeMap(
+            dotted_path='psj.content.content.review.PSJReview',
+            title='PSJ Review',
+            schema=None)
         return
 
     def unregister(self, metadataset):

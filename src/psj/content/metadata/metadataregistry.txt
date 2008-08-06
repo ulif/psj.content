@@ -26,7 +26,8 @@ metadata registry. The registry therefore manages a list of supported
 object types::
 
   >>> sorted(reg.listContentTypes())
-  ['psjbook', 'psjdocument', 'psjissue', 'psjmagazine', 'psjretroarticle', 'psjretromagazine', 'psjvolume']
+  ['psjbook', 'psjdocument', 'psjissue', 'psjmagazine',
+  ...'psjretroarticle', 'psjretromagazine', 'psjreview', 'psjvolume']
 
 We can get dict of content types directly::
 
