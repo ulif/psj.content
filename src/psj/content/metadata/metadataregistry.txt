@@ -26,12 +26,12 @@ metadata registry. The registry therefore manages a list of supported
 object types::
 
   >>> sorted(reg.listContentTypes())
-  ['psjbook', 'psjdocument', 'psjissue', 'psjmagazine', 'psjvolume']
+  ['psjbook', 'psjdocument', 'psjissue', 'psjmagazine', 'psjretroarticle', 'psjretromagazine', 'psjvolume']
 
 We can get dict of content types directly::
 
   >>> reg.contentTypes()
-  {'psjvolume': {...}, 'psjdocument': {...}, 'psjissue': {...}, ...}
+  {'psjbook': {...}, ...}
 
 XXX: Apparently, pprint does not work here. Why?
 
