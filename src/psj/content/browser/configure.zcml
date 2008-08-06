@@ -77,8 +77,16 @@
 	permission="zope2.View"
 	/>
 
+    <!-- RetroArticle and Review provide the same as PSJDocument -->
     <browser:page
 	for="..interfaces.IRetroArticle"
+	name="view"
+	class=".psjdocument.PSJDocumentView"
+	permission="zope2.View"
+	/>
+
+    <browser:page
+	for="..interfaces.IReview"
 	name="view"
 	class=".psjdocument.PSJDocumentView"
 	permission="zope2.View"
@@ -131,6 +139,14 @@
 	title="PSJ retro article view"
 	action="@@view"
 	description="Default representation of a PSJ retro article"
+	/>
+
+    <browser:menuItem
+	for="..interfaces.IReview"
+	menu="plone_displayviews"
+	title="PSJ review view"
+	action="@@view"
+	description="Default representation of a PSJ review"
 	/>
     
 </configure>
