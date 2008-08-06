@@ -34,6 +34,20 @@ class IDocument(Interface):
         """This method is called, everytime a document is updated.
         """
 
+class IReview(IDocument):
+    """A PSJ review of a book or another resource.
+    """
+    def rebuild():
+        """This method is called, everytime a document is updated.
+        """
+
+class IRetroArticle(IDocument):
+    """A PSJ retro article.
+    """
+    def rebuild():
+        """This method is called, everytime a document is updated.
+        """
+
 class IIssue(Interface):
     """A PSJ issue. Issues contain documents/articles.
     """
@@ -69,19 +83,6 @@ class IRetroMagazine(Interface):
         """This method is called, everytime an issue is updated.
         """
 
-class IRetroArticle(Interface):
-    """A PSJ retro article.
-    """
-    def rebuild():
-        """This method is called, everytime a document is updated.
-        """
-
-class IReview(Interface):
-    """A PSJ review of a book or another resource.
-    """
-    def rebuild():
-        """This method is called, everytime a document is updated.
-        """
 
 
 class IMetadataItem(Interface):
