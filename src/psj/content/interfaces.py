@@ -76,6 +76,12 @@ class IRetroArticle(Interface):
         """This method is called, everytime a document is updated.
         """
 
+class IReview(Interface):
+    """A PSJ review of a book or another resource.
+    """
+    def rebuild():
+        """This method is called, everytime a document is updated.
+        """
 
 
 class IMetadataItem(Interface):
