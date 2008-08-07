@@ -22,7 +22,8 @@
 """
 Fields for extended schemata.
 """
-from Products.Archetypes.public import BooleanField, TextField, ReferenceField
+from Products.Archetypes.public import (BooleanField, TextField, LinesField,
+                                        ReferenceField,)
 from archetypes.schemaextender.field import ExtensionField
 
 class PSJBooleanField(ExtensionField, BooleanField):
@@ -34,3 +35,5 @@ class PSJTextLineField(ExtensionField, TextField):
 class PSJRelationField(ExtensionField, ReferenceField):
     """A relation field."""
     
+class PSJLinesField(ExtensionField, LinesField):
+    """A lines field."""
