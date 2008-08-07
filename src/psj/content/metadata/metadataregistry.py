@@ -190,7 +190,7 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
             self._schemas[mset.id] = mset
             self.setContentTypesForSchema([objecttype,], mset.id)
         except:
-            print "EIN DOOFER ERROR."
+            pass
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
         return
@@ -233,6 +233,11 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
         if request.get('add_relation', None) is not None:
             result += ((dict(type='Relation',
                             title=request.get('relation.title', 'unnamed'),
+                            )),)
+        if request.get('add_vocab', None) is not None:
+            result += ((dict(type='Vocabulary',
+                             title=request.get('vocab.title', 'unnamed'),
+                             vocab=request.get('vocab.vocab', None)
                             )),)
         if request.get('add_schema', None) is not None:
             new_result = self.formDictToDict(result)

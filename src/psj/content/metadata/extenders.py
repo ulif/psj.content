@@ -26,17 +26,19 @@ from zope.component import adapts
 from zope.interface import implements
 from archetypes.schemaextender.interfaces import ISchemaExtender
 from Products.Archetypes.public import (StringWidget, BooleanWidget,
-                                        ReferenceWidget)
+                                        ReferenceWidget, SelectionWidget)
 from Products.ATReferenceBrowserWidget.ATReferenceBrowserWidget import (
     ReferenceBrowserWidget)
 from Products.ATContentTypes.content.document import ATDocument
 from Products.ATContentTypes.content import folder
+from Products.ATVocabularyManager import NamedVocabulary
 from Products.CMFCore.utils import getToolByName
 from psj.content.metadata.fields import (PSJTextLineField, PSJBooleanField,
-                                         PSJRelationField)
+                                         PSJRelationField, PSJLinesField)
 from psj.content.metadata.metadata import TextLineField as LineEntry
 from psj.content.metadata.metadata import BooleanField as BoolEntry
 from psj.content.metadata.metadata import RelationField as RelationEntry
+from psj.content.metadata.metadata import VocabularyField as VocabularyEntry
 from psj.content.interfaces import IBook
 
 PSJ_TYPES = ('PSJ Document', 'PSJ Volume', 'PSJ Issue',
@@ -93,6 +95,17 @@ class PageExtender(object):
                         destination_types = PSJ_TYPES,
                         label = entry.title,
                     ),
+                    ))
+            if isinstance(entry, VocabularyEntry):
+                if entry.vocab is None:
+                    continue
+                new_fields.append(PSJLinesField(
+                    str('md_'+key),
+                    schemata = 'metadata',
+                    widget = SelectionWidget(
+                        label=entry.title,
+                        ),
+                    vocabulary = NamedVocabulary(entry.vocab)
                     ))
         return new_fields
 

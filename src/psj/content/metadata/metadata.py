@@ -52,7 +52,7 @@ class MetadataSet(PersistentMapping):
             if ftype == 'Relation':
                 item = RelationField(ftitle, **field)
             if ftype == 'Vocabulary':
-                item = RelationField(ftitle, **field)
+                item = VocabularyField(ftitle, **field)
             if item is None:
                 continue
             self.add(item)
