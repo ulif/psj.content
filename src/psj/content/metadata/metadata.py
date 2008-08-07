@@ -139,3 +139,17 @@ class RelationField(BaseField):
             id = self.id,
             type = 'Relation',)
 
+
+class VocabularyField(BaseField):
+
+    def __init__(self, title, **kw):
+        self.title = unicode(title)
+        self.id = get_id_string(self.title)
+        self.vocab = kw.get('vocab', None)
+
+    def getDict(self):
+        return dict(
+            title = self.title,
+            id = self.id,
+            vocab = self.vocab,
+            type = 'Vocabulary',)
