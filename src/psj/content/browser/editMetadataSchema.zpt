@@ -131,7 +131,12 @@
       <tr>
 	<td class="form-label">* Vocabulary</td>
 	<td class="form-element">
-	  <input name="vocab.vocab" value="Unnamed" />
+	  <select name="vocab.vocab">
+            <option value="">None</option>
+	    <option 
+		tal:repeat="name context/getRegisteredVocabularies"
+		tal:content="name">vocab_name</option>
+	  </select>
 	</td>
       </tr>
     </table>
