@@ -152,6 +152,26 @@ We can get a dict representation of `RelationField`s::
    'type': 'Relation'}
 
 
+Vocabulary Fields
+-----------------
+
+Vocabulary fields hold references to site wide defined vocabularies.
+
+We create a vocabulary field like this::
+
+  >>> from psj.content.metadata import VocabularyField
+  >>> field = VocabularyField('title')
+  >>> field.title
+  u'title'
+
+Vocabularies have a `vocab` attribute, which holds the name of a
+vocabulary. We can get a dict representation of `VocabularyField`s::
+
+  >>> pp(field.getDict(), width=20)
+  {'id': 'title',
+   'title': u'title',
+   'type': 'Vocabulary',
+   'vocab': None}
 
 
 
