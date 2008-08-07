@@ -29,6 +29,7 @@ from persistent.mapping import PersistentMapping
 from Products.CMFCore.utils import registerToolInterface, UniqueObject
 from Products.CMFCore.ActionProviderBase import ActionProviderBase
 from Products.CMFCore.permissions import ManagePortal
+from Products.CMFCore.utils import getToolByName
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 
@@ -282,6 +283,9 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
                                            new_fields, REQUEST=request)
         return result
 
+    def getRegisteredVocabularies(self):
+        vocab_tool = getToolByName(self, 'portal_vocabularies')
+        return vocab_tool.keys()
 
 InitializeClass(MetadataSchemaRegistry)
 registerToolInterface('metadataschemas_registry', IMetadataSchemaRegistryTool)
