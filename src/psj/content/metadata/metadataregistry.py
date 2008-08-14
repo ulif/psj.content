@@ -184,12 +184,14 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
         return
 
     security.declareProtected(ManagePortal, 'manage_addMetadataSchema')
-    def manage_addMetadataSchema(self, id, objecttype, fields=(),
+    def manage_addMetadataSchema(self, id, objecttypes, fields=(),
                                  REQUEST=None):
         try:
             mset = MetadataSet(id, fields)
             self._schemas[mset.id] = mset
-            self.setContentTypesForSchema([objecttype,], mset.id)
+            if isinstance(objecttypes, basestring):
+                objecttypes = [objecttypes]
+            self.setContentTypesForSchema(objecttypes, mset.id)
         except:
             pass
         if REQUEST is not None:
@@ -220,31 +222,39 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
     def process_addForm(self, request, fields=[]):
         result = ()
         fields = request.form.get('fields', fields)
-        objecttype = request.form.get('objecttype', None)
+        objecttypes = request.form.get('objecttype', [])
+        if isinstance(objecttypes, basestring):
+            objecttypes = [objecttypes]
         for field in fields:
             result += (field,)
+        result = dict(fields=result, objecttypes=objecttypes)
         if request.get('add_text_line', None) is not None:
-            result += ((dict(type='TextLine',
-                            title=request.get('text_line.title', 'unnamed'),
-                            default=request.get('text_line.default', None))),)
+            result['fields'] += ((
+                dict(type='TextLine',
+                     title=request.get('text_line.title', 'unnamed'),
+                     default=request.get('text_line.default', None))),)
         if request.get('add_boolean', None) is not None:
-            result += ((dict(type='Boolean',
-                            title=request.get('boolean.title', 'unnamed'),
-                            default=request.get('boolean.default', False))),)
+            result['fields'] += ((
+                dict(type='Boolean',
+                     title=request.get('boolean.title', 'unnamed'),
+                     default=request.get('boolean.default', False))),)
         if request.get('add_relation', None) is not None:
-            result += ((dict(type='Relation',
-                            title=request.get('relation.title', 'unnamed'),
-                            )),)
+            result['fields'] += ((
+                dict(type='Relation',
+                     title=request.get('relation.title', 'unnamed'),
+                     )),)
         if request.get('add_vocab', None) is not None:
-            result += ((dict(type='Vocabulary',
-                             title=request.get('vocab.title', 'unnamed'),
-                             vocab=request.get('vocab.vocab', None)
-                            )),)
+            result['fields'] += ((
+                dict(type='Vocabulary',
+                     title=request.get('vocab.title', 'unnamed'),
+                     vocab=request.get('vocab.vocab', None)
+                     )),)
         if request.get('add_schema', None) is not None:
-            new_result = self.formDictToDict(result)
+            new_result = self.formDictToDict(result['fields'])
             name = request.get('id', 'Untitled Schema')
-            self.manage_addMetadataSchema(name, objecttype, new_result,
+            self.manage_addMetadataSchema(name, objecttypes, new_result,
                                           REQUEST=request)
+
         return result
 
     security.declareProtected(ManagePortal, 'manage_editMetadataSchema')
@@ -270,10 +280,12 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
             # populate edit form with already defined fields...
             old_fields = [ms.get(name).getDict() for name in ms]
         old_contenttypes = self.getContentTypesForSchema(ms_id)
-        new_contenttypes = [request.form.get('objecttype', None)]
-        if not new_contenttypes:
+        new_contenttypes = request.form.get('objecttype', [])
+        if isinstance(new_contenttypes, basestring):
+            new_contenttypes = [new_contentypes]
+        if len(new_contenttypes) == 0:
             new_contenttypes = old_contenttypes
-        new_fields = self.process_addForm(request, fields=old_fields)
+        new_fields = self.process_addForm(request, fields=old_fields)['fields']
         new_name = request.form.get('name', old_name)
         result = dict(name = new_name, objecttypes = new_contenttypes,
                       fields = new_fields)
