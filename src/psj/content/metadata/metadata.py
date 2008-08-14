@@ -128,7 +128,10 @@ class TextLineField(object):
         self.id = get_id_string(self.title)
         default = kw.get('default', None)
         if default is not None:
-            self.default = unicode(default)
+            if isinstance(default, unicode):
+                self.default = default
+            else:
+                self.default = unicode(default, 'utf-8')
         return
 
     def getDict(self):
