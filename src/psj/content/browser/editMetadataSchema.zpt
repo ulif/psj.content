@@ -26,9 +26,9 @@
 
       </td>
       </tr><tr>
-      <td class="form-label">* Objecttype</td>
+      <td class="form-label">* Objecttypes</td>
       <td class="form-element">
-	<select name="objecttype">
+	<select name="objecttype" multiple="multiple">
 	  <option tal:repeat="ct_id context/listContentTypes"
 		  tal:attributes="value ct_id; selected python:ct_id in data2['objecttypes'] and 'selected';"
 		  tal:content="python:context.lookupContentTypeTitle(ct_id)">
