@@ -2,9 +2,9 @@
 <object name="PSJ Review"
    meta_type="Factory-based Type Information with dynamic views"
    i18n:domain="psj.content" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
- <property name="title" i18n:translate="">PSJ Retro Article</property>
+ <property name="title" i18n:translate="">PSJ Review</property>
  <property name="description"
-     i18n:translate="">A Plone Scientific Portal Retro Article</property>
+     i18n:translate="">A Plone Scientific Portal Review</property>
 <!--
  <property name="content_icon">++resource++cinema_icon.gif</property>
 -->
