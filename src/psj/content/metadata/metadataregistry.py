@@ -256,13 +256,24 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
                      title=request.get('vocab.title', 'unnamed'),
                      vocab=request.get('vocab.vocab', None)
                      )),)
+
         if request.get('add_schema', None) is not None:
             new_result = self.formDictToDict(result['fields'])
             name = request.get('id', 'Untitled Schema')
             self.manage_addMetadataSchema(name, objecttypes, new_result,
                                           REQUEST=request)
-
         return result
+
+    def normalize_field(self, field):
+        """Make sure, all fields have all attributes.
+
+        Even those, that are used by other fields only. Otherwise we
+        cannot use 'records' in the HTML form."""
+        
+        for attr in ['vocab', 'default']:
+            if not attr in field.keys():
+                field[attr] = None
+        return field
 
     security.declareProtected(ManagePortal, 'manage_editMetadataSchema')
     def manage_editMetadataSchema(self, ms_id, name, objecttypes, fields=(),
