@@ -89,7 +89,7 @@ class MetadataSet(PersistentMapping):
 class BaseField(object):
 
     def __init__(self, title):
-        self.title = unicode(title)
+        self.title = unicode(title, 'utf-8')
         self.id = get_id_string(self.title)
         return
 
@@ -98,7 +98,7 @@ class BooleanField(object):
     default = False
 
     def __init__(self, title, **kw):
-        self.title = unicode(title)
+        self.title = unicode(title, 'utf-8')
         self.id = get_id_string(self.title)
         self.default = kw.get('default', False)
         return
@@ -115,7 +115,7 @@ class TextLineField(object):
     default = None
 
     def __init__(self, title, **kw):
-        self.title = unicode(title)
+        self.title = unicode(title, 'utf-8')
         self.id = get_id_string(self.title)
         default = kw.get('default', None)
         if default is not None:
@@ -132,7 +132,7 @@ class TextLineField(object):
 class RelationField(BaseField):
 
     def __init__(self, title, **kw):
-        self.title = unicode(title)
+        self.title = unicode(title, 'utf-8')
         self.id = get_id_string(self.title)
 
     def getDict(self):
@@ -145,7 +145,7 @@ class RelationField(BaseField):
 class VocabularyField(BaseField):
 
     def __init__(self, title, **kw):
-        self.title = unicode(title)
+        self.title = unicode(title, 'utf-8')
         self.id = get_id_string(self.title)
         self.vocab = kw.get('vocab', None)
 

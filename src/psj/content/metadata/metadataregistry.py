@@ -193,6 +193,7 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
                 objecttypes = [objecttypes]
             self.setContentTypesForSchema(objecttypes, mset.id)
         except:
+            # XXX Generate a log message here.
             pass
         if REQUEST is not None:
             REQUEST['RESPONSE'].redirect(self.absolute_url()+'/manage_main')
