@@ -27,4 +27,5 @@ from ulif.plone.testsetup import SimplePloneTestCase
 # The replacement for (normally) two files of code with many, many
 # lines:
 from ulif.plone.testsetup import register_all_plone_tests
-test_suite = register_all_plone_tests('psj.content')
+test_suite = register_all_plone_tests(
+    'psj.content', extra_packages=['Products.ATVocabularyManager'])
