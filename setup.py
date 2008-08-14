@@ -43,6 +43,7 @@ setup(
         'ulif.plone.testsetup',
         # -*- Extra requirements: -*-
         'archetypes.schemaextender',
+        'Products.ATVocabularyManager',
         ],
     entry_points="""
       # -*- Entry points: -*-
