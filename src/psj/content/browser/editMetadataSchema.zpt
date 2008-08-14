@@ -61,7 +61,7 @@
 	    </td>
 
 	    <input type="hidden" 
-		   tal:repeat="attr python:field.keys()"
+		   tal:repeat="attr python:context.normalize_field(field)"
 		   tal:attributes="name python:'fields.%s:records' % attr;
 				   value python: field[attr]" />
 	  </tr>
