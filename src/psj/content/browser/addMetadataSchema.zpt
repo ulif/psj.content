@@ -25,11 +25,11 @@
       </td>
       </tr><tr>
 
-      <td class="form-label">* Objecttype</td>
+      <td class="form-label">* Objecttypes</td>
       <td class="form-element">
-	<select name="objecttype">
+	<select name="objecttype" multiple="multiple">
 	  <option tal:repeat="ct_id context/listContentTypes"
-		  tal:attributes="value ct_id">
+		  tal:attributes="value ct_id; selected python:ct_id in data['objecttypes'] and 'selected';">
 	    <span 
 		tal:define="ct python:context.lookupContentType(ct_id)"
 		tal:replace="ct/title">Object Type</span>
@@ -43,16 +43,16 @@
       <td class="form-label">Fields
       </td>
       <td class="form-element">
-	<div tal:condition="not: python:len(data)">
+	<div tal:condition="not: python:len(data['fields'])">
 	  No fields defined yet.
 	</div>
-	<table tal:condition="python:len(data)">
+	<table tal:condition="python:len(data['fields'])">
 	  <tr>
 	    <td></td>
 	    <td class="form-label">name</td>
 	    <td class="form-label">type</td>
 	  </tr>
-	  <tr tal:repeat="field data">
+	  <tr tal:repeat="field data/fields">
 	    <td class="form-element">
 	      <input type="checkbox" name="del_field" />
 	    </td>
