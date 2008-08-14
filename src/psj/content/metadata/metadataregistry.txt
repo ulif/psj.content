@@ -50,7 +50,7 @@ Adding schemata
 We can add a new schema::
 
   >>> reg.manage_addMetadataSchema(
-  ...   'myschema', objecttype='psjissue',
+  ...   'myschema', objecttypes='psjissue',
   ...   fields=(dict(title='title',
   ...                type='TextLine',
   ...                default=None),
