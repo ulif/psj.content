@@ -51,7 +51,8 @@
 	  </tr>
 	  <tr tal:repeat="field data2/fields">
 	    <td class="form-element">
-	      <input type="checkbox" name="del_field" />
+	      <input type="checkbox" name="del_field"
+		     tal:attributes="name python:'del' + str(repeat['field'].index)" />
 	    </td>
 	    <td class="form-element">
 	      <span tal:content="field/title">Fieldname</span>
@@ -64,6 +65,14 @@
 		   tal:attributes="name python:'fields.%s:records' % attr;
 				   value python: field[attr]" />
 	  </tr>
+	  <tr>
+	    <td></td>
+	    <td colspan="2">
+	      <input type="submit" name="del_fields" 
+		     value="Delete selected fields"/>
+	    </td>
+	  </tr>
+
 	</table>
       </td>
     </tr>

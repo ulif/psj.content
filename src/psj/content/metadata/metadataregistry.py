@@ -223,10 +223,16 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
     def process_addForm(self, request, fields=[]):
         result = ()
         fields = request.form.get('fields', fields)
+        del_fields = request.get('del_fields', None)
         objecttypes = request.form.get('objecttype', [])
         if isinstance(objecttypes, basestring):
             objecttypes = [objecttypes]
+        num = -1
         for field in fields:
+            num += 1
+            if del_fields is not None:
+                if request.form.get('del' + str(num), None) is not None:
+                    continue
             result += (field,)
         result = dict(fields=result, objecttypes=objecttypes)
         if request.get('add_text_line', None) is not None:
@@ -283,7 +289,7 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
         old_contenttypes = self.getContentTypesForSchema(ms_id)
         new_contenttypes = request.form.get('objecttype', [])
         if isinstance(new_contenttypes, basestring):
-            new_contenttypes = [new_contentypes]
+            new_contenttypes = [new_contenttypes]
         if len(new_contenttypes) == 0:
             new_contenttypes = old_contenttypes
         new_fields = self.process_addForm(request, fields=old_fields)['fields']
