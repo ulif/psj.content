@@ -504,10 +504,10 @@ tab::
           name="md_is_important:boolean"
           id="md_is_important" />
    ...
-   <input id="md_reviewed_book_label" size="50"
-          type="text"
-          value="No reference set. Click the browse button to select."
-          readonly="readonly" />
+   <div style="clear: both">
+       <input type="button" class="searchButton"
+              value="Add..."
+              onclick="javascript:...,'md_reviewed_book', '/plone/my-first-document', 'md_reviewed_book')" />
    ...
 
    >>> browser.getControl('Save').click()
