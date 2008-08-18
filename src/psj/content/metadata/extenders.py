@@ -85,7 +85,7 @@ class PageExtender(object):
                 new_fields.append(PSJRelationField(
                     str('md_'+key),
                     relationship = 'Rel1',
-                    multivalued = 1,
+                    multiValued = 1,
                     schemata='metadata',
                     isMetadata=1,
                     allowed_types=PSJ_TYPES,
