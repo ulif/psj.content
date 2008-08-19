@@ -36,6 +36,7 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zope.interface import implements
 
 from psj.content.interfaces import IMetadataSchemaRegistryTool
+from psj.content.interfaces import PSJ_TYPES, MEMBER_TYPES
 from psj.content.metadata import MetadataSet
 
 _www = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'browser')
@@ -67,6 +68,8 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
     manage_main = PageTemplateFile('listMetadataSchemas', _www)
     manage_editMetadataSchemaForm = PageTemplateFile('editMetadataSchema',
                                                      _www)
+
+    relation_targets = MEMBER_TYPES + PSJ_TYPES
 
 
     def __init__(self,):
@@ -246,9 +249,17 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
                      title=request.get('boolean.title', 'unnamed'),
                      default=request.get('boolean.default', False))),)
         if request.get('add_relation', None) is not None:
+            allowed = tuple(request.get('relation.allowed',
+                                        PSJ_TYPES+MEMBER_TYPES))
+            if 'All' in allowed:
+                allowed = PSJ_TYPES + MEMBER_TYPES
+            if len(allowed) == 0:
+                allowed = PSJ_TYPES + MEMBER_TYPES
+            allowed = ','.join(allowed)
             result['fields'] += ((
                 dict(type='Relation',
                      title=request.get('relation.title', 'unnamed'),
+                     allowed=allowed,
                      )),)
         if request.get('add_vocab', None) is not None:
             result['fields'] += ((
@@ -270,7 +281,7 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
         Even those, that are used by other fields only. Otherwise we
         cannot use 'records' in the HTML form."""
         
-        for attr in ['vocab', 'default']:
+        for attr in ['vocab', 'allowed', 'default']:
             if not attr in field.keys():
                 field[attr] = None
         return field
