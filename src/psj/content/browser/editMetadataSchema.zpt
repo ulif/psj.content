@@ -124,6 +124,18 @@
 	  <input name="relation.title" value="Unnamed" />
 	</td>
       </tr>
+      <tr>
+	<td class="form-label">
+	  * Referencable Types
+	  <div>&nbsp;&nbsp;&nbsp;(None means all types)</div>
+	</td>
+	<td class="form-element">
+	  <select name="relation.allowed:list" multiple="multiple">
+	    <option tal:repeat="opt context/relation_targets"
+		    tal:content="opt">Relation Type</option>
+	  </select>
+	</td>
+      </tr>
     </table>
     <input type="submit" name="add_relation" value="Add link field" />
   </fieldset>
