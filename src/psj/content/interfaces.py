@@ -25,6 +25,11 @@
 from zope.interface import Interface
 from zope import schema
 
+PSJ_TYPES = ('PSJ Document', 'PSJ Volume', 'PSJ Issue',
+             'PSJ Magazine', 'PSJ Book')
+
+MEMBER_TYPES=('FSDPerson',)
+
 #from psj.content import PSJContentMessageFactory as _
 
 class IDocument(Interface):
