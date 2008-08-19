@@ -39,12 +39,7 @@ from psj.content.metadata.metadata import TextLineField as LineEntry
 from psj.content.metadata.metadata import BooleanField as BoolEntry
 from psj.content.metadata.metadata import RelationField as RelationEntry
 from psj.content.metadata.metadata import VocabularyField as VocabularyEntry
-from psj.content.interfaces import IBook
-
-PSJ_TYPES = ('PSJ Document', 'PSJ Volume', 'PSJ Issue',
-             'PSJ Magazine', 'PSJ Book')
-
-MEMBER_TYPES=('FSDPerson',)
+from psj.content.interfaces import IBook, PSJ_TYPES, MEMBER_TYPES
 
 class PageExtender(object):
     adapts(folder.ATFolder)
@@ -90,11 +85,11 @@ class PageExtender(object):
                     multiValued = 1,
                     schemata='metadata',
                     isMetadata=1,
-                    allowed_types=PSJ_TYPES+MEMBER_TYPES,
+                    allowed_types = entry.allowed,
                     addable = True,
                     widget = ReferenceBrowserWidget(
                         destination = ".",
-                        destination_types = PSJ_TYPES+MEMBER_TYPES,
+                        destination_types = entry.allowed,
                         label = entry.title,
                     ),
                     ))
