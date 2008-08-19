@@ -133,21 +133,32 @@ Relation Fields
 ---------------
 
 Relation fields represent someway links to other objects. They have
-only a title attribute.
+a title attribute and an `allowed` attribute to tell the types of
+allowed references. The latter can be a tuple of strings or a string
+with commas.
 
 We create a relation field like this::
 
   >>> from psj.content.metadata import RelationField
-  >>> field = RelationField('title')
+  >>> field = RelationField('title', allowed=('Type1', 'Type2'))
 
   >>> field.title
   u'title'
 
+  >>> field.allowed
+  ('Type1', 'Type2')
+
+Now we pass the list of types as comma separated string list::
+
+  >>> field = RelationField('title', allowed="Type1,Type2")
+  >>> field.allowed
+  ('Type1', 'Type2')
 
 We can get a dict representation of `RelationField`s::
 
   >>> pp(field.getDict(), width=20)
-  {'id': 'title',
+  {'allowed': 'Type1,Type2',
+   'id': 'title',
    'title': u'title',
    'type': 'Relation'}
 
