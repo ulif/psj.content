@@ -143,18 +143,22 @@ class TextLineField(object):
     
 class RelationField(BaseField):
 
-    def __init__(self, title, **kw):
+    def __init__(self, title, allowed=[], **kw):
         if isinstance(title, unicode):
             self.title = title
         else:
             self.title = unicode(title, 'utf-8')
         self.id = get_id_string(self.title)
+        if isinstance(allowed, basestring):
+            allowed = tuple(allowed.split(','))
+        self.allowed = allowed
 
     def getDict(self):
         return dict(
             title = self.title,
             id = self.id,
-            type = 'Relation',)
+            type = 'Relation',
+            allowed = ','.join(self.allowed),)
 
 
 class VocabularyField(BaseField):
