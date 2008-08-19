@@ -44,6 +44,8 @@ setup(
         # -*- Extra requirements: -*-
         'archetypes.schemaextender',
         'Products.ATVocabularyManager',
+        'Products.membrane',
+        'Products.FacultyStaffDirectory',
         ],
     entry_points="""
       # -*- Entry points: -*-

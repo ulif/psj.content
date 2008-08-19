@@ -44,6 +44,8 @@ from psj.content.interfaces import IBook
 PSJ_TYPES = ('PSJ Document', 'PSJ Volume', 'PSJ Issue',
              'PSJ Magazine', 'PSJ Book')
 
+MEMBER_TYPES=('FSDPerson',)
+
 class PageExtender(object):
     adapts(folder.ATFolder)
     implements(ISchemaExtender)
@@ -88,11 +90,11 @@ class PageExtender(object):
                     multiValued = 1,
                     schemata='metadata',
                     isMetadata=1,
-                    allowed_types=PSJ_TYPES,
+                    allowed_types=PSJ_TYPES+MEMBER_TYPES,
                     addable = True,
                     widget = ReferenceBrowserWidget(
                         destination = ".",
-                        destination_types = PSJ_TYPES,
+                        destination_types = PSJ_TYPES+MEMBER_TYPES,
                         label = entry.title,
                     ),
                     ))
