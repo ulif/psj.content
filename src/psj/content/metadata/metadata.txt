@@ -38,9 +38,14 @@ Currently, the following field types are supported:
 
 * TextLineField
 
+* TextField
+
 * BooleanField
 
 * RelationField
+
+* VocabularyField
+
 
 TextLine fields
 ---------------
@@ -84,6 +89,51 @@ We can get a dict representation of `TextFields`::
    'title': u'title',
    'type': 'TextLine'}
 
+
+Text fields
+-----------
+
+Text fields are in fact textline fields. The difference is, that they
+are rendered differently, as textareas instead of simple text lines.
+
+A TextField holds a string of unicode text, includung line breaks
+etc. It has a title and a default value::
+
+  >>> from psj.content.metadata import TextField
+  >>> field = TextField('title')
+
+TextFields provide a default value to set, which is `None` by
+default::
+
+  >>> field.default is None
+  True
+
+We can set a default by passing it to the constructor::
+
+  >>> field = TextField('title', default='foo')
+  >>> field.title
+  u'title'
+
+  >>> field.default
+  u'foo'
+
+Of couse we can also pass unicode values for title and default::
+
+  >>> field = TextField(u'title', default=u'bar')
+  >>> field.title
+  u'title'
+
+  >>> field.default
+  u'bar'
+
+We can get a dict representation of `TextFields`::
+
+
+  >>> pp(field.getDict(), width=20)
+  {'default': u'bar',
+   'id': 'title',
+   'title': u'title',
+   'type': 'Text'}
 
 
 Boolean fields
