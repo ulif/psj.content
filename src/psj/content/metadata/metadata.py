@@ -47,6 +47,8 @@ class MetadataSet(PersistentMapping):
             item = None
             if ftype == 'TextLine':
                 item = TextLineField(ftitle, **field)
+            if ftype == 'Text':
+                item = TextField(ftitle, **field)
             if ftype == 'Boolean':
                 item = BooleanField(ftitle, **field)
             if ftype == 'Relation':
@@ -140,7 +142,18 @@ class TextLineField(object):
             id = self.id,
             default = self.default,
             type = 'TextLine',)
+
+
+class TextField(TextLineField):
     
+    def getDict(self):
+        return dict(
+            title = self.title,
+            id = self.id,
+            default = self.default,
+            type = 'Text',)
+
+
 class RelationField(BaseField):
 
     def __init__(self, title, allowed=[], **kw):
