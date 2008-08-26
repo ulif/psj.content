@@ -243,6 +243,11 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
                 dict(type='TextLine',
                      title=request.get('text_line.title', 'unnamed'),
                      default=request.get('text_line.default', None))),)
+        if request.get('add_text', None) is not None:
+            result['fields'] += ((
+                dict(type='Text',
+                     title=request.get('text.title', 'unnamed'),
+                     default=request.get('text.default', None))),)
         if request.get('add_boolean', None) is not None:
             result['fields'] += ((
                 dict(type='Boolean',
