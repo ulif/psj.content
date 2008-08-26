@@ -32,6 +32,9 @@ class PSJBooleanField(ExtensionField, BooleanField):
 class PSJTextLineField(ExtensionField, TextField):
     """A text line field."""
 
+class PSJTextField(ExtensionField, PSJTextLineField):
+    """A text field."""
+
 class PSJRelationField(ExtensionField, ReferenceField):
     """A relation field."""
     
