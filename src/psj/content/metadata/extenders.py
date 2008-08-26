@@ -26,7 +26,8 @@ from zope.component import adapts
 from zope.interface import implements
 from archetypes.schemaextender.interfaces import ISchemaExtender
 from Products.Archetypes.public import (StringWidget, BooleanWidget,
-                                        ReferenceWidget, SelectionWidget)
+                                        ReferenceWidget, SelectionWidget,
+                                        TextAreaWidget, )
 from Products.ATReferenceBrowserWidget.ATReferenceBrowserWidget import (
     ReferenceBrowserWidget)
 from Products.ATContentTypes.content.document import ATDocument
@@ -34,8 +35,10 @@ from Products.ATContentTypes.content import folder
 from Products.ATVocabularyManager import NamedVocabulary
 from Products.CMFCore.utils import getToolByName
 from psj.content.metadata.fields import (PSJTextLineField, PSJBooleanField,
-                                         PSJRelationField, PSJLinesField)
+                                         PSJRelationField, PSJLinesField,
+                                         PSJTextField)
 from psj.content.metadata.metadata import TextLineField as LineEntry
+from psj.content.metadata.metadata import TextField as TextEntry
 from psj.content.metadata.metadata import BooleanField as BoolEntry
 from psj.content.metadata.metadata import RelationField as RelationEntry
 from psj.content.metadata.metadata import VocabularyField as VocabularyEntry
@@ -65,20 +68,26 @@ class PageExtender(object):
         new_fields = []
         for key in md_schema:
             entry = md_schema.get(key)
-            if isinstance(entry, LineEntry):
+            if isinstance(entry, TextEntry):
+                new_fields.append(PSJTextLineField(
+                    str('md_' + key),
+                    schemata='metadata',
+                    widget=TextAreaWidget(label=entry.title)
+                    ))
+            elif isinstance(entry, LineEntry):
                 new_fields.append(PSJTextLineField(
                     str('md_' + key),
                     schemata='metadata',
                     widget=StringWidget(label=entry.title)
                     ))
-            if isinstance(entry, BoolEntry):
+            elif isinstance(entry, BoolEntry):
                 new_fields.append(PSJBooleanField(
                     str('md_' + key),
                     schemata='metadata',
                     widget=BooleanWidget(label=entry.title),
                     default = entry.default,
                     ))
-            if isinstance(entry, RelationEntry):
+            elif isinstance(entry, RelationEntry):
                 new_fields.append(PSJRelationField(
                     str('md_'+key),
                     relationship = 'Rel1',
@@ -93,7 +102,7 @@ class PageExtender(object):
                         label = entry.title,
                     ),
                     ))
-            if isinstance(entry, VocabularyEntry):
+            elif isinstance(entry, VocabularyEntry):
                 if entry.vocab is None:
                     continue
                 new_fields.append(PSJLinesField(
