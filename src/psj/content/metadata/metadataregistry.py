@@ -270,7 +270,8 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
             result['fields'] += ((
                 dict(type='Vocabulary',
                      title=request.get('vocab.title', 'unnamed'),
-                     vocab=request.get('vocab.vocab', None)
+                     vocab=request.get('vocab.vocab', None),
+                     multi=request.get('vocab.multi', False),
                      )),)
 
         if request.get('add_schema', None) is not None:
@@ -286,7 +287,7 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
         Even those, that are used by other fields only. Otherwise we
         cannot use 'records' in the HTML form."""
         
-        for attr in ['vocab', 'allowed', 'default']:
+        for attr in ['vocab', 'allowed', 'default', 'multi']:
             if not attr in field.keys():
                 field[attr] = None
         return field
