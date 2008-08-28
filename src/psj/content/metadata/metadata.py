@@ -183,10 +183,17 @@ class VocabularyField(BaseField):
             self.title = unicode(title, 'utf-8')
         self.id = get_id_string(self.title)
         self.vocab = kw.get('vocab', None)
+        self.multi = kw.get('multi', False)
+        if isinstance(self.multi, basestring):
+            if self.multi == 'True':
+                self.multi = True
+            else:
+                self.multi = False
 
     def getDict(self):
         return dict(
             title = self.title,
             id = self.id,
             vocab = self.vocab,
+            multi = self.multi,
             type = 'Vocabulary',)
