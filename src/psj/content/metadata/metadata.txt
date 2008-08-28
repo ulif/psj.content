@@ -230,10 +230,32 @@ vocabulary. We can get a dict representation of `VocabularyField`s::
 
   >>> pp(field.getDict(), width=20)
   {'id': 'title',
+   'multi': False,
    'title': u'title',
    'type': 'Vocabulary',
    'vocab': None}
 
+Furthermore vocabularies can offer to select several values at
+once. Setting the `multi` attribute to `True` we request that::
+
+  >>> field = VocabularyField('title', multi=True)
+  >>> field.multi
+  True
+
+If we pass a string for `multi` it will be converted to a boolean
+value::
+
+  >>> field = VocabularyField('title', multi='True')
+  >>> field.multi
+  True
+
+  >>> field = VocabularyField('title', multi='False')
+  >>> field.multi
+  False
+
+  >>> field = VocabularyField('title', multi='blah')
+  >>> field.multi
+  False
 
 
 MetadataSets
