@@ -27,7 +27,7 @@ from zope.interface import implements
 from archetypes.schemaextender.interfaces import ISchemaExtender
 from Products.Archetypes.public import (StringWidget, BooleanWidget,
                                         ReferenceWidget, SelectionWidget,
-                                        TextAreaWidget, )
+                                        TextAreaWidget, MultiSelectionWidget,)
 from Products.ATReferenceBrowserWidget.ATReferenceBrowserWidget import (
     ReferenceBrowserWidget)
 from Products.ATContentTypes.content.document import ATDocument
@@ -105,14 +105,20 @@ class PageExtender(object):
             elif isinstance(entry, VocabularyEntry):
                 if entry.vocab is None:
                     continue
+                if entry.multi is True:
+                    widget = MultiSelectionWidget
+                else:
+                    widget = SelectionWidget
+
                 new_fields.append(PSJLinesField(
                     str('md_'+key),
                     schemata = 'metadata',
-                    widget = SelectionWidget(
+                    widget = widget(
                         label=entry.title,
                         ),
                     vocabulary = NamedVocabulary(entry.vocab)
                     ))
+
         return new_fields
 
 class BookExtender(PageExtender):
