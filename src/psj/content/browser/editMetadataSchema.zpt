@@ -150,6 +150,15 @@
 	</td>
       </tr>
       <tr>
+	<td class="form-label">
+	  Allow Multiple Select
+	  <div>&nbsp;&nbsp;&nbsp;(Can users select multiple values?)</div>
+	</td>
+	<td class="form-element">
+	  <input type="checkbox" name="vocab.multi:boolean" value="0" />
+	</td>
+      </tr>
+      <tr>
 	<td class="form-label">* Vocabulary</td>
 	<td class="form-element">
 	  <select name="vocab.vocab">
