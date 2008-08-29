@@ -92,23 +92,35 @@ class MetadataSet(PersistentMapping):
 
 class BaseField(object):
 
-    def __init__(self, title):
+    description = u''
+
+    def __init__(self, title, description=u''):
         if isinstance(title, unicode):
             self.title = title
         else:
             self.title = unicode(title, 'utf-8')
+        if isinstance(description, unicode):
+            self.description = description
+        else:
+            self.description = unicode(description, 'utf-8')
         self.id = get_id_string(self.title)
         return
 
 class BooleanField(object):
 
     default = False
+    description = u''
 
-    def __init__(self, title, **kw):
+    def __init__(self, title, description=u'', **kw):
         if isinstance(title, unicode):
             self.title = title
         else:
             self.title = unicode(title, 'utf-8')
+        if isinstance(description, unicode):
+            self.description = description
+        else:
+            self.description = unicode(description, 'utf-8')
+
         self.id = get_id_string(self.title)
         self.default = kw.get('default', False)
         return
@@ -116,6 +128,7 @@ class BooleanField(object):
     def getDict(self):
         return dict(
             title = self.title,
+            description = self.description,
             id = self.id,
             default = self.default,
             type = 'Boolean',)
@@ -123,12 +136,17 @@ class BooleanField(object):
 class TextLineField(object):
 
     default = None
+    description = u''
 
-    def __init__(self, title, **kw):
+    def __init__(self, title, description=u'', **kw):
         if isinstance(title, unicode):
             self.title = title
         else:
             self.title = unicode(title, 'utf-8')
+        if isinstance(description, unicode):
+            self.description = description
+        else:
+            self.description = unicode(description, 'utf-8')
         self.id = get_id_string(self.title)
         default = kw.get('default', None)
         if default is not None:
@@ -141,6 +159,7 @@ class TextLineField(object):
     def getDict(self):
         return dict(
             title = self.title,
+            description = self.description,
             id = self.id,
             default = self.default,
             type = 'TextLine',)
@@ -151,6 +170,7 @@ class TextField(TextLineField):
     def getDict(self):
         return dict(
             title = self.title,
+            description = self.description,
             id = self.id,
             default = self.default,
             type = 'Text',)
@@ -158,11 +178,17 @@ class TextField(TextLineField):
 
 class RelationField(BaseField):
 
-    def __init__(self, title, allowed=[], **kw):
+    description = u''
+
+    def __init__(self, title, description=u'', allowed=[], **kw):
         if isinstance(title, unicode):
             self.title = title
         else:
             self.title = unicode(title, 'utf-8')
+        if isinstance(description, unicode):
+            self.description = description
+        else:
+            self.description = unicode(description, 'utf-8')
         self.id = get_id_string(self.title)
         if isinstance(allowed, basestring):
             allowed = tuple(allowed.split(','))
@@ -171,6 +197,7 @@ class RelationField(BaseField):
     def getDict(self):
         return dict(
             title = self.title,
+            description = self.description,
             id = self.id,
             type = 'Relation',
             allowed = ','.join(self.allowed),)
@@ -178,11 +205,15 @@ class RelationField(BaseField):
 
 class VocabularyField(BaseField):
 
-    def __init__(self, title, **kw):
+    def __init__(self, title, description=u'', **kw):
         if isinstance(title, unicode):
             self.title = title
         else:
             self.title = unicode(title, 'utf-8')
+        if isinstance(description, unicode):
+            self.description = description
+        else:
+            self.description = unicode(description, 'utf-8')
         self.id = get_id_string(self.title)
         self.vocab = kw.get('vocab', None)
         self.multi = kw.get('multi', False)
@@ -195,6 +226,7 @@ class VocabularyField(BaseField):
     def getDict(self):
         return dict(
             title = self.title,
+            description = self.description,
             id = self.id,
             vocab = self.vocab,
             multi = self.multi,
@@ -203,12 +235,17 @@ class VocabularyField(BaseField):
 class LinesField(BaseField):
     
     default = []
+    description = u''
     
-    def __init__(self, title, **kw):
+    def __init__(self, title, description=u'', **kw):
         if isinstance(title, unicode):
             self.title = title
         else:
             self.title = unicode(title, 'utf-8')
+        if isinstance(description, unicode):
+            self.description = description
+        else:
+            self.description = unicode(description, 'utf-8')
         self.id = get_id_string(self.title)
         default = kw.get('default', None)
         if default is not None:
@@ -221,6 +258,7 @@ class LinesField(BaseField):
     def getDict(self):
         return dict(
             title = self.title,
-            default = self.default,
+            description = self.description,
+            default = tuple(self.default),
             id = self.id,
             type = 'Lines',)
