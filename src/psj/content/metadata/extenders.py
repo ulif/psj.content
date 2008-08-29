@@ -74,19 +74,25 @@ class PageExtender(object):
                 new_fields.append(PSJTextLineField(
                     str('md_' + key),
                     schemata='metadata',
-                    widget=TextAreaWidget(label=entry.title)
+                    widget=TextAreaWidget(
+                        label=entry.title,
+                        description=entry.description)
                     ))
             elif isinstance(entry, LineEntry):
                 new_fields.append(PSJTextLineField(
                     str('md_' + key),
                     schemata='metadata',
-                    widget=StringWidget(label=entry.title)
+                    widget=StringWidget(
+                        label=entry.title,
+                        description=entry.description)
                     ))
             elif isinstance(entry, BoolEntry):
                 new_fields.append(PSJBooleanField(
                     str('md_' + key),
                     schemata='metadata',
-                    widget=BooleanWidget(label=entry.title),
+                    widget=BooleanWidget(
+                        label=entry.title,
+                        description=entry.description),
                     default = entry.default,
                     ))
             elif isinstance(entry, RelationEntry):
@@ -102,16 +108,22 @@ class PageExtender(object):
                         destination = ".",
                         destination_types = entry.allowed,
                         label = entry.title,
+                        description = entry.description,
                     ),
                     ))
             elif isinstance(entry, LinesEntry):
+                if isinstance(entry.default, list):
+                    default = tuple(entry.default)
+                else:
+                    default = entry.default
                 new_fields.append(PSJLinesField(
                     str('md_'+key),
                     schemata='metadata',
                     isMetadata=1,
-                    default = tuple(entry.default),
+                    default = default,
                     widget = LinesWidget(
                         label = entry.title,
+                        description = entry.description,
                     ),
                     ))
             elif isinstance(entry, VocabularyEntry):
@@ -126,7 +138,8 @@ class PageExtender(object):
                     str('md_'+key),
                     schemata = 'metadata',
                     widget = widget(
-                        label=entry.title,
+                        label = entry.title,
+                        description = entry.description,
                         ),
                     vocabulary = NamedVocabulary(entry.vocab)
                     ))
