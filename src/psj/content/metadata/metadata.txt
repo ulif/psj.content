@@ -19,7 +19,9 @@ Metadata fields represent one entry in a metadata set. Typical fields
 are such as 'title', 'author' or 'publisher'. They do _not_ contain
 any data, i.e. they describe a field, but do not provide its content.
 
-Every metadata field must provide an identifier (the 'title').
+Every metadata field must provide an identifier (the
+'title'). Furthermore every metadata field provides a description,
+which can be displayed in forms.
 
 We create a simple field like this::
 
@@ -29,6 +31,9 @@ We create a simple field like this::
 
   >>> field.title
   u'title'
+
+  >>> field.description
+  u''
 
 Because we want to support different types of fields, which might
 require different attributes, we defined a class for every supported
@@ -70,6 +75,9 @@ We can set a default by passing it to the constructor::
   >>> field.title
   u'title'
 
+  >>> field.description
+  u''
+
   >>> field.default
   u'foo'
 
@@ -79,6 +87,9 @@ Of couse we can also pass unicode values for title and default::
   >>> field.title
   u'title'
 
+  >>> field.description
+  u''
+
   >>> field.default
   u'bar'
 
@@ -87,6 +98,7 @@ We can get a dict representation of `TextFields`::
 
   >>> pp(field.getDict(), width=20)
   {'default': u'bar',
+   'description': u'',
    'id': 'title',
    'title': u'title',
    'type': 'TextLine'}
@@ -116,6 +128,9 @@ We can set a default by passing it to the constructor::
   >>> field.title
   u'title'
 
+  >>> field.description
+  u''
+
   >>> field.default
   u'foo'
 
@@ -133,6 +148,7 @@ We can get a dict representation of `TextFields`::
 
   >>> pp(field.getDict(), width=20)
   {'default': u'bar',
+   'description': u'',
    'id': 'title',
    'title': u'title',
    'type': 'Text'}
@@ -162,14 +178,20 @@ We can set a default by passing it to the constructor::
   >>> field.title
   u'title'
 
+  >>> field.description
+  u''
+
   >>> field.default
   [u'foo']
 
 Of couse we can also pass unicode values for title and default::
 
-  >>> field = LinesField(u'title', default=u'bar')
+  >>> field = LinesField(u'title', description='baz', default=u'bar')
   >>> field.title
   u'title'
+
+  >>> field.description
+  u'baz'
 
   >>> field.default
   [u'bar']
@@ -178,7 +200,8 @@ We can get a dict representation of `LinesFields`::
 
 
   >>> pp(field.getDict(), width=20)
-  {'default': [u'bar'],
+  {'default': (u'bar',),
+   'description': u'baz',
    'id': 'title',
    'title': u'title',
    'type': 'Lines'}
@@ -222,6 +245,7 @@ We can get a dict representation of `BooleanField`s::
 
   >>> pp(field.getDict(), width=20)
   {'default': True,
+   'description': u'',
    'id': 'title',
    'title': u'title',
    'type': 'Boolean'}
@@ -243,6 +267,9 @@ We create a relation field like this::
   >>> field.title
   u'title'
 
+  >>> field.description
+  u''
+
   >>> field.allowed
   ('Type1', 'Type2')
 
@@ -256,6 +283,7 @@ We can get a dict representation of `RelationField`s::
 
   >>> pp(field.getDict(), width=20)
   {'allowed': 'Type1,Type2',
+   'description': u'',
    'id': 'title',
    'title': u'title',
    'type': 'Relation'}
@@ -273,11 +301,15 @@ We create a vocabulary field like this::
   >>> field.title
   u'title'
 
+  >>> field.description
+  u''
+
 Vocabularies have a `vocab` attribute, which holds the name of a
 vocabulary. We can get a dict representation of `VocabularyField`s::
 
   >>> pp(field.getDict(), width=20)
-  {'id': 'title',
+  {'description': u'',
+   'id': 'title',
    'multi': False,
    'title': u'title',
    'type': 'Vocabulary',
