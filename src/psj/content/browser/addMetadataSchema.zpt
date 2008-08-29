@@ -93,6 +93,11 @@
 	  <input name="text_line.title" value="Unnamed" />
 	</td>
 	</tr><tr>
+	<td class="form-label">Description</td>
+	<td class="form-element">
+	  <textarea name="text_line.descr"></textarea>
+	</td>
+	</tr><tr>
 	<td class="form-label">Default Value</td>
 	<td class="form-element">
 	  <input name="text_line.default" />
@@ -111,6 +116,11 @@
 	  <input name="boolean.title" value="Unnamed" />
 	</td>
 	</tr><tr>
+	<td class="form-label">Description</td>
+	<td class="form-element">
+	  <textarea name="boolean.descr"></textarea>
+	</td>
+	</tr><tr>
 	<td class="form-label">Default Value</td>
 	<td class="form-element">
 	  <input type="checkbox" name="boolean.default" />
@@ -127,6 +137,12 @@
 	<td class="form-label">* Field Name</td>
 	<td class="form-element">
 	  <input name="relation.title" value="Unnamed" />
+	</td>
+      </tr>
+      <tr>
+	<td class="form-label">Description</td>
+	<td class="form-element">
+	  <textarea name="relation.descr"></textarea>
 	</td>
       </tr>
       <tr>
@@ -152,6 +168,12 @@
 	<td class="form-label">* Field Name</td>
 	<td class="form-element">
 	  <input name="vocab.title" value="Unnamed" />
+	</td>
+      </tr>
+      <tr>
+	<td class="form-label">Description</td>
+	<td class="form-element">
+	  <textarea name="vocab.descr"></textarea>
 	</td>
       </tr>
       <tr>
@@ -187,10 +209,14 @@
 	  <input name="text.title" value="Unnamed" />
 	</td>
 	</tr><tr>
+	<td class="form-label">Description</td>
+	<td class="form-element">
+	  <textarea name="text.descr"></textarea>
+	</td>
+	</tr><tr>
 	<td class="form-label">Default Value</td>
 	<td class="form-element">
-	  <textarea name="text.default">
-	  </textarea>
+	  <textarea name="text.default"></textarea>
 	</td>
       </tr>
     </table>
@@ -206,10 +232,14 @@
 	  <input name="lines.title" value="Unnamed" />
 	</td>
 	</tr><tr>
+	<td class="form-label">Description</td>
+	<td class="form-element">
+	  <textarea name="lines.descr"></textarea>
+	</td>
+	</tr><tr>
 	<td class="form-label">Default Value</td>
 	<td class="form-element">
-	  <textarea name="lines.default">
-	  </textarea>
+	  <textarea name="lines.default"></textarea>
 	</td>
       </tr>
     </table>
