@@ -242,21 +242,25 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
             result['fields'] += ((
                 dict(type='TextLine',
                      title=request.get('text_line.title', 'unnamed'),
+                     description=request.get('text_line.descr', u''),
                      default=request.get('text_line.default', None))),)
         if request.get('add_text', None) is not None:
             result['fields'] += ((
                 dict(type='Text',
                      title=request.get('text.title', 'unnamed'),
+                     description=request.get('text.descr', u''),
                      default=request.get('text.default', None))),)
         if request.get('add_lines', None) is not None:
             result['fields'] += ((
                 dict(type='Lines',
                      title=request.get('lines.title', 'unnamed'),
+                     description=request.get('lines.descr', u''),
                      default=request.get('lines.default', None))),)
         if request.get('add_boolean', None) is not None:
             result['fields'] += ((
                 dict(type='Boolean',
                      title=request.get('boolean.title', 'unnamed'),
+                     description=request.get('boolean.descr', u''),
                      default=request.get('boolean.default', False))),)
         if request.get('add_relation', None) is not None:
             allowed = tuple(request.get('relation.allowed',
@@ -269,12 +273,14 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
             result['fields'] += ((
                 dict(type='Relation',
                      title=request.get('relation.title', 'unnamed'),
+                     description=request.get('relation.descr', u''),
                      allowed=allowed,
                      )),)
         if request.get('add_vocab', None) is not None:
             result['fields'] += ((
                 dict(type='Vocabulary',
                      title=request.get('vocab.title', 'unnamed'),
+                     description=request.get('vocab.descr', u''),
                      vocab=request.get('vocab.vocab', None),
                      multi=request.get('vocab.multi', False),
                      )),)
@@ -292,7 +298,7 @@ class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
         Even those, that are used by other fields only. Otherwise we
         cannot use 'records' in the HTML form."""
         
-        for attr in ['vocab', 'allowed', 'default', 'multi']:
+        for attr in ['vocab', 'allowed', 'default', 'multi', 'description']:
             if not attr in field.keys():
                 field[attr] = None
         return field
