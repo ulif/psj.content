@@ -55,6 +55,8 @@ class MetadataSet(PersistentMapping):
                 item = RelationField(ftitle, **field)
             if ftype == 'Vocabulary':
                 item = VocabularyField(ftitle, **field)
+            if ftype == 'Lines':
+                item = LinesField(ftitle, **field)
             if item is None:
                 continue
             self.add(item)
@@ -197,3 +199,28 @@ class VocabularyField(BaseField):
             vocab = self.vocab,
             multi = self.multi,
             type = 'Vocabulary',)
+
+class LinesField(BaseField):
+    
+    default = []
+    
+    def __init__(self, title, **kw):
+        if isinstance(title, unicode):
+            self.title = title
+        else:
+            self.title = unicode(title, 'utf-8')
+        self.id = get_id_string(self.title)
+        default = kw.get('default', None)
+        if default is not None:
+            if isinstance(default, unicode):
+                self.default = default
+            else:
+                self.default = unicode(default, 'utf-8')
+            self.default = self.default.split('\n')
+
+    def getDict(self):
+        return dict(
+            title = self.title,
+            default = self.default,
+            id = self.id,
+            type = 'Lines',)
