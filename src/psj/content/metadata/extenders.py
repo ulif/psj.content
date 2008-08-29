@@ -27,7 +27,8 @@ from zope.interface import implements
 from archetypes.schemaextender.interfaces import ISchemaExtender
 from Products.Archetypes.public import (StringWidget, BooleanWidget,
                                         ReferenceWidget, SelectionWidget,
-                                        TextAreaWidget, MultiSelectionWidget,)
+                                        TextAreaWidget, MultiSelectionWidget,
+                                        LinesWidget,)
 from Products.ATReferenceBrowserWidget.ATReferenceBrowserWidget import (
     ReferenceBrowserWidget)
 from Products.ATContentTypes.content.document import ATDocument
@@ -42,6 +43,7 @@ from psj.content.metadata.metadata import TextField as TextEntry
 from psj.content.metadata.metadata import BooleanField as BoolEntry
 from psj.content.metadata.metadata import RelationField as RelationEntry
 from psj.content.metadata.metadata import VocabularyField as VocabularyEntry
+from psj.content.metadata.metadata import LinesField as LinesEntry
 from psj.content.interfaces import IBook, PSJ_TYPES, MEMBER_TYPES
 
 class PageExtender(object):
@@ -99,6 +101,16 @@ class PageExtender(object):
                     widget = ReferenceBrowserWidget(
                         destination = ".",
                         destination_types = entry.allowed,
+                        label = entry.title,
+                    ),
+                    ))
+            elif isinstance(entry, LinesEntry):
+                new_fields.append(PSJLinesField(
+                    str('md_'+key),
+                    schemata='metadata',
+                    isMetadata=1,
+                    default = tuple(entry.default),
+                    widget = LinesWidget(
                         label = entry.title,
                     ),
                     ))
