@@ -38,6 +38,8 @@ Currently, the following field types are supported:
 
 * TextLineField
 
+* LinesField
+
 * TextField
 
 * BooleanField
@@ -134,6 +136,52 @@ We can get a dict representation of `TextFields`::
    'id': 'title',
    'title': u'title',
    'type': 'Text'}
+
+
+Lines fields
+------------
+
+Lines fields store lines of text. This way you can store a set of
+terms, one line representing one term.
+
+A LinesField holds a list of strings of unicode text. It has a title
+and a default value::
+
+  >>> from psj.content.metadata import LinesField
+  >>> field = LinesField('title')
+
+TextFields provide a default value to set, which is an empty list by
+default::
+
+  >>> field.default
+  []
+
+We can set a default by passing it to the constructor::
+
+  >>> field = LinesField('title', default='foo')
+  >>> field.title
+  u'title'
+
+  >>> field.default
+  [u'foo']
+
+Of couse we can also pass unicode values for title and default::
+
+  >>> field = LinesField(u'title', default=u'bar')
+  >>> field.title
+  u'title'
+
+  >>> field.default
+  [u'bar']
+
+We can get a dict representation of `LinesFields`::
+
+
+  >>> pp(field.getDict(), width=20)
+  {'default': [u'bar'],
+   'id': 'title',
+   'title': u'title',
+   'type': 'Lines'}
 
 
 Boolean fields
