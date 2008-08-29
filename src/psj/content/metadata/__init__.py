@@ -1,6 +1,6 @@
 
 from metadata import (MetadataSet, BaseField, TextLineField, BooleanField,
-                      RelationField, VocabularyField, TextField, )
+                      RelationField, VocabularyField, TextField, LinesField, )
 
 
 __all__ = (
@@ -11,4 +11,5 @@ __all__ = (
     BooleanField,
     RelationField,
     VocabularyField,
+    LinesField
     )
