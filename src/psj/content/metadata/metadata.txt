@@ -35,6 +35,12 @@ We create a simple field like this::
   >>> field.description
   u''
 
+Descriptions can contain umlauts::
+
+  >>> field = BaseField('title', description='Söme Ümläuts')
+  >>> print field.description
+  Söme Ümläuts
+
 Because we want to support different types of fields, which might
 require different attributes, we defined a class for every supported
 field type, all derived from `BaseField`.
@@ -191,7 +197,7 @@ Of couse we can also pass unicode values for title and default::
   u'title'
 
   >>> field.description
-  u'baz'
+  'baz'
 
   >>> field.default
   [u'bar']
@@ -201,7 +207,7 @@ We can get a dict representation of `LinesFields`::
 
   >>> pp(field.getDict(), width=20)
   {'default': (u'bar',),
-   'description': u'baz',
+   'description': 'baz',
    'id': 'title',
    'title': u'title',
    'type': 'Lines'}
