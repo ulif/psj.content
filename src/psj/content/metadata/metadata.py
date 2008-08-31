@@ -116,11 +116,7 @@ class BooleanField(object):
             self.title = title
         else:
             self.title = unicode(title, 'utf-8')
-        if isinstance(description, unicode):
-            self.description = description
-        else:
-            self.description = unicode(description, 'utf-8')
-
+        self.description = description
         self.id = get_id_string(self.title)
         self.default = kw.get('default', False)
         return
@@ -143,10 +139,7 @@ class TextLineField(object):
             self.title = title
         else:
             self.title = unicode(title, 'utf-8')
-        if isinstance(description, unicode):
-            self.description = description
-        else:
-            self.description = unicode(description, 'utf-8')
+        self.description = description
         self.id = get_id_string(self.title)
         default = kw.get('default', None)
         if default is not None:
@@ -185,10 +178,7 @@ class RelationField(BaseField):
             self.title = title
         else:
             self.title = unicode(title, 'utf-8')
-        if isinstance(description, unicode):
-            self.description = description
-        else:
-            self.description = unicode(description, 'utf-8')
+        self.description = description
         self.id = get_id_string(self.title)
         if isinstance(allowed, basestring):
             allowed = tuple(allowed.split(','))
@@ -210,10 +200,7 @@ class VocabularyField(BaseField):
             self.title = title
         else:
             self.title = unicode(title, 'utf-8')
-        if isinstance(description, unicode):
-            self.description = description
-        else:
-            self.description = unicode(description, 'utf-8')
+        self.description = description
         self.id = get_id_string(self.title)
         self.vocab = kw.get('vocab', None)
         self.multi = kw.get('multi', False)
@@ -242,10 +229,7 @@ class LinesField(BaseField):
             self.title = title
         else:
             self.title = unicode(title, 'utf-8')
-        if isinstance(description, unicode):
-            self.description = description
-        else:
-            self.description = unicode(description, 'utf-8')
+        self.description = description
         self.id = get_id_string(self.title)
         default = kw.get('default', None)
         if default is not None:
