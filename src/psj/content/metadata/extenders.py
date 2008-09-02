@@ -98,7 +98,7 @@ class PageExtender(object):
             elif isinstance(entry, RelationEntry):
                 new_fields.append(PSJRelationField(
                     str('md_'+key),
-                    relationship = 'Rel1',
+                    relationship = 'Rel_' + key,
                     multiValued = 1,
                     schemata='metadata',
                     isMetadata=1,
