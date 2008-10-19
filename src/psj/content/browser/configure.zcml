@@ -77,14 +77,14 @@
 	permission="zope2.View"
 	/>
 
-    <!-- RetroArticle and Review provide the same as PSJDocument -->
     <browser:page
 	for="..interfaces.IRetroArticle"
 	name="view"
-	class=".psjdocument.PSJDocumentView"
+	class=".psjretroarticle.PSJRetroArticleView"
 	permission="zope2.View"
 	/>
 
+    <!-- RetroReview provides the same as PSJDocument -->
     <browser:page
 	for="..interfaces.IReview"
 	name="view"
