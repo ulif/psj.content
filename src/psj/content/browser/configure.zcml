@@ -84,11 +84,10 @@
 	permission="zope2.View"
 	/>
 
-    <!-- RetroReview provides the same as PSJDocument -->
     <browser:page
 	for="..interfaces.IReview"
 	name="view"
-	class=".psjdocument.PSJDocumentView"
+	class=".psjreview.PSJReviewView"
 	permission="zope2.View"
 	/>
 
