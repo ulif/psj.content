@@ -5,4 +5,5 @@
   <include package="archetypes.schemaextender" />
   <adapter factory=".extenders.PageExtender" />
   <adapter factory=".extenders.BookExtender" />
+  <adapter factory=".extenders.FileTypeExtender" />
 </configure>
