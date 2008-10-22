@@ -26,7 +26,7 @@ from zope.interface import Interface
 from zope import schema
 
 PSJ_TYPES = ('PSJ Document', 'PSJ Volume', 'PSJ Issue',
-             'PSJ Magazine', 'PSJ Book')
+             'PSJ Magazine', 'PSJ Book', 'PSJ File', 'PSJ PostPrint',)
 
 MEMBER_TYPES=('FSDPerson',)
 
