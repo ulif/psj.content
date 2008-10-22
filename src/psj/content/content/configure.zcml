@@ -59,5 +59,15 @@
             set_schema="..interfaces.IBook"
             />
     </class>
+    <class class=".file.PSJFile">
+        <require
+            permission="zope2.View"
+            interface="..interfaces.IFile"
+            />
+        <require
+            permission="cmf.ModifyPortalContent"
+            set_schema="..interfaces.IFile"
+            />
+    </class>
     
 </configure>

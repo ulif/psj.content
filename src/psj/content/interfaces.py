@@ -88,7 +88,12 @@ class IRetroMagazine(Interface):
         """This method is called, everytime an issue is updated.
         """
 
-
+class IFile(Interface):
+    """A PSJ File.
+    """
+    def rebuild():
+        """This method is called, everytime an issue is updated.
+        """
 
 class IMetadataItem(Interface):
     """An item in a metadata set.

@@ -32,6 +32,10 @@ types:
 
   A representation of a book (review).
 
+- ``PSJFile``
+
+  A representation of any media file.
+
 Setting up and logging in
 =========================
 
@@ -203,6 +207,37 @@ The created book should be available in the ZODB now::
    True
 
 Get back to the portal root::
+
+   >>> browser.open(portal_url)
+
+
+Adding PSJFiles
+---------------
+
+PSJFiles are like normal Plone ATFiles, but provide additional
+metadata.
+
+We can add a PSJFile object::
+
+   >>> browser.open(portal_url)
+   >>> browser.getLink(id='psj-file').url.endswith(
+   ...   'createObject?type_name=PSJ+File')
+   True
+
+Now let us add a PSJ file::
+
+   >>> browser.getLink(id='psj-file').click()
+   >>> browser.getControl(name='title').value = "My first file"
+   >>> browser.getControl(name='description').value = "The description"
+
+Here we grab the upload field, insert a locally created fake file
+containing two lines of plain text and submit the whole thing::
+
+   >>> import cStringIO
+   >>> file_ctrl = browser.getControl(name="file_file")
+   >>> myfile = cStringIO.StringIO("Some content\nin two lines")
+   >>> file_ctrl.add_file(myfile, 'text/plain', filename='mydocument.txt')
+   >>> browser.getControl(name='form_submit').click()
 
    >>> browser.open(portal_url)
 
