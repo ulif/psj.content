@@ -32,6 +32,7 @@ from Products.Archetypes.public import (StringWidget, BooleanWidget,
 from Products.ATReferenceBrowserWidget.ATReferenceBrowserWidget import (
     ReferenceBrowserWidget)
 from Products.ATContentTypes.content.document import ATDocument
+from Products.ATContentTypes.content.file import ATFile
 from Products.ATContentTypes.content import folder
 from Products.ATVocabularyManager import NamedVocabulary
 from Products.CMFCore.utils import getToolByName
@@ -153,3 +154,13 @@ class BookExtender(PageExtender):
     """
     adapts(IBook)
     implements(ISchemaExtender)
+
+
+class FileTypeExtender(PageExtender):
+    """An extender for ATFile based content types.
+
+    This includes PSJFile and PSJPostPrint.
+    """
+    adapts(ATFile)
+    implements(ISchemaExtender)
+
