@@ -69,5 +69,15 @@
             set_schema="..interfaces.IFile"
             />
     </class>
+    <class class=".postprint.PSJPostPrint">
+        <require
+            permission="zope2.View"
+            interface="..interfaces.IPostPrint"
+            />
+        <require
+            permission="cmf.ModifyPortalContent"
+            set_schema="..interfaces.IPostPrint"
+            />
+    </class>
     
 </configure>

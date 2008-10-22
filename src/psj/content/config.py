@@ -44,4 +44,5 @@ ADD_PERMISSIONS = {
     "PSJRetroArticle" : "PSJ: Add PSJ Retro Article",
     "PSJReview" : "PSJ: Add PSJ Review",
     "PSJFile": "PSJ: Add PSJ File",
+    "PSJPostPrint": "PSJ: Add PSJ PostPrint",
 }

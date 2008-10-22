@@ -95,6 +95,14 @@ class IFile(Interface):
         """This method is called, everytime an issue is updated.
         """
 
+class IPostPrint(Interface):
+    """A PSJ PostPrint.
+    """
+    def rebuild():
+        """This method is called, everytime an issue is updated.
+        """
+
+
 class IMetadataItem(Interface):
     """An item in a metadata set.
     """
