@@ -75,6 +75,7 @@ class PageExtender(object):
                 new_fields.append(PSJTextLineField(
                     str('md_' + key),
                     schemata='metadata',
+                    searchable=True,
                     widget=TextAreaWidget(
                         label=entry.title,
                         description=entry.description)
@@ -83,6 +84,7 @@ class PageExtender(object):
                 new_fields.append(PSJTextLineField(
                     str('md_' + key),
                     schemata='metadata',
+                    searchable=True,
                     widget=StringWidget(
                         label=entry.title,
                         description=entry.description)
@@ -105,6 +107,7 @@ class PageExtender(object):
                     isMetadata=1,
                     allowed_types = entry.allowed,
                     addable = True,
+                    searchable = True,
                     widget = ReferenceBrowserWidget(
                         destination = ".",
                         destination_types = entry.allowed,
@@ -121,6 +124,7 @@ class PageExtender(object):
                     str('md_'+key),
                     schemata='metadata',
                     isMetadata=1,
+                    searchable=True,
                     default = default,
                     widget = LinesWidget(
                         label = entry.title,
@@ -138,6 +142,7 @@ class PageExtender(object):
                 new_fields.append(PSJLinesField(
                     str('md_'+key),
                     schemata = 'metadata',
+                    searchable=True,
                     widget = widget(
                         label = entry.title,
                         description = entry.description,
