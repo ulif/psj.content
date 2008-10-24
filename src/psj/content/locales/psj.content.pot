@@ -1,0 +1,105 @@
+# --- PLEASE EDIT THE LINES BELOW CORRECTLY ---
+# SOME DESCRIPTIVE TITLE.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2008-10-24 06:54+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: en\n"
+"Language-Name: English\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: psj.content\n"
+
+#. Default: "A Plone Scientific Portal Document"
+#: ./profiles/default/types/PSJ_Document.xml
+msgid "A Plone Scientific Portal Document"
+msgstr ""
+
+#. Default: "A Plone Scientific Portal Magazine"
+#: ./profiles/default/types/PSJ_Magazine.xml
+msgid "A Plone Scientific Portal Magazine"
+msgstr ""
+
+#. Default: "A Plone Scientific Portal Magazine Issue"
+#: ./profiles/default/types/PSJ_Issue.xml
+msgid "A Plone Scientific Portal Magazine Issue"
+msgstr ""
+
+#. Default: "A Plone Scientific Portal Magazine Volume"
+#: ./profiles/default/types/PSJ_Volume.xml
+msgid "A Plone Scientific Portal Magazine Volume"
+msgstr ""
+
+#. Default: "A Plone Scientific Portal Retro Article"
+#: ./profiles/default/types/PSJ_RetroArticle.xml
+msgid "A Plone Scientific Portal Retro Article"
+msgstr ""
+
+#. Default: "A Plone Scientific Portal Retro Magazine"
+#: ./profiles/default/types/PSJ_RetroMagazine.xml
+msgid "A Plone Scientific Portal Retro Magazine"
+msgstr ""
+
+#. Default: "A Plone Scientific Portal Review"
+#: ./profiles/default/types/PSJ_Review.xml
+msgid "A Plone Scientific Portal Review"
+msgstr ""
+
+#: ./content/psjdocument.py:52
+msgid "Document"
+msgstr ""
+
+#: ./content/psjdocument.py:61
+msgid "PDFDocument"
+msgstr ""
+
+#. Default: "PSJ Document"
+#: ./profiles/default/types/PSJ_Document.xml
+msgid "PSJ Document"
+msgstr ""
+
+#. Default: "PSJ Issue"
+#: ./profiles/default/types/PSJ_Issue.xml
+msgid "PSJ Issue"
+msgstr ""
+
+#. Default: "PSJ Magazine"
+#: ./profiles/default/types/PSJ_Magazine.xml
+msgid "PSJ Magazine"
+msgstr ""
+
+#. Default: "PSJ Retro Article"
+#: ./profiles/default/types/PSJ_RetroArticle.xml
+msgid "PSJ Retro Article"
+msgstr ""
+
+#. Default: "PSJ Retro Magazine"
+#: ./profiles/default/types/PSJ_RetroMagazine.xml
+msgid "PSJ Retro Magazine"
+msgstr ""
+
+#. Default: "PSJ Review"
+#: ./profiles/default/types/PSJ_Review.xml
+msgid "PSJ Review"
+msgstr ""
+
+#. Default: "PSJ Volume"
+#: ./profiles/default/types/PSJ_Volume.xml
+msgid "PSJ Volume"
+msgstr ""
+
+#: ./content/psjdocument.py:64
+msgid "This field is automatically updated."
+msgstr ""
+
+#: ./content/psjdocument.py:53
+msgid "Upload an office document here"
+msgstr ""
+
