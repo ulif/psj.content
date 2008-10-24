@@ -24,7 +24,7 @@
   <element value="view"/>
   <element value="folder_summary_view"/>
  </property>
- <alias from="(Default)" to="(dynamic view)"/>
+ <alias from="(Default)" to="base_view"/>
  <alias from="edit" to="atct_edit"/>
  <alias from="sharing" to="@@sharing"/>
  <alias from="view" to="(selected layout)"/>
