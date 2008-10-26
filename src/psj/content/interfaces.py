@@ -128,3 +128,13 @@ class IMetadataSet(Interface):
 class IMetadataSchemaRegistryTool(Interface):
     """A registry for metadata schemas.
     """
+
+from zope.viewlet.interfaces import IViewletManager
+from zope.publisher.interfaces.browser import IBrowserSkinType
+class IPSJDocumentMetadata(IViewletManager):
+    """A marker for metadata viewlet manager.
+    """
+
+class IPSJLayer(IBrowserSkinType):
+    """A layer/theme. This should go into a theme package.
+    """
