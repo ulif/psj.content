@@ -91,6 +91,35 @@
 	permission="zope2.View"
 	/>
 
+    <browser:page
+	for="..interfaces.IBook"
+	name="view"
+	class=".psjbook.PSJBookView"
+	permission="zope2.View"
+	/>
+
+    <browser:page
+	for="..interfaces.IFile"
+	name="view"
+        template="psjfile.pt"
+	permission="zope2.View"
+	/>
+
+    <browser:page
+	for="..interfaces.IPostPrint"
+	name="view"
+        template="psjfile.pt"
+	permission="zope2.View"
+	/>
+
+    <browser:menuItem
+	for="..interfaces.IBook"
+	menu="plone_displayviews"
+	title="PSJ book view"
+	action="@@view"
+	description="Default representation of a PSJ book"
+	/>
+
 
     <browser:menuItem
 	for="..interfaces.IDocument"
@@ -98,6 +127,14 @@
 	title="PSJ document view"
 	action="@@view"
 	description="Default representation of a PSJ document"
+	/>
+
+    <browser:menuItem
+	for="..interfaces.IDocument"
+	menu="plone_displayviews"
+	title="PSJ folderish document view"
+	action="@@folderview"
+	description="Default representation of a folderish PSJ document"
 	/>
 
     <browser:menuItem
@@ -147,5 +184,25 @@
 	action="@@view"
 	description="Default representation of a PSJ review"
 	/>
+
+    <browser:viewletManager
+	name="psj.metadatadocument"
+	provides="..interfaces.IPSJDocumentMetadata"
+	permission="zope2.View"
+	class="psj.content.browser.viewlets.PSJDocumentMetadataManager"
+	/>
     
+    <interface
+	interface="..interfaces.IPSJLayer"
+	type="zope.publisher.interfaces.browser.IBrowserSkinType"
+	name="PSJ Theme"
+	/>
+
+    <browser:viewlet
+	name="psj.documentmetadata"
+	manager="..interfaces.IPSJDocumentMetadata"
+        class="psj.content.browser.viewlets.PSJDocumentMetadataViewlet"
+	permission="zope2.View"
+	/>
+
 </configure>
