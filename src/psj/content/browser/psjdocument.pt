@@ -37,6 +37,9 @@
 				context.widget('pdfdocument', mode='view')"/>
 	</div>
 
+	<div class="metadatabox" 
+	     tal:content="structure provider:psj.metadatadocument" />
+
         <div tal:replace="structure view/getDocument" />
 
         <div metal:use-macro="context/document_relateditems/macros/relatedItems">
