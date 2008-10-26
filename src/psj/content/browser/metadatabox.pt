@@ -1,0 +1,25 @@
+<dl id="metadata" class="collapsible inline collapsedOnLoad"
+    tal:define="checkPermission python:view.checkPermission;
+                portal view/getPortal">
+  <dt class="collapsibleHeader"> Metadata </dt>	
+  <dd class="collapsibleContent">
+    <table class="metadata-table">
+      <tr class="odd" tal:repeat="field view/getFields"
+	  tal:attributes="class python: repeat['field'].odd() and 'odd' or 'even'">
+	<th class="metadata-list-th"
+	    tal:content="field/description">Field Description</th>
+	<td class="metadata-list-td"
+	    tal:condition="field/isregularfield">
+	  <metal:fieldMacro 
+	      use-macro="python: here.widget(field['value'], mode='view')"/>
+	</td>
+	<td class="metadata-list-td"
+	    tal:condition="not: field/isregularfield"
+	    tal:content="field/value"
+	    >
+	  Field Value
+	</td>
+      </tr>
+    </table>
+  </dd>
+</dl>
