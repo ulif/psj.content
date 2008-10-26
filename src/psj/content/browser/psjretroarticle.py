@@ -28,7 +28,7 @@ from Products.Archetypes import atapi
 class PSJRetroArticleView(BrowserView):
     """Default view of a PSJ Retro Article.
     """
-    __call__ = ViewPageTemplateFile('psjretroarticle.pt')
+    __call__ = ViewPageTemplateFile('psjdocument.pt')
 
     def getDocument(self):
         """Get the embedded document as HTML.

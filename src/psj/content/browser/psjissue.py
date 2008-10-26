@@ -27,5 +27,5 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 class PSJIssueView(BrowserView):
     """Default view of a PSJ issue.
     """
-    __call__ = ViewPageTemplateFile('psjissue.pt')
+    __call__ = ViewPageTemplateFile('psjfolder.pt')
 

@@ -27,7 +27,7 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 class PSJMagazineView(BrowserView):
     """Default view of a PSJ magazine.
     """
-    __call__ = ViewPageTemplateFile('psjmagazine.pt')
+    __call__ = ViewPageTemplateFile('psjfolder.pt')
 
 
 

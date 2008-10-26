@@ -28,7 +28,7 @@ from Products.Archetypes import atapi
 class PSJReviewView(BrowserView):
     """Default view of a PSJ review.
     """
-    __call__ = ViewPageTemplateFile('psjreview.pt')
+    __call__ = ViewPageTemplateFile('psjdocument.pt')
 
     def getDocument(self):
         """Get the embedded document as HTML.

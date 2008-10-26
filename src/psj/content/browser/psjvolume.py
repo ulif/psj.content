@@ -27,6 +27,6 @@ from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
 class PSJVolumeView(BrowserView):
     """Default view of a PSJ volume.
     """
-    __call__ = ViewPageTemplateFile('psjvolume.pt')
+    __call__ = ViewPageTemplateFile('psjfolder.pt')
 
 
