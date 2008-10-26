@@ -17,7 +17,7 @@
    <element value="view"/>
    <element value="base_view"/>
  </property>
- <alias from="(Default)" to="(dynamic view)"/>
+ <alias from="(Default)" to="view"/>
  <alias from="edit" to="atct_edit"/>
  <action title="View" action_id="view" category="object" condition_expr=""
     url_expr="string:${object_url}" visible="True">
