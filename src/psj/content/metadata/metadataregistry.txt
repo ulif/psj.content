@@ -137,3 +137,36 @@ object and ask for a metadata schema that 'fits'::
   >>> sorted(list(data))
   ['a_link', 'is_great', 'title']
 
+
+Exporting Metadatasets
+----------------------
+
+We can export metadatasets as XML. This can be done for any
+metadata-registry by using the appropriate `export` function::
+
+  >>> from psj.content.metadata.metadataregistry import export
+
+We have to tell, which registry data we want::
+
+  >>> result = export(reg)
+  >>> print result
+  <metadataregistry version="0.1"><schemata><schema id="myschema"><field type="Boolean"><default>True</default><description /><id>is_great</id><title>is great</title></field><field type="Relation"><id>a_link</id><allowed /><description /><title>A link</title></field><field type="TextLine"><default>None</default><description /><id>title</id><title>title</title></field><registered_for content_type="psjdocument" /></schema></schemata></metadataregistry>
+
+We can also handle umlauts as our document is utf-8 encoded::
+
+  >>> reg.manage_editMetadataSchema(
+  ...   'myschema', name='My new schema',
+  ...   objecttypes=['psjdocument',],
+  ...   fields=(dict(title='A title with ümläüts',
+  ...                type='TextLine',
+  ...                default=None),
+  ...           dict(title='is great',
+  ...                type='Boolean',
+  ...                default=True),
+  ...           dict(title='A link',
+  ...                type='Relation'),
+  ...          )
+  ...   )
+  >>> print export(reg)
+  <metadataregistry version="0.1"><schemata><schema id="myschema"><field type="Boolean"><default>True</default><description /><id>is_great</id><title>is great</title></field><field type="TextLine"><default>None</default><description /><id>a_title_with_mlts</id><title>A title with ümläüts</title></field><field type="Relation"><id>a_link</id><allowed /><description /><title>A link</title></field><registered_for content_type="psjdocument" /></schema></schemata></metadataregistry>
+
