@@ -45,6 +45,41 @@ class TypeMap(PersistentMapping):
     security = ClassSecurityInfo()
     security.declareObjectProtected(ManagePortal)
 
+
+def export(registry, filename=None):
+    """Export the data from a metadataregistry as XML.
+
+    We need a registry as data we operate on. The result is returned
+    as a simple string containing an XML representation of the
+    metadata registry. If a filename is given, the result is written
+    to this file.
+    """
+    from elementtree.ElementTree import Element, SubElement, tostring
+    result = Element('metadataregistry', version="0.1")
+    schemas = SubElement(result, 'schemata')
+    for schema_id, schema in registry.schemas().items():
+        schema_elem = SubElement(schemas, 'schema', id=schema_id)
+        # Export all fields of a schema...
+        for field_id, field in schema.items():
+            items = field.getDict()
+            field_type = items['type']
+            del items['type']
+            field_elem = SubElement(schema_elem, 'field', type=field_type)
+            for key, val in items.items():
+                elem = SubElement(field_elem, key)
+                if not isinstance(val, basestring):
+                    val = str(val)
+                elem.text = val
+        # Export the content types a schema is registered for...
+        content_types = registry.getContentTypesForSchema(schema_id)
+        for content_type in content_types:
+            content_type_elem = SubElement(schema_elem, 'registered_for',
+                                           content_type = content_type)
+    result_string = tostring(result, encoding='utf-8')
+    if filename is not None:
+        open(filename, 'wb').write(result_string)
+    return result_string
+
 class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
     implements(IMetadataSchemaRegistryTool)
     security = ClassSecurityInfo()
