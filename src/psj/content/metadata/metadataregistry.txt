@@ -170,3 +170,20 @@ We can also handle umlauts as our document is utf-8 encoded::
   >>> print export(reg)
   <metadataregistry version="0.1"><schemata><schema id="myschema"><field type="Boolean"><default>True</default><description /><id>is_great</id><title>is great</title></field><field type="TextLine"><default>None</default><description /><id>a_title_with_mlts</id><title>A title with ümläüts</title></field><field type="Relation"><id>a_link</id><allowed /><description /><title>A link</title></field><registered_for content_type="psjdocument" /></schema></schemata></metadataregistry>
 
+If we want, we can also export to a file::
+
+  >>> result = export(reg, filename='myregistry.xml')
+  >>> contents = open('myregistry.xml', 'rb').read()
+  >>> print contents
+  <metadataregistry version="0.1"><schemata><schema id="myschema"><field type="Boolean"><default>True</default><description /><id>is_great</id><title>is great</title></field><field type="TextLine"><default>None</default><description /><id>a_title_with_mlts</id><title>A title with ümläüts</title></field><field type="Relation"><id>a_link</id><allowed /><description /><title>A link</title></field><registered_for content_type="psjdocument" /></schema></schemata></metadataregistry>
+
+We can also get the result as an elementtree for use with other
+exporter tools that want to build more complete data sets::
+
+  >>> print export(reg, as_tree=True)
+  <Element metadataregistry at ...>
+
+Clean up::
+
+  >>> import os
+  >>> os.unlink('myregistry.xml')

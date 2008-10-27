@@ -46,7 +46,7 @@ class TypeMap(PersistentMapping):
     security.declareObjectProtected(ManagePortal)
 
 
-def export(registry, filename=None):
+def export(registry, filename=None, as_tree=False):
     """Export the data from a metadataregistry as XML.
 
     We need a registry as data we operate on. The result is returned
@@ -54,7 +54,8 @@ def export(registry, filename=None):
     metadata registry. If a filename is given, the result is written
     to this file.
     """
-    from elementtree.ElementTree import Element, SubElement, tostring
+    from elementtree.ElementTree import (Element, SubElement, tostring,
+                                         ElementTree)
     result = Element('metadataregistry', version="0.1")
     schemas = SubElement(result, 'schemata')
     for schema_id, schema in registry.schemas().items():
@@ -77,7 +78,10 @@ def export(registry, filename=None):
                                            content_type = content_type)
     result_string = tostring(result, encoding='utf-8')
     if filename is not None:
-        open(filename, 'wb').write(result_string)
+        tree = ElementTree(result)
+        tree.write(filename, encoding='utf-8')
+    if as_tree:
+        return result
     return result_string
 
 class MetadataSchemaRegistry(UniqueObject, ActionProviderBase, Folder):
