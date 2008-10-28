@@ -30,8 +30,13 @@
         
         <div tal:replace="structure provider:plone.abovecontentbody" />
 
-	<div metal:use-macro="python: 
-			         context.widget('document', mode='view')"/>
+	<div tal:on-error="nothing"
+	     tal:condition="python: 
+			    context.portal_membership.checkPermission('PSJ: Add PSJ Document', context)">
+	  <div metal:use-macro="python: 
+				context.widget('document', mode='view')"/>
+	</div>
+
 	<div>
 	  <div metal:use-macro="python: 
 				context.widget('pdfdocument', mode='view')"/>
