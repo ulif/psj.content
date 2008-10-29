@@ -42,13 +42,13 @@
 				context.widget('pdfdocument', mode='view')"/>
 	</div>
 
-	<div tal:condition="view/getBSBId"
-	     tal:define="bsb_id view/getBSBId"
-	     class="bsblink">
+	<div tal:condition="view/getDocLink"
+	     tal:define="doclink view/getDocLink"
+	     class="doclink">
 	  <span i18n:translate="">BSB Digitale Bibliothek:</span>
 	  <a href=""
-	     tal:attributes="href bsb_id"
-	     tal:content="bsb_id">http:example.org/foo</a>
+	     tal:attributes="href doclink"
+	     tal:content="doclink">http:example.org/foo</a>
 	</div>
 
 	<div class="metadatabox" 
