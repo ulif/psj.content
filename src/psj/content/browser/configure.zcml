@@ -80,14 +80,14 @@
     <browser:page
 	for="..interfaces.IRetroArticle"
 	name="view"
-	class=".psjretroarticle.PSJRetroArticleView"
+	class=".psjdocument.PSJDocumentView"
 	permission="zope2.View"
 	/>
 
     <browser:page
 	for="..interfaces.IReview"
 	name="view"
-	class=".psjreview.PSJReviewView"
+	class=".psjdocument.PSJDocumentView"
 	permission="zope2.View"
 	/>
 
