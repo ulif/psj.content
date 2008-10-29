@@ -42,6 +42,14 @@
 				context.widget('pdfdocument', mode='view')"/>
 	</div>
 
+	<div tal:condition="view/getBSBId"
+	     tal:define="bsb_id view/getBSBId">
+	  <span i18n:translate="">BSB Digitale Bibliothek:</span>
+	  <a href=""
+	     tal:attributes="href bsb_id"
+	     tal:content="bsb_id">http:example.org/foo</a>
+	</div>
+
 	<div class="metadatabox" 
 	     tal:content="structure provider:psj.metadatadocument" />
 
