@@ -43,7 +43,8 @@
 	</div>
 
 	<div tal:condition="view/getBSBId"
-	     tal:define="bsb_id view/getBSBId">
+	     tal:define="bsb_id view/getBSBId"
+	     class="bsblink">
 	  <span i18n:translate="">BSB Digitale Bibliothek:</span>
 	  <a href=""
 	     tal:attributes="href bsb_id"
