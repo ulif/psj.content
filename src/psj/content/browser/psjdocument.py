@@ -35,3 +35,13 @@ class PSJDocumentView(BrowserView):
         """
         html = self.context.annotations['psj.content']['html']
         return html
+
+    def getBSBId(self, *args):
+        """Return an URL to a BSB Id if one is defined in metadata.
+
+        Those links point to entries in the bavarian state library
+        catalogue.
+        """
+        if not hasattr(self.context, 'md_bsb_id'):
+            return u''
+        return str(self.context['md_bsb_id'])
