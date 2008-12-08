@@ -7,6 +7,8 @@ def read(*rnames):
 long_description = (
     read('README.txt')
     + '\n\n'
+    + read('docs', 'SPONSORS.txt')
+    + '\n\n'
     + read('docs', 'HISTORY.txt')
     + '\n\n'
     + 'Download\n'
