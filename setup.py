@@ -17,7 +17,7 @@ long_description = (
 
 setup(
     name='psj.content',
-    version='0.2dev',
+    version='0.2',
     author='Uli Fouquet',
     author_email='uli@gnufix.de',
     url = 'http://pypi.python.org/pypi/psj.content',
