@@ -4,8 +4,8 @@ Changelog
 0.2 - Unreleased
 ================
 
-* Feature Changes
------------------
+Feature Changes
+---------------
 
 - Added metadatabox for all content types.
 
@@ -14,8 +14,8 @@ Changelog
 - Display a link to metadatafield 'bdb_id' if it is present in PSJ
   document views (PSJDocument, PSJRetroArticle, PSJReview)
 
-* Bug Fixes
------------
+Bug Fixes
+---------
 
 - Link to source document in PSJ document views is now only visible
   when principal has 'PSJ: Add PSJ Document' permission.
