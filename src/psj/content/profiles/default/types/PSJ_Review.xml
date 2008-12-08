@@ -4,10 +4,7 @@
    i18n:domain="psj.content" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
  <property name="title" i18n:translate="">PSJ Review</property>
  <property name="description"
-     i18n:translate="">A Plone Scientific Portal Review</property>
-<!--
- <property name="content_icon">++resource++cinema_icon.gif</property>
--->
+     i18n:translate="">A Plone Scholarly Portal Review</property>
  <property name="content_meta_type">PSJReview</property>
  <property name="product">psj.content</property>
  <property name="factory">addPSJReview</property>
