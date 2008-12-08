@@ -1,9 +1,9 @@
 psj.content
 ***********
 
-:Test-Layer: integration
+Content types and metadata handling for the Plone Scholarly Journal.
 
-Content types for the Plone Scholarly Journal.
+:Test-Layer: integration
 
 The `psj.content` package currently supports the following content
 types:
