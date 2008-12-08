@@ -39,3 +39,43 @@ notes.
 
 The whole installation process is driven by ``zc.buildout``.
 
+If you want to run this package alone, follow the follwing steps:
+
+1) Run `bootstrap.py`::
+
+     $ python2.4 bootstrap/bootstrap.py
+
+   This will create basic build scripts and directories.
+
+2) Run `buildout`::
+
+     $ ./bin/buildout
+
+   This will fetch all packages needed from the internet and install
+   it locally. Also all scripts are created by this step.
+
+3) Start the server::
+
+     $ ./bin/instance fg
+
+   Now you can login on http://localhost:8080/manage. Default
+   credentials are: username ``admin``, password ``admin``.
+
+   You can change the credentials in ``buildout.cfg``.
+
+   If you want to start the server in background, do::
+
+     $ ./bin/instance start
+
+4) Stop the server by pressing CTRL-C on the commandline. If you
+   started the server in background, do::
+
+
+     $ ./bin/instance stop
+
+If you want to run the tests:
+
+5) Do the tests::
+
+     $ ./bin/instance test -s psj.content
+
