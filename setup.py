@@ -28,7 +28,7 @@ setup(
     classifiers=['Development Status :: 3 - Alpha',
                  'Environment :: Web Environment',
                  'Intended Audience :: Developers',
-                 'License :: OSI Approved :: Gnu Public License',
+                 'License :: OSI Approved :: Zope Public License',
                  'Programming Language :: Python',
                  'Operating System :: OS Independent',
                  'Framework :: Plone',
