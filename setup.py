@@ -15,7 +15,7 @@ long_description = (
 
 setup(
     name='psj.content',
-    version='0.1dev',
+    version='0.2dev',
     author='Uli Fouquet',
     author_email='uli@gnufix.de',
     url = 'https://svn.gnufix.de/repos/psj.content',
