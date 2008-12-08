@@ -3,7 +3,7 @@ psj.content
 
 :Test-Layer: integration
 
-Content types for the Plone Scientific Journal.
+Content types for the Plone Scholarly Journal.
 
 The `psj.content` package currently supports the following content
 types:
