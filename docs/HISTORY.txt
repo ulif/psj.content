@@ -1,7 +1,7 @@
 Changelog
 *********
 
-0.2 - Unreleased
+0.2 (2008-08-12)
 ================
 
 Feature Changes
@@ -23,7 +23,7 @@ Bug Fixes
 - Remove inline metadata from folderish PSJ document views.
 
 
-0.1 - 2008-10-26
+0.1 (2008-10-26)
 ================
 
 * Initial release
