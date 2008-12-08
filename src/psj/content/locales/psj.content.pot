@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2008-10-24 06:54+0000\n"
+"POT-Creation-Date: 2008-12-08 16:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,39 +17,44 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: psj.content\n"
 
-#. Default: "A Plone Scientific Portal Document"
+#. Default: "A Plone Scholarly Portal Document"
 #: ./profiles/default/types/PSJ_Document.xml
-msgid "A Plone Scientific Portal Document"
+msgid "A Plone Scholarly Portal Document"
 msgstr ""
 
-#. Default: "A Plone Scientific Portal Magazine"
+#. Default: "A Plone Scholarly Portal Magazine"
 #: ./profiles/default/types/PSJ_Magazine.xml
-msgid "A Plone Scientific Portal Magazine"
+msgid "A Plone Scholarly Portal Magazine"
 msgstr ""
 
-#. Default: "A Plone Scientific Portal Magazine Issue"
+#. Default: "A Plone Scholarly Portal Magazine Issue"
 #: ./profiles/default/types/PSJ_Issue.xml
-msgid "A Plone Scientific Portal Magazine Issue"
+msgid "A Plone Scholarly Portal Magazine Issue"
 msgstr ""
 
-#. Default: "A Plone Scientific Portal Magazine Volume"
+#. Default: "A Plone Scholarly Portal Magazine Volume"
 #: ./profiles/default/types/PSJ_Volume.xml
-msgid "A Plone Scientific Portal Magazine Volume"
+msgid "A Plone Scholarly Portal Magazine Volume"
 msgstr ""
 
-#. Default: "A Plone Scientific Portal Retro Article"
+#. Default: "A Plone Scholarly Portal Retro Article"
 #: ./profiles/default/types/PSJ_RetroArticle.xml
-msgid "A Plone Scientific Portal Retro Article"
+msgid "A Plone Scholarly Portal Retro Article"
 msgstr ""
 
-#. Default: "A Plone Scientific Portal Retro Magazine"
+#. Default: "A Plone Scholarly Portal Retro Magazine"
 #: ./profiles/default/types/PSJ_RetroMagazine.xml
-msgid "A Plone Scientific Portal Retro Magazine"
+msgid "A Plone Scholarly Portal Retro Magazine"
 msgstr ""
 
-#. Default: "A Plone Scientific Portal Review"
+#. Default: "A Plone Scholarly Portal Review"
 #: ./profiles/default/types/PSJ_Review.xml
-msgid "A Plone Scientific Portal Review"
+msgid "A Plone Scholarly Portal Review"
+msgstr ""
+
+#. Default: "BSB Digitale Bibliothek:"
+#: ./browser/psjdocument.pt:48
+msgid "BSB Digitale Bibliothek:"
 msgstr ""
 
 #: ./content/psjdocument.py:52
