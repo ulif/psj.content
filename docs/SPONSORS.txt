@@ -1,5 +1,5 @@
-Sponsors
-********
+Sponsors/Credits
+****************
 
 Initial programming was undertaken on behalf of the "Stiftung Deutsche
 Geisteswissenschaftliche Institute im Ausland" (Foundation German
@@ -10,4 +10,6 @@ Funding was provided by the German "Bundesministerium für Bildung und
 Forschung" (Federal Ministry of Education and Research).
 
 The programming was coordinated by the ``Fafalter GmbH``, Düsseldorf,
-Germany.
+Germany, namely Ruth and Bories von dem Bussche.
+
+Many thanks to all these institutions and persons!
