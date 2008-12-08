@@ -19,7 +19,7 @@ setup(
     author='Uli Fouquet',
     author_email='uli@gnufix.de',
     url = 'https://svn.gnufix.de/repos/psj.content',
-    description='Plone Scientific Jounal - the content types',
+    description='Plone Scholarly Journal - the content types',
     long_description=long_description,
     license='GPL',
     keywords="zope policy journal plone plone3",
