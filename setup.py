@@ -17,7 +17,7 @@ long_description = (
 
 setup(
     name='psj.content',
-    version='0.2',
+    version='0.2dev',
     author='Uli Fouquet',
     author_email='uli@gnufix.de',
     url = 'http://pypi.python.org/pypi/psj.content',
@@ -28,7 +28,7 @@ setup(
     classifiers=['Development Status :: 3 - Alpha',
                  'Environment :: Web Environment',
                  'Intended Audience :: Developers',
-                 'License :: OSI Approved :: Gnu Public License',
+                 'License :: OSI Approved :: Zope Public License',
                  'Programming Language :: Python',
                  'Operating System :: OS Independent',
                  'Framework :: Plone',
