@@ -30,6 +30,13 @@ setup(name='psj.content',
           'plone.app.dexterity',
           'collective.autopermission',
           'grokcore.component',
+          'plone.behavior',            # for behaviours
+          'plone.directives.form',      # for behaviours
+          'zope.i18nmessageid',
+          'plone.dexterity',
+          'zope.component',
+          'zope.interface',
+          'zope.schema',
       ],
       entry_points="""
       # -*- Entry points: -*-
