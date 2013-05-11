@@ -29,6 +29,7 @@ setup(name='psj.content',
           'Plone',
           'plone.app.dexterity',
           'collective.autopermission',
+          'grokcore.component',
       ],
       entry_points="""
       # -*- Entry points: -*-
