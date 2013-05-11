@@ -12,8 +12,37 @@
     <plone:behavior
         title="Author"
         description="Name of Document Author"
-        provides=".behaviors.IAuthor"
-        factory=".behaviors.Author"
+        provides=".behaviors.IPSJAuthor"
+        factory=".behaviors.PSJAuthor"
         />
+
+    <plone:behavior
+        title="Title"
+        description="Document title"
+        provides=".behaviors.IPSJTitle"
+        factory=".behaviors.PSJTitle"
+        />
+
+    <plone:behavior
+        title="Subtitle"
+        description="Document subtitle"
+        provides=".behaviors.IPSJSubtitle"
+        factory=".behaviors.PSJSubtitle"
+        />
+
+    <plone:behavior
+        title="Abstract"
+        description="Document abstract"
+        provides=".behaviors.IPSJAbstract"
+        factory=".behaviors.PSJAbstract"
+        />
+
+    <plone:behavior
+        title="PSJ Base Data"
+        description="Base Data for PSJ Documents, including author, title, etc."
+        provides=".behaviors.IPSJBaseData"
+        factory=".behaviors.PSJBaseData"
+        />
+
 
 </configure>

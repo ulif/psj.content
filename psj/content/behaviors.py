@@ -23,7 +23,7 @@ from plone.dexterity.interfaces import IDexterityContent
 from plone.directives.form import Schema, fieldset, IFormFieldProvider
 from zope.component import adapts
 from zope.interface import implements, alsoProvides
-from zope.schema import TextLine
+from zope.schema import TextLine, Text
 from psj.content import _
 
 class PSJMetadataBase(object):
@@ -44,29 +44,139 @@ class PSJFieldProperty(DCFieldProperty):
     """
     pass
 
-class IAuthor(Schema):
+class IPSJAuthor(Schema):
     """A document author.
     """
     fieldset(
         'psj_metadata',
         label = _(u'PSJ Metadata'),
-        fields = ('author',),
+        fields = ('psj_author',),
         )
 
-    author = TextLine(
+    psj_author = TextLine(
         title = _(u'Author'),
         description = _(u'Document Author'),
         required = False,
         )
 
-alsoProvides(IAuthor, IFormFieldProvider)
+alsoProvides(IPSJAuthor, IFormFieldProvider)
 
-class Author(PSJMetadataBase):
+class IPSJTitle(Schema):
+    """A document title.
+    """
+    fieldset(
+        'psj_metadata',
+        label = _(u'PSJ Metadata'),
+        fields = ('psj_title',),
+        )
+
+    psj_title = TextLine(
+        title = _(u'Title'),
+        description = _(u'Document Title'),
+        required = False,
+        )
+
+alsoProvides(IPSJTitle, IFormFieldProvider)
+
+class IPSJSubtitle(Schema):
+    """A document subtitle.
+    """
+    fieldset(
+        'psj_metadata',
+        label = _(u'PSJ Metadata'),
+        fields = ('psj_subtitle',),
+        )
+
+    psj_subtitle = TextLine(
+        title = _(u'Subtitle'),
+        description = _(u'Document Subtitle'),
+        required = False,
+        )
+
+alsoProvides(IPSJSubtitle, IFormFieldProvider)
+
+class IPSJAbstract(Schema):
+    """A document abstract.
+    """
+    fieldset(
+        'psj_metadata',
+        label = _(u'PSJ Metadata'),
+        fields = ('psj_abstract',),
+        )
+
+    psj_abstract = Text(
+        title = _(u'Abstract'),
+        description = _(u'Document Abstract'),
+        required = False,
+        )
+
+alsoProvides(IPSJAbstract, IFormFieldProvider)
+
+
+class IPSJBaseData(Schema):
+    """Document base metadata, including authorname, title, etc.
+    """
+    fieldset(
+        'psj_metadata',
+        label = _(u'PSJ Metadata'),
+        fields = ('psj_author', 'psj_title', 'psj_subtitle', 'psj_abstract'),
+        )
+
+    psj_author = IPSJAuthor['psj_author']
+    psj_title = IPSJTitle['psj_title']
+    psj_subtitle = IPSJSubtitle['psj_subtitle']
+    psj_abstract = IPSJAbstract['psj_abstract']
+
+alsoProvides(IPSJBaseData, IFormFieldProvider)
+
+
+class PSJAuthor(PSJMetadataBase):
     """A behaviour allowing to set the author of a PSJ document.
     """
-    implements(IAuthor)
+    implements(IPSJAuthor)
 
-    author = DCFieldProperty(
-        IAuthor['author'],
-        get_name = 'author'
+    psj_author = DCFieldProperty(
+        IPSJAuthor['psj_author'],
+        get_name = 'psj_author'
         )
+
+
+class PSJTitle(PSJMetadataBase):
+    """A behaviour allowing to set the title of a PSJ document.
+    """
+    implements(IPSJTitle)
+
+    psj_title = DCFieldProperty(
+        IPSJTitle['psj_title'],
+        get_name = 'psj_title'
+        )
+
+class PSJSubtitle(PSJMetadataBase):
+    """A behaviour allowing to set the subtitle of a PSJ document.
+    """
+    implements(IPSJSubtitle)
+
+    psj_subtitle = DCFieldProperty(
+        IPSJSubtitle['psj_subtitle'],
+        get_name = 'psj_subtitle'
+        )
+
+class PSJAbstract(PSJMetadataBase):
+    """A behaviour allowing to set the abstract of a PSJ document.
+    """
+    implements(IPSJAbstract)
+
+    psj_abstract = DCFieldProperty(
+        IPSJAbstract['psj_abstract'],
+        get_name = 'psj_abstract'
+        )
+
+class PSJBaseData(PSJAuthor, PSJTitle, PSJSubtitle, PSJAbstract):
+    """A behavior providing base metadata.
+    """
+    implements(IPSJBaseData)
+
+    psj_author = PSJAuthor.psj_author
+    psj_title = PSJTitle.psj_title
+    psj_subtitle = PSJSubtitle.psj_subtitle
+    psj_abstract = PSJAbstract.psj_abstract
