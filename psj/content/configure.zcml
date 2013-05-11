@@ -21,4 +21,6 @@
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />
 
+    <include package="." file="behaviors.zcml" />
+
 </configure>
