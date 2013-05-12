@@ -3,6 +3,11 @@ import os
 
 version = '2.0dev'
 
+tests_require = [
+    'PIL',
+    'plone.app.testing',
+    ]
+
 setup(name='psj.content',
       version=version,
       description="Plone Scholarly Journal - the content types",
@@ -38,6 +43,10 @@ setup(name='psj.content',
           'zope.interface',
           'zope.schema',
       ],
+      tests_require=tests_require,
+      extras_require = {
+          'test': tests_require,
+          },
       entry_points="""
       # -*- Entry points: -*-
 
