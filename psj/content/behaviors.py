@@ -175,8 +175,3 @@ class PSJBaseData(PSJAuthor, PSJTitle, PSJSubtitle, PSJAbstract):
     """A behavior providing base metadata.
     """
     implements(IPSJBaseData)
-
-    psj_author = PSJAuthor.psj_author
-    psj_title = PSJTitle.psj_title
-    psj_subtitle = PSJSubtitle.psj_subtitle
-    psj_abstract = PSJAbstract.psj_abstract
