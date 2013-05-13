@@ -44,7 +44,11 @@ class PSJFieldProperty(DCFieldProperty):
     """
     pass
 
-class IPSJAuthor(Schema):
+class IPSJBehavior(Schema):
+    """A behavior supporting PSJ content types.
+    """
+
+class IPSJAuthor(IPSJBehavior):
     """A document author.
     """
     fieldset(
@@ -61,7 +65,7 @@ class IPSJAuthor(Schema):
 
 alsoProvides(IPSJAuthor, IFormFieldProvider)
 
-class IPSJTitle(Schema):
+class IPSJTitle(IPSJBehavior):
     """A document title.
     """
     fieldset(
@@ -78,7 +82,7 @@ class IPSJTitle(Schema):
 
 alsoProvides(IPSJTitle, IFormFieldProvider)
 
-class IPSJSubtitle(Schema):
+class IPSJSubtitle(IPSJBehavior):
     """A document subtitle.
     """
     fieldset(
@@ -95,7 +99,7 @@ class IPSJSubtitle(Schema):
 
 alsoProvides(IPSJSubtitle, IFormFieldProvider)
 
-class IPSJAbstract(Schema):
+class IPSJAbstract(IPSJBehavior):
     """A document abstract.
     """
     fieldset(
@@ -113,7 +117,7 @@ class IPSJAbstract(Schema):
 alsoProvides(IPSJAbstract, IFormFieldProvider)
 
 
-class IPSJBaseData(Schema):
+class IPSJBaseData(IPSJBehavior):
     """Document base metadata, including authorname, title, etc.
     """
     fieldset(
