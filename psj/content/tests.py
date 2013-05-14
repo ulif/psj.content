@@ -18,7 +18,7 @@ from zope.schema.interfaces import WrongType
 ptc.setupPloneSite()
 
 import psj.content
-from psj.content.behaviors import IPSJAuthor
+from psj.content.behaviors import IPSJAuthor, IPSJTitle
 
 
 class TestCase(ptc.PloneTestCase):
@@ -62,7 +62,7 @@ class TestingAssignable(object):
     implements(IBehaviorAssignable)
     adapts(DummyDocument)
 
-    enabled = [IPSJAuthor]
+    enabled = [IPSJAuthor, IPSJTitle]
 
     def __init__(self, context):
         self.context = context
@@ -107,6 +107,38 @@ class BehaviorAuthorTestCase(TestCase):
         self.assertRaises(
             WrongType, setattr, behavior, u'psj_author', b'Cheese')
         return
+
+    def test_title_installed(self):
+        # make sure we can get the 'Title' behavior after install
+        behavior = queryUtility(
+            IBehavior, name=u'psj.content.behaviors.IPSJTitle',
+            default=None)
+        self.assertTrue(behavior is not None)
+        self.assertEqual(behavior.interface, IPSJTitle)
+        # make sure the behavior provides IFormFieldProvider
+        self.assertEqual(
+            IFormFieldProvider.providedBy(behavior.interface), True)
+        return
+
+    def test_title_behavior_usable(self):
+        # we can get a behavior by adapter
+        doc = DummyDocument(b'doc')
+        provideAdapter(TestingAssignable)
+        self.assertEqual(IDexterityContent.providedBy(doc), True)
+        behavior = IPSJTitle(doc, None)
+        self.assertTrue(behavior is not None)
+        self.assertEqual(True, hasattr(behavior, b'psj_title'))
+        # we can assign valid values to doc through the behavior
+        behavior.psj_title = u'John Cleese'
+        self.assertEqual(u'John Cleese', doc.psj_title)
+        # numbers are not accepted as TextLines
+        self.assertRaises(
+            WrongType, setattr, behavior, u'psj_title', 1)
+        # also byte streams (non-unicode) are rejected
+        self.assertRaises(
+            WrongType, setattr, behavior, u'psj_title', b'Cheese')
+        return
+
 
 
 def test_suite():
