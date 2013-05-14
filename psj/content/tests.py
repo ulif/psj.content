@@ -18,7 +18,7 @@ from zope.schema.interfaces import WrongType
 ptc.setupPloneSite()
 
 import psj.content
-from psj.content.behaviors import IPSJAuthor, IPSJTitle
+from psj.content.behaviors import IPSJAuthor, IPSJTitle, IPSJSubtitle
 
 
 class TestCase(ptc.PloneTestCase):
@@ -62,7 +62,7 @@ class TestingAssignable(object):
     implements(IBehaviorAssignable)
     adapts(DummyDocument)
 
-    enabled = [IPSJAuthor, IPSJTitle]
+    enabled = [IPSJAuthor, IPSJTitle, IPSJSubtitle]
 
     def __init__(self, context):
         self.context = context
@@ -137,6 +137,37 @@ class BehaviorAuthorTestCase(TestCase):
         # also byte streams (non-unicode) are rejected
         self.assertRaises(
             WrongType, setattr, behavior, u'psj_title', b'Cheese')
+        return
+
+    def test_subtitle_installed(self):
+        # make sure we can get the 'Subtitle' behavior after install
+        behavior = queryUtility(
+            IBehavior, name=u'psj.content.behaviors.IPSJSubtitle',
+            default=None)
+        self.assertTrue(behavior is not None)
+        self.assertEqual(behavior.interface, IPSJSubtitle)
+        # make sure the behavior provides IFormFieldProvider
+        self.assertEqual(
+            IFormFieldProvider.providedBy(behavior.interface), True)
+        return
+
+    def test_subtitle_behavior_usable(self):
+        # we can get a behavior by adapter
+        doc = DummyDocument(b'doc')
+        provideAdapter(TestingAssignable)
+        self.assertEqual(IDexterityContent.providedBy(doc), True)
+        behavior = IPSJSubtitle(doc, None)
+        self.assertTrue(behavior is not None)
+        self.assertEqual(True, hasattr(behavior, b'psj_subtitle'))
+        # we can assign valid values to doc through the behavior
+        behavior.psj_subtitle = u'John Cleese'
+        self.assertEqual(u'John Cleese', doc.psj_subtitle)
+        # numbers are not accepted as TextLines
+        self.assertRaises(
+            WrongType, setattr, behavior, u'psj_subtitle', 1)
+        # also byte streams (non-unicode) are rejected
+        self.assertRaises(
+            WrongType, setattr, behavior, u'psj_subtitle', b'Cheese')
         return
 
 
