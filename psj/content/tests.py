@@ -41,7 +41,7 @@ class TestCase(ptc.PloneTestCase):
 class DummyDocument(object):
     # a dummy document that supports properties
     implements(IDexterityContent)
-    portal_type = 'testtype'
+    portal_type = u'testtype'
     def __init__(self, title):
         self.title = title
 
@@ -80,7 +80,7 @@ class BehaviorAuthorTestCase(TestCase):
     def test_author_installed(self):
         # make sure we can get the 'Author' behavior after install
         behavior = queryUtility(
-            IBehavior, name='psj.content.behaviors.IPSJAuthor',
+            IBehavior, name=u'psj.content.behaviors.IPSJAuthor',
             default=None)
         self.assertTrue(behavior is not None)
         self.assertEqual(behavior.interface, IPSJAuthor)
@@ -91,19 +91,21 @@ class BehaviorAuthorTestCase(TestCase):
 
     def test_author_behavior_usable(self):
         # we can get a behavior by adapter
-        doc = DummyDocument('doc')
+        doc = DummyDocument(b'doc')
         provideAdapter(TestingAssignable)
         self.assertEqual(IDexterityContent.providedBy(doc), True)
         behavior = IPSJAuthor(doc, None)
         self.assertTrue(behavior is not None)
-        self.assertEqual(True, hasattr(behavior, 'psj_author'))
+        self.assertEqual(True, hasattr(behavior, b'psj_author'))
         # we can assign valid values to doc through the behavior
         behavior.psj_author = u'John Cleese'
         self.assertEqual(u'John Cleese', doc.psj_author)
         # numbers are not accepted as TextLines
-        self.assertRaises(WrongType, setattr, behavior, 'psj_author', 1)
+        self.assertRaises(
+            WrongType, setattr, behavior, u'psj_author', 1)
         # also byte streams (non-unicode) are rejected
-        self.assertRaises(WrongType, setattr, behavior, 'psj_author', 'Cheese')
+        self.assertRaises(
+            WrongType, setattr, behavior, u'psj_author', b'Cheese')
         return
 
 
@@ -135,4 +137,4 @@ def test_suite():
     return suite
 
 if __name__ == '__main__':
-    unittest.main(defaultTest='test_suite')
+    unittest.main(defaultTest=u'test_suite')
