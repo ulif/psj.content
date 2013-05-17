@@ -44,5 +44,11 @@
         factory=".behaviors.PSJBaseData"
         />
 
+    <plone:behavior
+        title="PSJ Office Document Transformer"
+        description="Allows upload and transformations of office docs."
+        provides=".behaviors.IPSJOfficeDocTransformer"
+        factory=".behaviors.PSJOfficeDocTransformer"
+        />
 
 </configure>
