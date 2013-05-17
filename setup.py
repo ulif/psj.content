@@ -37,6 +37,8 @@ setup(name='psj.content',
           'grokcore.component',
           'plone.behavior',            # for behaviours
           'plone.directives.form',      # for behaviours
+          'plone.formwidget.namedfile',  # for named files in behaviors
+          'plone.namedfile[blobs]',      # for named files in behaviors
           'zope.i18nmessageid',
           'plone.dexterity',
           'zope.component',
