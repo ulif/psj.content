@@ -21,6 +21,7 @@
 from plone.app.dexterity.behaviors.metadata import DCFieldProperty
 from plone.dexterity.interfaces import IDexterityContent
 from plone.directives.form import Schema, fieldset, IFormFieldProvider
+from plone.namedfile.field import NamedBlobFile
 from zope.component import adapts
 from zope.interface import implements, alsoProvides
 from zope.schema import TextLine, Text
@@ -134,6 +135,27 @@ class IPSJBaseData(IPSJBehavior):
 alsoProvides(IPSJBaseData, IFormFieldProvider)
 
 
+class IPSJOfficeDocTransformer(IPSJBehavior):
+    """A document that provides some office doc.
+
+    The transformer also supports automatic transforms of uploaded
+    office docs.
+    """
+    fieldset(
+        'psj_docholder',
+        label = _(u'Office Docs'),
+        fields = ('psj_office_doc',),
+        )
+
+    psj_office_doc = NamedBlobFile(
+        title = _(u'Source Office File (.doc, .docx, .odt)'),
+        description = _(u'Document Abstract'),
+        required = True,
+        )
+
+alsoProvides(IPSJOfficeDocTransformer, IFormFieldProvider)
+
+
 class PSJAuthor(PSJMetadataBase):
     """A behaviour allowing to set the author of a PSJ document.
     """
@@ -179,3 +201,13 @@ class PSJBaseData(PSJAuthor, PSJTitle, PSJSubtitle, PSJAbstract):
     """A behavior providing base metadata.
     """
     implements(IPSJBaseData)
+
+class PSJOfficeDocTransformer(PSJMetadataBase):
+    """A document that provides some office doc.
+    """
+    implements(IPSJOfficeDocTransformer)
+
+    psj_office_doc = DCFieldProperty(
+        IPSJOfficeDocTransformer['psj_office_doc'],
+        get_name = 'psj_office_doc',
+        )
