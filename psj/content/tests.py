@@ -30,7 +30,6 @@ class TestCase(ptc.PloneTestCase):
         @classmethod
         def setUp(cls):
             fiveconfigure.debug_mode = True
-            #zcml.load_config('configure.zcml', psj.content)
             ztc.installPackage(psj.content)
             fiveconfigure.debug_mode = False
 
