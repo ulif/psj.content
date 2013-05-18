@@ -75,18 +75,22 @@ class TestingAssignable(object):
             yield queryUtility(IBehavior, name=e.__identifier__)
 
 
-class BehaviorAuthorTestCase(TestCase):
+class MetadataBehaviorsTestCase(TestCase):
+    # Tests of behaviors concerning basic PSJ metadata.
 
-    def test_author_installed(self):
-        # make sure we can get the 'Author' behavior after install
-        behavior = queryUtility(
-            IBehavior, name=u'psj.content.behaviors.IPSJAuthor',
-            default=None)
+    def behavior_installed(self, name, iface):
+        # make sure we get the desired behavior after install
+        name = u'psj.content.behaviors.%s' % name
+        behavior = queryUtility(IBehavior, name=name, default=None)
         self.assertTrue(behavior is not None)
-        self.assertEqual(behavior.interface, IPSJAuthor)
+        self.assertEqual(behavior.interface, iface)
         # make sure the behavior provides IFormFieldProvider
         self.assertEqual(
             IFormFieldProvider.providedBy(behavior.interface), True)
+        return
+
+    def test_author_installed(self):
+        self.behavior_installed('IPSJAuthor', IPSJAuthor)
         return
 
     def test_author_behavior_usable(self):
@@ -109,15 +113,7 @@ class BehaviorAuthorTestCase(TestCase):
         return
 
     def test_title_installed(self):
-        # make sure we can get the 'Title' behavior after install
-        behavior = queryUtility(
-            IBehavior, name=u'psj.content.behaviors.IPSJTitle',
-            default=None)
-        self.assertTrue(behavior is not None)
-        self.assertEqual(behavior.interface, IPSJTitle)
-        # make sure the behavior provides IFormFieldProvider
-        self.assertEqual(
-            IFormFieldProvider.providedBy(behavior.interface), True)
+        self.behavior_installed('IPSJTitle', IPSJTitle)
         return
 
     def test_title_behavior_usable(self):
@@ -140,15 +136,7 @@ class BehaviorAuthorTestCase(TestCase):
         return
 
     def test_subtitle_installed(self):
-        # make sure we can get the 'Subtitle' behavior after install
-        behavior = queryUtility(
-            IBehavior, name=u'psj.content.behaviors.IPSJSubtitle',
-            default=None)
-        self.assertTrue(behavior is not None)
-        self.assertEqual(behavior.interface, IPSJSubtitle)
-        # make sure the behavior provides IFormFieldProvider
-        self.assertEqual(
-            IFormFieldProvider.providedBy(behavior.interface), True)
+        self.behavior_installed('IPSJSubtitle', IPSJSubtitle)
         return
 
     def test_subtitle_behavior_usable(self):
@@ -196,7 +184,7 @@ def test_suite():
 
         ])
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(BehaviorAuthorTestCase))
+    suite.addTest(unittest.makeSuite(MetadataBehaviorsTestCase))
     return suite
 
 if __name__ == '__main__':
