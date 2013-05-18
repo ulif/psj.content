@@ -89,27 +89,35 @@ class MetadataBehaviorsTestCase(TestCase):
             IFormFieldProvider.providedBy(behavior.interface), True)
         return
 
+    def text_behavior_usable(self, attr_name, iface):
+        # we can attach a behavior to a content type and modify some
+        # text/textline attribute
+        doc = DummyDocument(b'doc')
+        provideAdapter(TestingAssignable)
+        self.assertEqual(IDexterityContent.providedBy(doc), True)
+        behavior = iface(doc, None)
+        self.assertTrue(behavior is not None)
+        self.assertEqual(True, hasattr(behavior, attr_name))
+        # we can assign valid values to doc through the behavior
+        setattr(behavior, attr_name, u'John Cleese')
+        #behavior.psj_author = u'John Cleese'
+        self.assertEqual(u'John Cleese', getattr(doc, attr_name))
+        # numbers are not accepted as Text/TextLines
+        self.assertRaises(
+            WrongType, setattr, behavior, attr_name, 1)
+        # also byte streams (non-unicode) are rejected
+        self.assertRaises(
+            WrongType, setattr, behavior, attr_name, b'Cheese')
+        return
+
+
     def test_author_installed(self):
         self.behavior_installed('IPSJAuthor', IPSJAuthor)
         return
 
     def test_author_behavior_usable(self):
         # we can get a behavior by adapter
-        doc = DummyDocument(b'doc')
-        provideAdapter(TestingAssignable)
-        self.assertEqual(IDexterityContent.providedBy(doc), True)
-        behavior = IPSJAuthor(doc, None)
-        self.assertTrue(behavior is not None)
-        self.assertEqual(True, hasattr(behavior, b'psj_author'))
-        # we can assign valid values to doc through the behavior
-        behavior.psj_author = u'John Cleese'
-        self.assertEqual(u'John Cleese', doc.psj_author)
-        # numbers are not accepted as TextLines
-        self.assertRaises(
-            WrongType, setattr, behavior, u'psj_author', 1)
-        # also byte streams (non-unicode) are rejected
-        self.assertRaises(
-            WrongType, setattr, behavior, u'psj_author', b'Cheese')
+        self.text_behavior_usable(b'psj_author', IPSJAuthor)
         return
 
     def test_title_installed(self):
@@ -118,21 +126,7 @@ class MetadataBehaviorsTestCase(TestCase):
 
     def test_title_behavior_usable(self):
         # we can get a behavior by adapter
-        doc = DummyDocument(b'doc')
-        provideAdapter(TestingAssignable)
-        self.assertEqual(IDexterityContent.providedBy(doc), True)
-        behavior = IPSJTitle(doc, None)
-        self.assertTrue(behavior is not None)
-        self.assertEqual(True, hasattr(behavior, b'psj_title'))
-        # we can assign valid values to doc through the behavior
-        behavior.psj_title = u'John Cleese'
-        self.assertEqual(u'John Cleese', doc.psj_title)
-        # numbers are not accepted as TextLines
-        self.assertRaises(
-            WrongType, setattr, behavior, u'psj_title', 1)
-        # also byte streams (non-unicode) are rejected
-        self.assertRaises(
-            WrongType, setattr, behavior, u'psj_title', b'Cheese')
+        self.text_behavior_usable(b'psj_title', IPSJTitle)
         return
 
     def test_subtitle_installed(self):
@@ -141,23 +135,8 @@ class MetadataBehaviorsTestCase(TestCase):
 
     def test_subtitle_behavior_usable(self):
         # we can get a behavior by adapter
-        doc = DummyDocument(b'doc')
-        provideAdapter(TestingAssignable)
-        self.assertEqual(IDexterityContent.providedBy(doc), True)
-        behavior = IPSJSubtitle(doc, None)
-        self.assertTrue(behavior is not None)
-        self.assertEqual(True, hasattr(behavior, b'psj_subtitle'))
-        # we can assign valid values to doc through the behavior
-        behavior.psj_subtitle = u'John Cleese'
-        self.assertEqual(u'John Cleese', doc.psj_subtitle)
-        # numbers are not accepted as TextLines
-        self.assertRaises(
-            WrongType, setattr, behavior, u'psj_subtitle', 1)
-        # also byte streams (non-unicode) are rejected
-        self.assertRaises(
-            WrongType, setattr, behavior, u'psj_subtitle', b'Cheese')
+        self.text_behavior_usable(b'psj_subtitle', IPSJSubtitle)
         return
-
 
 
 def test_suite():
