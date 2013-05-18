@@ -18,7 +18,9 @@ from zope.schema.interfaces import WrongType
 ptc.setupPloneSite()
 
 import psj.content
-from psj.content.behaviors import IPSJAuthor, IPSJTitle, IPSJSubtitle
+from psj.content.behaviors import (
+    IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract,
+    )
 
 
 class TestCase(ptc.PloneTestCase):
@@ -62,7 +64,7 @@ class TestingAssignable(object):
     implements(IBehaviorAssignable)
     adapts(DummyDocument)
 
-    enabled = [IPSJAuthor, IPSJTitle, IPSJSubtitle]
+    enabled = [IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract]
 
     def __init__(self, context):
         self.context = context
@@ -136,6 +138,15 @@ class MetadataBehaviorsTestCase(TestCase):
     def test_subtitle_behavior_usable(self):
         # we can get a behavior by adapter
         self.text_behavior_usable(b'psj_subtitle', IPSJSubtitle)
+        return
+
+    def test_abstract_installed(self):
+        self.behavior_installed('IPSJAbstract', IPSJAbstract)
+        return
+
+    def test_subtitle_behavior_usable(self):
+        # we can get a behavior by adapter
+        self.text_behavior_usable(b'psj_abstract', IPSJAbstract)
         return
 
 
