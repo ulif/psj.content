@@ -32,18 +32,19 @@ setup(name='psj.content',
           'setuptools',
           # -*- Extra requirements: -*-
           'Plone',
-          'plone.app.dexterity',
           'collective.autopermission',
           'grokcore.component',
+          'plone.app.dexterity',
           'plone.behavior',            # for behaviours
+          'plone.dexterity',
           'plone.directives.form',      # for behaviours
           'plone.formwidget.namedfile',  # for named files in behaviors
           'plone.namedfile[blobs]',      # for named files in behaviors
-          'zope.i18nmessageid',
-          'plone.dexterity',
           'zope.component',
+          'zope.i18nmessageid',
           'zope.interface',
           'zope.schema',
+          'Products.ATVocabularyManager',
       ],
       tests_require=tests_require,
       extras_require = {
