@@ -45,6 +45,7 @@ setup(name='psj.content',
           'zope.interface',
           'zope.schema',
           'Products.ATVocabularyManager',
+          'psj.policy',
       ],
       tests_require=tests_require,
       extras_require = {
