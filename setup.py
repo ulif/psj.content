@@ -46,6 +46,7 @@ setup(name='psj.content',
           'zope.schema',
           'Products.ATVocabularyManager',
           'psj.policy',
+          'ulif.openoffice',
       ],
       tests_require=tests_require,
       extras_require = {
