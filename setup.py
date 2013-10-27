@@ -34,8 +34,8 @@ setup(name='psj.content',
           'Plone',
           'collective.autopermission',
           'grokcore.component',
-          'plone.app.dexterity',
-          'plone.behavior',            # for behaviours
+          'plone.app.dexterity [grok]',
+          'plone.behavior',             # for behaviours
           'plone.dexterity',
           'plone.directives.form',      # for behaviours
           'plone.formwidget.namedfile',  # for named files in behaviors
@@ -46,7 +46,7 @@ setup(name='psj.content',
           'zope.schema',
           'Products.ATVocabularyManager',
           'psj.policy',
-          'ulif.openoffice',
+          'ulif.openoffice',           # mention here to get scripts
       ],
       tests_require=tests_require,
       extras_require = {
