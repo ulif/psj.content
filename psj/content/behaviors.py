@@ -18,14 +18,19 @@
 """Plone Behaviors for `psj.content`.
 
 """
+from five import grok
 from plone.app.dexterity.behaviors.metadata import DCFieldProperty
 from plone.dexterity.interfaces import IDexterityContent
 from plone.directives.form import Schema, fieldset, IFormFieldProvider
-from plone.namedfile.field import NamedBlobFile
+from plone.namedfile.field import NamedBlobFile as NamedBlobFileField
+from plone.namedfile.file import NamedBlobFile
+from Products.CMFCore.utils import getToolByName
 from zope.component import adapts
-from zope.interface import implements, alsoProvides
+from zope.interface import implements, alsoProvides, Interface
+from zope.lifecycleevent.interfaces import IObjectCreatedEvent
 from zope.schema import TextLine, Text
 from psj.content import _
+
 
 class PSJMetadataBase(object):
     """An adapter storing metadata directly on an object using the
@@ -144,14 +149,22 @@ class IPSJOfficeDocTransformer(IPSJBehavior):
     fieldset(
         'psj_docholder',
         label = _(u'Office Docs'),
-        fields = ('psj_office_doc',),
+        fields = ('psj_office_doc', 'psj_pdf_repr'),
         )
 
-    psj_office_doc = NamedBlobFile(
+    psj_office_doc = NamedBlobFileField(
         title = _(u'Source Office File (.doc, .docx, .odt)'),
         description = _(u'Document Abstract'),
         required = True,
         )
+
+    psj_pdf_repr = NamedBlobFileField(
+        title = _(u'PDF version'),
+        description = _(u'The PDF representation of the source document.'),
+        required = False,
+        readonly = True,
+        )
+
 
 alsoProvides(IPSJOfficeDocTransformer, IFormFieldProvider)
 
@@ -202,6 +215,7 @@ class PSJBaseData(PSJAuthor, PSJTitle, PSJSubtitle, PSJAbstract):
     """
     implements(IPSJBaseData)
 
+
 class PSJOfficeDocTransformer(PSJMetadataBase):
     """A document that provides some office doc.
     """
@@ -211,3 +225,27 @@ class PSJOfficeDocTransformer(PSJMetadataBase):
         IPSJOfficeDocTransformer['psj_office_doc'],
         get_name = 'psj_office_doc',
         )
+
+    psj_pdf_repr = DCFieldProperty(
+        IPSJOfficeDocTransformer['psj_pdf_repr'],
+        get_name = 'psj_pdf_repr',
+        )
+
+
+@grok.subscribe(IPSJOfficeDocTransformer, IObjectCreatedEvent)
+def create_representations(transformer, event):
+    """Event handler for freshly created IPSJOfficeDocTransforms.
+
+    Creates PDF representation of uploaded office doc on creation.
+    """
+    transforms = getToolByName(transformer, 'portal_transforms')
+    in_data = transformer.psj_office_doc.data
+    out_data = transforms.convertTo(
+        'application/pdf', in_data,
+        mimetype='application/vnd.oasis.opendocument.text')
+    if out_data is None:
+        # transform failed
+        return
+    new_filename = transformer.psj_office_doc.filename + '.pdf'
+    transformer.psj_pdf_repr = NamedBlobFile(
+        data=out_data.getData(), filename=new_filename)

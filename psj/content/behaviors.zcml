@@ -49,6 +49,7 @@
         description="Allows upload and transformations of office docs."
         provides=".behaviors.IPSJOfficeDocTransformer"
         factory=".behaviors.PSJOfficeDocTransformer"
+        marker=".behaviors.IPSJOfficeDocTransformer"
         />
 
 </configure>
