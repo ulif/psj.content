@@ -1,0 +1,11 @@
+<vdex xmlns="http://www.imsglobal.org/xsd/imsvdex_v1p0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+      xsi:schemaLocation="http://www.imsglobal.org/xsd/imsvdex_v1p0 imsvdex_v1p0.xsd http://www.imsglobal.org/xsd/imsmd_rootv1p2p1 imsmd_rootv1p2p1.xsd" 
+      profileType="flatTokenTerms" language="en"
+      orderSignificant="true">
+  <vocabIdentifier>psj_licenses</vocabIdentifier>
+  <vocabName>
+    <langstring language="de">Lizenzen</langstring>
+    <langstring language="en">Licenses</langstring>
+  </vocabName>
+</vdex>
