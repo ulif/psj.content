@@ -25,7 +25,9 @@ from plone.directives.form import fieldset, IFormFieldProvider
 from plone.namedfile.field import NamedBlobFile as NamedBlobFileField
 from plone.namedfile.file import NamedBlobFile
 from plone.supermodel import model
+from Products.CMFCore.utils import getToolByName
 from zope import schema
+from zope.lifecycleevent.interfaces import IObjectCreatedEvent
 
 
 class IOfficeDoc(model.Schema):
@@ -50,8 +52,37 @@ class IOfficeDoc(model.Schema):
         readonly = True,
         )
 
+    def psj_create_reprs():
+        """Create PDF, HTML, etc. representations of source doc.
+        """
+
 
 class OfficeDoc(Item):
     """An office document.
     """
     grok.implements(IOfficeDoc)
+
+    def psj_create_reprs(self):
+        """Create PDF, HTML, etc. representations of source doc.
+        """
+        transforms = getToolByName(self, 'portal_transforms')
+        in_data = self.psj_office_doc.data
+        out_data = transforms.convertTo(
+        'application/pdf', in_data,
+        mimetype='application/vnd.oasis.opendocument.text')
+        if out_data is None:
+            # transform failed
+            return
+        new_filename = self.psj_office_doc.filename + '.pdf'
+        self.psj_pdf_repr = NamedBlobFile(
+            data=out_data.getData(), filename=new_filename)
+
+
+@grok.subscribe(IOfficeDoc, IObjectCreatedEvent)
+def create_representations(obj, event):
+    """Event handler for freshly created IOfficeDocs.
+
+    Creates PDF representation of uploaded office doc on creation.
+    """
+    obj.psj_create_reprs()
+    return
