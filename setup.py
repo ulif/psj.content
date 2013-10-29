@@ -4,7 +4,7 @@ import os
 version = '2.0dev'
 
 tests_require = [
-    'PIL',
+    'Pillow',
     'plone.app.testing',
     ]
 
