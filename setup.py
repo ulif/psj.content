@@ -34,7 +34,8 @@ setup(name='psj.content',
           'Plone',
           'collective.autopermission',
           'grokcore.component',
-          'plone.app.dexterity [grok]',
+          'plone.app.dexterity [grok, relations]',
+          'plone.app.relationfield',
           'plone.behavior',             # for behaviours
           'plone.dexterity',
           'plone.directives.form',      # for behaviours
