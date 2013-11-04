@@ -35,6 +35,7 @@ setup(name='psj.content',
           'collective.autopermission',
           'grokcore.component',
           'plone.app.dexterity [grok, relations]',
+          'plone.app.referenceablebehavior',
           'plone.app.relationfield',
           'plone.behavior',             # for behaviours
           'plone.dexterity',
