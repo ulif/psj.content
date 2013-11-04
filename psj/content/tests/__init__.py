@@ -1,8 +1,9 @@
 # tests for psj.content
 
-#import unittest
+import unittest
 #from zope.testing import doctestunit
 #from zope.component import testing
+
 
 def test_suite():
     suite = unittest.TestSuite([
@@ -29,6 +30,7 @@ def test_suite():
         ])
     suite = unittest.TestSuite()
     return suite
+
 
 if __name__ == '__main__':
     unittest.main(defaultTest=u'test_suite')

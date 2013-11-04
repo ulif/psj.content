@@ -12,13 +12,13 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program; if not, write to the Free Software
-#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 #  MA 02111-1307 USA.
 #
 """Testing support for `psj.content`.
 
 """
-from Products.Five import fiveconfigure, zcml
+from Products.Five import fiveconfigure
 from Products.PloneTestCase import PloneTestCase as ptc
 from Products.PloneTestCase.layer import PloneSite
 from Testing import ZopeTestCase as ztc

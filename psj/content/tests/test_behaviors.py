@@ -15,6 +15,7 @@ class DummyDocument(object):
     # a dummy document that supports properties
     implements(IDexterityContent)
     portal_type = u'testtype'
+
     def __init__(self, title):
         self.title = title
 
@@ -84,7 +85,6 @@ class MetadataBehaviorsTestCase(TestCase):
             WrongType, setattr, behavior, attr_name, b'Cheese')
         return
 
-
     def test_author_installed(self):
         self.behavior_installed('IPSJAuthor', IPSJAuthor)
         return
@@ -116,7 +116,7 @@ class MetadataBehaviorsTestCase(TestCase):
         self.behavior_installed('IPSJAbstract', IPSJAbstract)
         return
 
-    def test_subtitle_behavior_usable(self):
+    def test_abstract_behavior_usable(self):
         # we can get a behavior by adapter
         self.text_behavior_usable(b'psj_abstract', IPSJAbstract)
         return
