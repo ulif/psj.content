@@ -132,3 +132,11 @@ def create_representations(obj, event):
     """
     obj.psj_create_reprs()
     return
+
+
+class DisplayView(DisplayForm):
+    """A display view for office docs.
+    """
+    grok.name('psj_view')
+    grok.context(IOfficeDoc)
+    grok.require('zope2.View')
