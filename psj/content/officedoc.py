@@ -18,16 +18,20 @@
 """Dexterity type for office docs.
 
 """
+from BTrees.OOBTree import OOBTree
 from psj.content import _
 from five import grok
-from plone.dexterity.content import Item
+from plone.dexterity.content import Item, Container
+from plone.directives.dexterity import DisplayForm
 from plone.directives.form import fieldset, IFormFieldProvider
 from plone.namedfile.field import NamedBlobFile as NamedBlobFileField
 from plone.namedfile.file import NamedBlobFile
 from plone.supermodel import model
+from Products.ATContentTypes.content.file import ATFile
+from Products.ATContentTypes.content.image import ATImage
 from Products.CMFCore.utils import getToolByName
 from zope import schema
-from zope.lifecycleevent.interfaces import IObjectCreatedEvent
+from zope.lifecycleevent.interfaces import IObjectAddedEvent
 
 
 class IOfficeDoc(model.Schema):
@@ -52,33 +56,75 @@ class IOfficeDoc(model.Schema):
         readonly = True,
         )
 
+    psj_html_repr = NamedBlobFileField(
+        title = _(u'HTML representation'),
+        description = _(u'The HTML representation of the source document.'),
+        required = False,
+        readonly = True,
+        )
+
     def psj_create_reprs():
         """Create PDF, HTML, etc. representations of source doc.
         """
 
-
-class OfficeDoc(Item):
+class OfficeDoc(Container):
     """An office document.
     """
     grok.implements(IOfficeDoc)
+
+    __allow_access_to_unprotected_subobjects__ = 1
+
+    def __init__(self, *args, **kw):
+        super(OfficeDoc, self).__init__(*args, **kw)
 
     def psj_create_reprs(self):
         """Create PDF, HTML, etc. representations of source doc.
         """
         transforms = getToolByName(self, 'portal_transforms')
         in_data = self.psj_office_doc.data
+        # create PDF
         out_data = transforms.convertTo(
-        'application/pdf', in_data,
-        mimetype='application/vnd.oasis.opendocument.text')
-        if out_data is None:
-            # transform failed
-            return
-        new_filename = self.psj_office_doc.filename + '.pdf'
-        self.psj_pdf_repr = NamedBlobFile(
-            data=out_data.getData(), filename=new_filename)
+            'application/pdf', in_data,
+            mimetype='application/vnd.oasis.opendocument.text')
+        if out_data is not None:
+            # transform succeeded
+            new_filename = self.psj_office_doc.filename + '.pdf'
+            self.psj_pdf_repr = NamedBlobFile(
+                data=out_data.getData(), filename=new_filename)
+        # create HTML
+        out_data = transforms.convertTo(
+            'text/html', in_data,
+            mimetype='application/vnd.oasis.opendocument.text')
+        if out_data is not None:
+            # transform succeeded
+            new_filename = self.psj_office_doc.filename + '.html'
+            html = out_data.getData()
+            self.psj_html_repr = NamedBlobFile(
+                data=html, filename=new_filename)
+            for id, subdata in out_data.getSubObjects().items():
+                id = id.decode('utf8')
+                if id.lower()[-4:] in (u'.png', u'.jpg', u'.gif', u'.tif'):
+                    new_id = self.invokeFactory('Image', id)
+                else:
+                    new_id = self.invokeFactory('File', id)
+                new_context = self[new_id]
+                new_context.update_data(subdata)
+        return
+
+    def SearchableText(self):
+        """The text searchable in this document.
+
+        Additionally to the regular fields (title, description, etc.),
+        we take care for the HTML representation to be added to the
+        searchable text.
+
+        XXX: we should strip HTML markup before adding the text.
+        """
+        base_result = super(OfficeDoc, self).SearchableText()
+        return '%s %s' % (base_result, self.psj_html_repr.data)
 
 
-@grok.subscribe(IOfficeDoc, IObjectCreatedEvent)
+@grok.subscribe(IOfficeDoc, IObjectAddedEvent)
 def create_representations(obj, event):
     """Event handler for freshly created IOfficeDocs.
 
