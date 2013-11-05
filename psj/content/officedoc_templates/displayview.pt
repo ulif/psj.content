@@ -15,7 +15,6 @@
         <div tal:replace="structure provider:plone.belowcontenttitle" />
         <p class="documentDescription" tal:content="context/description" />
         <div tal:replace="structure provider:plone.abovecontentbody" />
-        <div>ASDASD QWEQWE ASDASD</div>
         <div>
           Source:
           <span tal:replace="structure view/w/psj_office_doc/render" />
