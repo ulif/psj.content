@@ -121,7 +121,8 @@ class OfficeDoc(Container):
         XXX: we should strip HTML markup before adding the text.
         """
         base_result = super(OfficeDoc, self).SearchableText()
-        return '%s %s' % (base_result, self.psj_html_repr.data)
+        html_content = getattr(self.psj_html_repr, 'data', '')
+        return '%s %s' % (base_result, html_content)
 
 
 @grok.subscribe(IOfficeDoc, IObjectAddedEvent)
