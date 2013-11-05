@@ -1,0 +1,38 @@
+<html
+    xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+    xmlns:tal="http://xml.zope.org/namespaces/tal"
+    xmlns:metal="http://xml.zope.org/namespaces/metal"
+    xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+    lang="en"
+    metal:use-macro="context/main_template/macros/master"
+    i18n:domain="example.conference">
+  <body>
+
+    <metal:main fill-slot="main">
+      <tal:main-macro metal:define-macro="main">
+        <div tal:replace="structure provider:plone.abovecontenttitle" />
+        <h1 class="documentFirstHeading" tal:content="context/title" />
+        <div tal:replace="structure provider:plone.belowcontenttitle" />
+        <p class="documentDescription" tal:content="context/description" />
+        <div tal:replace="structure provider:plone.abovecontentbody" />
+        <div>ASDASD QWEQWE ASDASD</div>
+        <div>
+          Source:
+          <span tal:replace="structure view/w/psj_office_doc/render" />
+        </div>
+        <div>
+          PDF:
+          <span tal:replace="structure view/w/psj_pdf_repr/render" />
+        </div>
+        <div>
+          <span tal:replace="structure view/context/psj_html_repr/data" />
+        </div>
+        <!--
+        <div tal:content="structure view/w/details/render" />
+        -->
+        <div tal:replace="structure provider:plone.belowcontentbody" />
+      </tal:main-macro>
+    </metal:main>
+
+  </body>
+</html>
