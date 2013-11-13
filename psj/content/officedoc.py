@@ -38,40 +38,41 @@ class IOfficeDoc(model.Schema):
     """
     model.fieldset(
         'psj_docholder',
-        label = _(u'Office Documents'),
-        fields = ('psj_office_doc', 'psj_pdf_repr'),
+        label=_(u'Office Documents'),
+        fields=('psj_office_doc', 'psj_pdf_repr'),
         )
 
     psj_office_doc = NamedBlobFileField(
-        title = _(u'Source Office File (.doc, .docx, .odt)'),
-        description = _(u'Source Document'),
-        required = True,
+        title=_(u'Source Office File (.doc, .docx, .odt)'),
+        description=_(u'Source Document'),
+        required=True,
         )
 
     psj_md5 = schema.ASCIILine(
-        title = _(u'MD5 of Source'),
-        description = _(u'The MD5 sum of the contained office doc.'),
-        required = False,
-        readonly = True,
+        title=_(u'MD5 of Source'),
+        description=_(u'The MD5 sum of the contained office doc.'),
+        required=False,
+        readonly=True,
         )
 
     psj_pdf_repr = NamedBlobFileField(
-        title = _(u'PDF version'),
-        description = _(u'The PDF representation of the source document.'),
-        required = False,
-        readonly = True,
+        title=_(u'PDF version'),
+        description=_(u'The PDF representation of the source document.'),
+        required=False,
+        readonly=True,
         )
 
     psj_html_repr = NamedBlobFileField(
-        title = _(u'HTML representation'),
-        description = _(u'The HTML representation of the source document.'),
-        required = False,
-        readonly = True,
+        title=_(u'HTML representation'),
+        description=_(u'The HTML representation of the source document.'),
+        required=False,
+        readonly=True,
         )
 
     def psj_create_reprs():
         """Create PDF, HTML, etc. representations of source doc.
         """
+
 
 class OfficeDoc(Container):
     """An office document.
