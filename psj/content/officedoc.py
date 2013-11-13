@@ -86,43 +86,63 @@ class OfficeDoc(Container):
     psj_html_repr = None
     psj_pdf_repr = None
 
+    def psj_create_pdf(self, transforms, in_data):
+        """Create a PDF representation of `in_data`.
+
+        `in_data` is supposed to be the binary content of an office
+        document.
+
+        `transforms` are the portal transforms.
+        """
+        out_data = transforms.convertTo(
+            'application/pdf', in_data,
+            mimetype='application/vnd.oasis.opendocument.text')
+        if out_data is None:
+            # transform failed
+            return
+        new_filename = self.psj_office_doc.filename + '.pdf'
+        self.psj_pdf_repr = NamedBlobFile(
+            data=out_data.getData(), filename=new_filename)
+
+    def psj_create_html(self, transforms, in_data):
+        """Create an HTML representation of `in_data`.
+
+        `in_data` is supposed to be the binary content of an office
+        document.
+
+        `transforms` are the portal transforms.
+        """
+        out_data = transforms.convertTo(
+            'text/html', in_data,
+            mimetype='application/vnd.oasis.opendocument.text')
+        self.psj_md5 = md5.new(in_data).hexdigest()
+        if out_data is None:
+            # transform failed
+            return
+        new_filename = self.psj_office_doc.filename + '.html'
+        html = out_data.getData()
+        self.psj_html_repr = NamedBlobFile(
+            data=html, filename=new_filename)
+        for name in self.keys():
+            # make sure all old extra-files (images, etc.) are
+            # deleted.
+            del self[name]
+        for id, subdata in out_data.getSubObjects().items():
+            id = id.decode('utf8')
+            if id.lower()[-4:] in (u'.png', u'.jpg', u'.gif', u'.tif'):
+                new_id = self.invokeFactory('Image', id)
+            else:
+                new_id = self.invokeFactory('File', id)
+            new_context = self[new_id]
+            new_context.update_data(subdata)
+
     def psj_create_reprs(self):
         """Create PDF, HTML, etc. representations of source doc.
         """
         transforms = getToolByName(self, 'portal_transforms')
         in_data = self.psj_office_doc.data
-        # create PDF
-        out_data = transforms.convertTo(
-            'application/pdf', in_data,
-            mimetype='application/vnd.oasis.opendocument.text')
-        if out_data is not None:
-            # transform succeeded
-            new_filename = self.psj_office_doc.filename + '.pdf'
-            self.psj_pdf_repr = NamedBlobFile(
-                data=out_data.getData(), filename=new_filename)
-        # create HTML
-        out_data = transforms.convertTo(
-            'text/html', in_data,
-            mimetype='application/vnd.oasis.opendocument.text')
-        self.psj_md5 = md5.new(in_data).hexdigest()
-        if out_data is not None:
-            # transform succeeded
-            new_filename = self.psj_office_doc.filename + '.html'
-            html = out_data.getData()
-            self.psj_html_repr = NamedBlobFile(
-                data=html, filename=new_filename)
-            for name in self.keys():
-                # make sure all old extra-files (images, etc.) are
-                # deleted.
-                del self[name]
-            for id, subdata in out_data.getSubObjects().items():
-                id = id.decode('utf8')
-                if id.lower()[-4:] in (u'.png', u'.jpg', u'.gif', u'.tif'):
-                    new_id = self.invokeFactory('Image', id)
-                else:
-                    new_id = self.invokeFactory('File', id)
-                new_context = self[new_id]
-                new_context.update_data(subdata)
+        self.create_pdf(transforms, in_data)
+        self.create_html(transforms, in_data)
         return
 
     def SearchableText(self):
