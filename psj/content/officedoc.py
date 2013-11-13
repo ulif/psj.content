@@ -81,9 +81,6 @@ class OfficeDoc(Container):
 
     __allow_access_to_unprotected_subobjects__ = 1
 
-    def __init__(self, *args, **kw):
-        super(OfficeDoc, self).__init__(*args, **kw)
-
     def psj_create_reprs(self):
         """Create PDF, HTML, etc. representations of source doc.
         """
