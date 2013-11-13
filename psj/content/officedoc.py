@@ -19,17 +19,13 @@
 
 """
 import md5
-from BTrees.OOBTree import OOBTree
 from psj.content import _
 from five import grok
-from plone.dexterity.content import Item, Container
+from plone.dexterity.content import Container
 from plone.directives.dexterity import DisplayForm
-from plone.directives.form import fieldset, IFormFieldProvider
 from plone.namedfile.field import NamedBlobFile as NamedBlobFileField
 from plone.namedfile.file import NamedBlobFile
 from plone.supermodel import model
-from Products.ATContentTypes.content.file import ATFile
-from Products.ATContentTypes.content.image import ATImage
 from Products.CMFCore.utils import getToolByName
 from zope import schema
 from zope.lifecycleevent.interfaces import (
