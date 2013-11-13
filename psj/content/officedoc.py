@@ -18,6 +18,7 @@
 """Dexterity type for office docs.
 
 """
+import md5
 from BTrees.OOBTree import OOBTree
 from psj.content import _
 from five import grok
@@ -31,7 +32,9 @@ from Products.ATContentTypes.content.file import ATFile
 from Products.ATContentTypes.content.image import ATImage
 from Products.CMFCore.utils import getToolByName
 from zope import schema
-from zope.lifecycleevent.interfaces import IObjectAddedEvent
+from zope.lifecycleevent.interfaces import (
+    IObjectAddedEvent, IObjectModifiedEvent
+    )
 
 
 class IOfficeDoc(model.Schema):
@@ -47,6 +50,13 @@ class IOfficeDoc(model.Schema):
         title = _(u'Source Office File (.doc, .docx, .odt)'),
         description = _(u'Source Document'),
         required = True,
+        )
+
+    psj_md5 = schema.ASCIILine(
+        title = _(u'MD5 of Source'),
+        description = _(u'The MD5 sum of the contained office doc.'),
+        required = False,
+        readonly = True,
         )
 
     psj_pdf_repr = NamedBlobFileField(
@@ -95,12 +105,17 @@ class OfficeDoc(Container):
         out_data = transforms.convertTo(
             'text/html', in_data,
             mimetype='application/vnd.oasis.opendocument.text')
+        self.psj_md5 = md5.new(in_data).hexdigest()
         if out_data is not None:
             # transform succeeded
             new_filename = self.psj_office_doc.filename + '.html'
             html = out_data.getData()
             self.psj_html_repr = NamedBlobFile(
                 data=html, filename=new_filename)
+            for name in self.keys():
+                # make sure all old extra-files (images, etc.) are
+                # deleted.
+                del self[name]
             for id, subdata in out_data.getSubObjects().items():
                 id = id.decode('utf8')
                 if id.lower()[-4:] in (u'.png', u'.jpg', u'.gif', u'.tif'):
@@ -132,6 +147,28 @@ def create_representations(obj, event):
     Creates PDF representation of uploaded office doc on creation.
     """
     obj.psj_create_reprs()
+    return
+
+
+@grok.subscribe(IOfficeDoc, IObjectModifiedEvent)
+def update_representations(obj, event):
+    """Event handler for modified IOfficeDocs.
+
+    Checks, whether source doc was really changed (by comparing MD5
+    sums) and if so updates all respective representations.
+    """
+    for descr in event.descriptions:
+        if descr.interface != IOfficeDoc:
+            continue
+        if not 'psj_office_doc' in descr.attributes:
+            continue
+        # event handler tells that the src doc changed. This might not
+        # be true. We recheck by md5 sums.
+        md5_sum = md5.new(obj.psj_office_doc.data).hexdigest()
+        old_md5 = getattr(obj, 'psj_md5', '')
+        if md5_sum == old_md5:
+            return
+        obj.psj_create_reprs()
     return
 
 
