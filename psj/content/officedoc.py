@@ -127,13 +127,13 @@ class OfficeDoc(Container):
             # make sure all old extra-files (images, etc.) are
             # deleted.
             del self[name]
-        for id, subdata in out_data.getSubObjects().items():
-            id = id.decode('utf8')
-            if id.lower()[-4:] in (u'.png', u'.jpg', u'.gif', u'.tif'):
-                new_id = self.invokeFactory('Image', id)
+        for name, subdata in out_data.getSubObjects().items():
+            name = name.decode('utf8')
+            if name.lower()[-4:] in (u'.png', u'.jpg', u'.gif', u'.tif'):
+                new_name = self.invokeFactory('Image', name)
             else:
-                new_id = self.invokeFactory('File', id)
-            new_context = self[new_id]
+                new_name = self.invokeFactory('File', name)
+            new_context = self[new_name]
             new_context.update_data(subdata)
 
     def psj_create_reprs(self):
@@ -141,8 +141,8 @@ class OfficeDoc(Container):
         """
         transforms = getToolByName(self, 'portal_transforms')
         in_data = self.psj_office_doc.data
-        self.create_pdf(transforms, in_data)
-        self.create_html(transforms, in_data)
+        self.psj_create_pdf(transforms, in_data)
+        self.psj_create_html(transforms, in_data)
         return
 
     def SearchableText(self):
