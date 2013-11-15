@@ -5,7 +5,7 @@ from plone.dexterity.interfaces import IDexterityFTI
 from plone.namedfile.file import NamedBlobFile
 from zope.component import queryUtility, createObject
 from zope.interface import verify
-from psj.content.officedoc import IOfficeDoc, OfficeDoc
+from psj.content.officedoc import IOfficeDoc, OfficeDoc, DisplayView
 from psj.content.testing import INTEGRATION_TESTING
 
 class OfficeDocUnitTests(unittest.TestCase):
@@ -60,3 +60,21 @@ class OfficeDocIntegrationTests(unittest.TestCase):
         factory = fti.factory
         new_obj = createObject(factory)
         self.assertTrue(IOfficeDoc.providedBy(new_obj))
+
+    def test_view(self):
+        # we can get a regular view for added officedocs
+        self.folder.invokeFactory(
+            'psj.content.officedoc', 'doc1',
+            psj_office_doc=self.src_file)
+        d1 = self.folder['doc1']
+        view = d1.restrictedTraverse('@@view')
+        assert view is not None
+
+    def test_psj_view(self):
+        # we can get or own `psj_view` for officedocs
+        self.folder.invokeFactory(
+            'psj.content.officedoc', 'doc1',
+            psj_office_doc=self.src_file)
+        d1 = self.folder['doc1']
+        view = d1.restrictedTraverse('@@psj_view')
+        assert isinstance(view, DisplayView)
