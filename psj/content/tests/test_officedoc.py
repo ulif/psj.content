@@ -46,3 +46,9 @@ class OfficeDocIntegrationTests(unittest.TestCase):
         # we can get factory type infos for officedocs
         fti = queryUtility(IDexterityFTI, name='psj.content.officedoc')
         assert fti is not None
+
+    def test_schame(self):
+        # our fti provides the correct schema
+        fti = queryUtility(IDexterityFTI, name='psj.content.officedoc')
+        schema = fti.lookupSchema()
+        self.assertEqual(IOfficeDoc, schema)
