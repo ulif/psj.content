@@ -3,7 +3,7 @@ import unittest
 from plone.app.testing import TEST_USER_ID, setRoles
 from plone.dexterity.interfaces import IDexterityFTI
 from plone.namedfile.file import NamedBlobFile
-from zope.component import queryUtility
+from zope.component import queryUtility, createObject
 from zope.interface import verify
 from psj.content.officedoc import IOfficeDoc, OfficeDoc
 from psj.content.testing import INTEGRATION_TESTING
@@ -52,3 +52,10 @@ class OfficeDocIntegrationTests(unittest.TestCase):
         fti = queryUtility(IDexterityFTI, name='psj.content.officedoc')
         schema = fti.lookupSchema()
         self.assertEqual(IOfficeDoc, schema)
+
+    def test_factory(self):
+        # our fti provides a factory for OfficeDoc instances
+        fti = queryUtility(IDexterityFTI, name='psj.content.officedoc')
+        factory = fti.factory
+        new_obj = createObject(factory)
+        self.assertTrue(IOfficeDoc.providedBy(new_obj))
