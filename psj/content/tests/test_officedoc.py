@@ -27,13 +27,14 @@ class OfficeDocIntegrationTests(unittest.TestCase):
         self.portal.invokeFactory('Folder', 'test-folder')
         setRoles(self.portal, TEST_USER_ID, ['Member'])
         self.folder = self.portal['test-folder']
+        self.src_file = NamedBlobFile(
+            data='Hi there!', filename=u'sample.txt')
 
     def test_adding(self):
         # we can add OfficeDoc instances
-        src = NamedBlobFile(data='Hi there!', filename=u'sample.txt')
         self.folder.invokeFactory(
             'psj.content.officedoc', 'doc1',
-            psj_office_doc = src,
+            psj_office_doc = self.src_file,
             )
         d1 = self.folder['doc1']
         self.assertTrue(IOfficeDoc.providedBy(d1))
