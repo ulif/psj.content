@@ -18,6 +18,10 @@
 """Testing support for `psj.content`.
 
 """
+from plone.app.testing import (
+    PloneSandboxLayer, PLONE_FIXTURE, IntegrationTesting,
+    FunctionalTesting
+    )
 from Products.Five import fiveconfigure
 from Products.PloneTestCase import PloneTestCase as ptc
 from Products.PloneTestCase.layer import PloneSite
@@ -40,3 +44,26 @@ class TestCase(ptc.PloneTestCase):
         @classmethod
         def tearDown(cls):
             pass
+
+class Fixture(PloneSandboxLayer):
+
+    defaultBases = (PLONE_FIXTURE,)
+
+    def setUpZope(self, app, configuration_context):
+        # load ZCML
+        import psj.content
+        self.loadZCML(package=psj.content)
+
+    def setUpPloneSite(self, portal):
+        self.applyProfile(portal, 'psj.content:default')
+        self.applyProfile(portal, 'psj.policy:default')
+
+FIXTURE = Fixture()
+INTEGRATION_TESTING = IntegrationTesting(
+    bases=(FIXTURE,),
+    name='psj.content:Integration',
+    )
+FUCTIONAL_TESTING = FunctionalTesting(
+    bases=(FIXTURE,),
+    name='psj.content:Functional',
+    )
