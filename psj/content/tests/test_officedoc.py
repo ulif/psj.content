@@ -47,7 +47,7 @@ class OfficeDocIntegrationTests(unittest.TestCase):
         fti = queryUtility(IDexterityFTI, name='psj.content.officedoc')
         assert fti is not None
 
-    def test_schame(self):
+    def test_schema(self):
         # our fti provides the correct schema
         fti = queryUtility(IDexterityFTI, name='psj.content.officedoc')
         schema = fti.lookupSchema()
