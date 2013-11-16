@@ -4,7 +4,9 @@ from plone.app.testing import TEST_USER_ID, setRoles
 from plone.dexterity.interfaces import IDexterityFTI
 from plone.namedfile.file import NamedBlobFile
 from zope.component import queryUtility, createObject, getMultiAdapter
+from zope.event import notify
 from zope.interface import verify
+from zope.lifecycleevent import ObjectModifiedEvent
 from psj.content.officedoc import IOfficeDoc, OfficeDoc, DisplayView
 from psj.content.testing import INTEGRATION_TESTING
 
@@ -42,6 +44,18 @@ class OfficeDocIntegrationTests(unittest.TestCase):
         self.assertEqual(d1.psj_md5, '396199333edbf40ad43e62a1c1397793')
         assert d1.psj_html_repr.data is not None
         assert d1.psj_pdf_repr.data is not None
+
+    def test_editing(self):
+        # we can modify OfficeDocs. Changes are reflected.
+        self.folder.invokeFactory(
+            'psj.content.officedoc', 'doc1', psj_office_doc = self.src_file,
+            )
+        d1 = self.folder['doc1']
+        d1.psj_office_doc = NamedBlobFile(
+            data='I changed!', filename=u'othersample.txt')
+        # we have to fire an event here
+        notify(ObjectModifiedEvent(d1))
+        self.assertEqual(d1.psj_md5, '2e2b959667fdf3f17dd3a834b0f1f009')
 
     def test_fti(self):
         # we can get factory type infos for officedocs
