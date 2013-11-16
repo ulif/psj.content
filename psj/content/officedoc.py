@@ -176,18 +176,11 @@ def update_representations(obj, event):
     Checks, whether source doc was really changed (by comparing MD5
     sums) and if so updates all respective representations.
     """
-    for descr in event.descriptions:
-        if descr.interface != IOfficeDoc:
-            continue
-        if not 'psj_office_doc' in descr.attributes:
-            continue
-        # event handler tells that the src doc changed. This might not
-        # be true. We recheck by md5 sums.
-        md5_sum = md5.new(obj.psj_office_doc.data).hexdigest()
-        old_md5 = getattr(obj, 'psj_md5', '')
-        if md5_sum == old_md5:
-            return
-        obj.psj_create_reprs()
+    md5_sum = md5.new(obj.psj_office_doc.data).hexdigest()
+    old_md5 = getattr(obj, 'psj_md5', '')
+    if md5_sum == old_md5:
+        return
+    obj.psj_create_reprs()
     return
 
 
