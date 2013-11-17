@@ -52,13 +52,18 @@ class OfficeDocIntegrationTests(unittest.TestCase):
         # we can modify OfficeDocs. Changes are reflected.
         self.folder.invokeFactory(
             'psj.content.officedoc', 'doc1', psj_office_doc = self.src_file,
+            title=u'My doc', description=u'My description.'
             )
         d1 = self.folder['doc1']
         d1.psj_office_doc = NamedBlobFile(
             data='I changed!', filename=u'othersample.txt')
+        d1.title = u'My changed title'
+        d1.description = u'My changed description'
         # we have to fire an event here
         notify(ObjectModifiedEvent(d1))
         self.assertEqual(d1.psj_md5, '2e2b959667fdf3f17dd3a834b0f1f009')
+        self.assertEqual(d1.title, u'My changed title')
+        self.assertEqual(d1.description, u'My changed description')
 
     def test_fti(self):
         # we can get factory type infos for officedocs
