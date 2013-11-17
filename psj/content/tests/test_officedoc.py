@@ -36,10 +36,13 @@ class OfficeDocIntegrationTests(unittest.TestCase):
         # we can add OfficeDoc instances
         self.folder.invokeFactory(
             'psj.content.officedoc', 'doc1',
-            psj_office_doc = self.src_file,
+            psj_office_doc = self.src_file, title=u'My Doc',
+            description=u'My description.'
             )
         d1 = self.folder['doc1']
         self.assertTrue(IOfficeDoc.providedBy(d1))
+        self.assertEqual(d1.title, u'My Doc')
+        self.assertEqual(d1.description, u'My description.')
         # additional attributes were set
         self.assertEqual(d1.psj_md5, '396199333edbf40ad43e62a1c1397793')
         assert d1.psj_html_repr.data is not None
