@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Tests for officedoc module.
 import unittest
 from plone.app.testing import TEST_USER_ID, setRoles
@@ -7,8 +8,48 @@ from zope.component import queryUtility, createObject, getMultiAdapter
 from zope.event import notify
 from zope.interface import verify
 from zope.lifecycleevent import ObjectModifiedEvent
-from psj.content.officedoc import IOfficeDoc, OfficeDoc, DisplayView
+from psj.content.officedoc import (
+    IOfficeDoc, OfficeDoc, DisplayView, strip_tags
+    )
 from psj.content.testing import INTEGRATION_TESTING
+
+class HelperTests(unittest.TestCase):
+
+    def test_strip_tags_simple(self):
+        # simple one-leveled docs are stripped correctly
+        result = strip_tags('<div>foo</div>')
+        self.assertEqual('foo', result)
+
+    def test_strip_tags_nested(self):
+        # we can strip tags from nested HTML
+        result = strip_tags('<div>foo<div>bar</div>baz</div>')
+        self.assertEqual('foobarbaz', result)
+
+    def test_strip_tags_non_ascii(self):
+        # we handle non-ASCII chars correctly
+        result = strip_tags('<div>ä</div>')
+        self.assertEqual('ä', result)
+
+    def test_strip_tags_no_content(self):
+        # HTML w/o any tags is handled correctly
+        result = strip_tags('Hi there!')
+        self.assertEqual('Hi there!', result)
+
+    def test_strip_tags_no_linebreak(self):
+        # linebreaks are removed from HTML
+        result = strip_tags('foo\nbar\nbaz')
+        self.assertEqual('foo bar baz', result)
+
+    def test_strip_tags_only_single_spaces(self):
+        # concatenated spaces are reduced to a single one.
+        result = strip_tags('foo  bar \nbaz')
+        self.assertEqual('foo bar baz', result)
+
+    def test_strip_tags_result_stripped(self):
+        # leading/trailing whitespaces are stripped from result
+        result = strip_tags('  foo bar \n ')
+        self.assertEqual('foo bar', result)
+
 
 class OfficeDocUnitTests(unittest.TestCase):
 
@@ -105,6 +146,16 @@ class OfficeDocIntegrationTests(unittest.TestCase):
 
     def test_searchable_text(self):
         # searchableText contains the office doc content
+        self.folder.invokeFactory(
+            'psj.content.officedoc', 'doc1', psj_office_doc=self.src_file,
+            title=u'Foo Doc', description=u'My Description')
+        d1 = self.folder['doc1']
+        self.assertEqual(
+            'Foo Doc My Description Hi there!',
+            d1.SearchableText())
+
+    def test_searchable_text_indexed(self):
+        # searchableText is indexed properly
         self.folder.invokeFactory(
             'psj.content.officedoc', 'doc1', psj_office_doc=self.src_file,
             title=u'Foo Doc', description=u'My Description')
