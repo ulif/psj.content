@@ -33,6 +33,30 @@ from zope.lifecycleevent.interfaces import (
     )
 
 
+def strip_tags(html):
+    """Strip tags from HTML text.
+
+    Returns the text in `html` with all tags removed. Any consecutive
+    whitespaces are reduced to a single space. Thus, ``<div> Foo \n
+    </div>`` becomes ``Foo``.
+    """
+    in_tag = False
+    in_quote = False
+    result = ''
+
+    for char in html:
+        if not in_tag and char == '<':
+            in_tag = True
+        elif not in_quote and char == '>':
+            in_tag = False
+        elif char in ['"', "'"]:
+            in_quote = not in_quote
+        elif not in_tag:
+            result += char
+    # replace consecutive whitespaces with single spaces
+    return ' '.join(result.split()).strip()
+
+
 class IOfficeDoc(model.Schema):
     """An office document.
     """
@@ -151,12 +175,10 @@ class OfficeDoc(Container):
         Additionally to the regular fields (title, description, etc.),
         we take care for the HTML representation to be added to the
         searchable text.
-
-        XXX: we should strip HTML markup before adding the text.
         """
         base_result = super(OfficeDoc, self).SearchableText()
         html_content = getattr(self.psj_html_repr, 'data', '')
-        return '%s %s' % (base_result, html_content)
+        return '%s %s' % (base_result, strip_tags(html_content))
 
 
 @grok.subscribe(IOfficeDoc, IObjectAddedEvent)
