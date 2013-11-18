@@ -102,3 +102,14 @@ class OfficeDocIntegrationTests(unittest.TestCase):
         default_view_name = getMultiAdapter(
             (d1, d1.REQUEST), name="plone_context_state").view_template_id()
         self.assertEqual(default_view_name, 'psj_view')
+
+    def test_searchable_text(self):
+        # searchableText contains the office doc content
+        self.folder.invokeFactory(
+            'psj.content.officedoc', 'doc1', psj_office_doc=self.src_file,
+            title=u'Foo Doc', description=u'My Description')
+        d1 = self.folder['doc1']
+        d1.reindexObject()
+        result = self.portal.portal_catalog(SearchableText="there")
+        self.assertEqual(1, len(result))
+        self.assertEqual(result[0].getURL(), d1.absolute_url())
