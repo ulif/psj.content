@@ -183,8 +183,6 @@ class OfficeDocIntegrationTests(unittest.TestCase):
 
     def test_title_indexed(self):
         # titles of officedocs are indexed
-        result = self.portal.portal_catalog(Title='Doctitle')
-        self.assertEqual(0, len(result))
         self.folder.invokeFactory(
             'psj.content.officedoc', 'doc1', title=u'My DocTitle')
         d1 = self.folder['doc1']
