@@ -164,9 +164,10 @@ class OfficeDoc(Container):
         """Create PDF, HTML, etc. representations of source doc.
         """
         transforms = getToolByName(self, 'portal_transforms')
-        in_data = self.psj_office_doc.data
-        self.psj_create_pdf(transforms, in_data)
-        self.psj_create_html(transforms, in_data)
+        in_data = getattr(self.psj_office_doc, 'data', None)
+        if in_data is not None:  # safety belt
+            self.psj_create_pdf(transforms, in_data)
+            self.psj_create_html(transforms, in_data)
         return
 
     def SearchableText(self):
