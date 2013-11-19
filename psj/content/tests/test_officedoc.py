@@ -164,3 +164,19 @@ class OfficeDocIntegrationTests(unittest.TestCase):
         result = self.portal.portal_catalog(SearchableText="there")
         self.assertEqual(1, len(result))
         self.assertEqual(result[0].getURL(), d1.absolute_url())
+
+    def test_searchable_text_indexed_after_change(self):
+        # when changing an officedoc, also the indexes are updated
+        self.folder.invokeFactory(
+            'psj.content.officedoc', 'doc1', psj_office_doc=self.src_file)
+        d1 = self.folder['doc1']
+        d1.reindexObject()
+        d1.psj_office_doc = NamedBlobFile(
+            data='I changed!', filename=u'othersample.txt')
+        # we have to fire an event here
+        notify(ObjectModifiedEvent(d1))
+        result = self.portal.portal_catalog(SearchableText="there")
+        self.assertEqual(0, len(result))  # old content not indexed
+        result = self.portal.portal_catalog(SearchableText="changed")
+        self.assertEqual(1, len(result))  # new content found
+        self.assertEqual(result[0].getURL(), d1.absolute_url())
