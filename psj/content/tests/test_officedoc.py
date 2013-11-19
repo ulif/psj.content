@@ -195,3 +195,19 @@ class OfficeDocIntegrationTests(unittest.TestCase):
         self.assertEqual(0, len(result))  # old content gone
         result = self.portal.portal_catalog(Title='Othertitle')
         self.assertEqual(1, len(result))  # new content found
+
+    def test_description_indexed(self):
+        # descriptions of officedocs are indexed
+        self.folder.invokeFactory(
+            'psj.content.officedoc', 'doc1',
+            description=u'My DocDescription')
+        d1 = self.folder['doc1']
+        result = self.portal.portal_catalog(Description='DocDescription')
+        self.assertEqual(1, len(result))
+        # description changes are reflected in catalog
+        d1.setDescription(u'My ChangedDescription')
+        notify(ObjectModifiedEvent(d1))
+        result = self.portal.portal_catalog(Description='DocDescription')
+        self.assertEqual(0, len(result))  # old content gone
+        result = self.portal.portal_catalog(Description='ChangedDescription')
+        self.assertEqual(1, len(result))  # new content found
