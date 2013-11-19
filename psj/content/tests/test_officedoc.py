@@ -13,6 +13,7 @@ from psj.content.officedoc import (
     )
 from psj.content.testing import INTEGRATION_TESTING
 
+
 class HelperTests(unittest.TestCase):
 
     def test_strip_tags_simple(self):
@@ -77,7 +78,7 @@ class OfficeDocIntegrationTests(unittest.TestCase):
         # we can add OfficeDoc instances
         self.folder.invokeFactory(
             'psj.content.officedoc', 'doc1',
-            psj_office_doc = self.src_file, title=u'My Doc',
+            psj_office_doc=self.src_file, title=u'My Doc',
             description=u'My description.'
             )
         d1 = self.folder['doc1']
@@ -92,7 +93,7 @@ class OfficeDocIntegrationTests(unittest.TestCase):
     def test_editing(self):
         # we can modify OfficeDocs. Changes are reflected.
         self.folder.invokeFactory(
-            'psj.content.officedoc', 'doc1', psj_office_doc = self.src_file,
+            'psj.content.officedoc', 'doc1', psj_office_doc=self.src_file,
             title=u'My doc', description=u'My description.'
             )
         d1 = self.folder['doc1']
