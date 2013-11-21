@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 # Tests for officedoc module.
 import unittest
-from plone.app.testing import TEST_USER_ID, setRoles
+from plone.app.testing import (
+    TEST_USER_ID, TEST_USER_NAME, TEST_USER_PASSWORD,
+    SITE_OWNER_NAME, SITE_OWNER_PASSWORD,
+    setRoles, login, logout,
+    )
 from plone.dexterity.interfaces import IDexterityFTI
 from plone.namedfile.file import NamedBlobFile
+from plone.testing.z2 import Browser
 from zope.component import queryUtility, createObject, getMultiAdapter
 from zope.event import notify
 from zope.interface import verify
@@ -211,3 +216,47 @@ class OfficeDocIntegrationTests(unittest.TestCase):
         self.assertEqual(0, len(result))  # old content gone
         result = self.portal.portal_catalog(Description='ChangedDescription')
         self.assertEqual(1, len(result))  # new content found
+
+
+class OfficeDocBrowserTests(unittest.TestCase):
+
+    layer = INTEGRATION_TESTING
+
+    def setUp(self):
+        self.portal = self.layer['portal']
+        setRoles(self.portal, TEST_USER_ID, ['Manager'])
+        self.portal.invokeFactory('Folder', 'test-folder')
+        setRoles(self.portal, TEST_USER_ID, ['Member', 'Manager'])
+        self.portal_url = self.portal.absolute_url()
+        self.browser = Browser(self.layer['app'])
+
+    def do_login(self, browser):
+        browser.open(self.portal_url + '/login')
+        browser.getControl(label='Login Name').value = SITE_OWNER_NAME
+        browser.getControl(label='Password').value = SITE_OWNER_PASSWORD
+        browser.getControl("Log in").click()
+
+    def test_add(self):
+        # we can add office docs
+        self.do_login(self.browser)
+        self.browser.open(self.portal_url)
+        # find add link and click it
+        add_link = self.browser.getLink('Office Document')
+        self.assertEqual('psj-content-officedoc', add_link.attrs['id'])
+        add_link.click()
+
+        # fill form
+        self.browser.getControl(label='Title').value = 'My Title'
+        self.browser.getControl(label='Summary').value = 'My Description'
+        # upload source document
+        file_upload = self.browser.getControl(
+            name='form.widgets.psj_office_doc')
+        from cStringIO import StringIO
+        myfile = StringIO('My File Contents')
+        file_upload.add_file(myfile, 'text/plain', 'sample.txt')
+        self.browser.getControl("Save").click()
+
+        assert 'My Title' in self.browser.contents
+        assert 'My Description' in self.browser.contents
+        assert 'My File Contents' in self.browser.contents
+        assert 'sample.txt.pdf' in self.browser.contents
