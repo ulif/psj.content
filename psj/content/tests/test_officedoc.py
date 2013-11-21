@@ -171,7 +171,6 @@ class OfficeDocIntegrationTests(unittest.TestCase):
         self.folder.invokeFactory(
             'psj.content.officedoc', 'doc1', psj_office_doc=self.src_file)
         d1 = self.folder['doc1']
-        d1.reindexObject()
         d1.psj_office_doc = NamedBlobFile(
             data='I changed!', filename=u'othersample.txt')
         # we have to fire an event here
@@ -183,7 +182,7 @@ class OfficeDocIntegrationTests(unittest.TestCase):
         self.assertEqual(result[0].getURL(), d1.absolute_url())
 
     def test_title_indexed(self):
-        # titles of officedocs are indexed
+        # titles of officedocs are indexed (also after change)
         self.folder.invokeFactory(
             'psj.content.officedoc', 'doc1', title=u'My DocTitle')
         d1 = self.folder['doc1']
@@ -198,7 +197,7 @@ class OfficeDocIntegrationTests(unittest.TestCase):
         self.assertEqual(1, len(result))  # new content found
 
     def test_description_indexed(self):
-        # descriptions of officedocs are indexed
+        # descriptions of officedocs are indexed (also after change)
         self.folder.invokeFactory(
             'psj.content.officedoc', 'doc1',
             description=u'My DocDescription')
