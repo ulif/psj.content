@@ -11,6 +11,7 @@ before_install:
 install:
   - mkdir -p buildout-cache/eggs
   - mkdir -p buildout-cache/downloads
+  - pip install distribute
   - python bootstrap.py -v 1.7.0 -c travis.cfg
   - bin/buildout -N -t 3 -c travis.cfg
 script: bin/test
