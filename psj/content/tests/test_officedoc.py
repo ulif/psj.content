@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Tests for officedoc module.
 import unittest
+from cStringIO import StringIO
 from plone.app.testing import (
     TEST_USER_ID, TEST_USER_NAME, TEST_USER_PASSWORD,
     SITE_OWNER_NAME, SITE_OWNER_PASSWORD,
@@ -224,8 +225,6 @@ class OfficeDocBrowserTests(unittest.TestCase):
 
     def setUp(self):
         self.portal = self.layer['portal']
-        setRoles(self.portal, TEST_USER_ID, ['Manager'])
-        self.portal.invokeFactory('Folder', 'test-folder')
         setRoles(self.portal, TEST_USER_ID, ['Member', 'Manager'])
         self.portal_url = self.portal.absolute_url()
         self.browser = Browser(self.layer['app'])
@@ -251,7 +250,6 @@ class OfficeDocBrowserTests(unittest.TestCase):
         # upload source document
         file_upload = self.browser.getControl(
             name='form.widgets.psj_office_doc')
-        from cStringIO import StringIO
         myfile = StringIO('My File Contents')
         file_upload.add_file(myfile, 'text/plain', 'sample.txt')
         self.browser.getControl("Save").click()
