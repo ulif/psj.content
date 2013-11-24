@@ -236,7 +236,7 @@ class OfficeDocBrowserTests(unittest.TestCase):
         browser.getControl("Log in").click()
 
     def test_add(self):
-        # we can add office docs
+        # we can add office docs (and edit it; see below)
         self.do_login(self.browser)
         self.browser.open(self.portal_url)
         # find add link and click it
@@ -258,3 +258,35 @@ class OfficeDocBrowserTests(unittest.TestCase):
         assert 'My Description' in self.browser.contents
         assert 'My File Contents' in self.browser.contents
         assert 'sample.txt.pdf' in self.browser.contents
+
+        # edit tests follow here.
+
+        # XXX: These should be in a separate test, but it looks as
+        # test isolation does not work sufficiently: the my-title doc
+        # created above shows up in other tests in this browser test
+        # case. Therefore we do the edit tests right here.
+        edit_link = self.browser.getLink('Edit')
+        edit_link.click()
+
+        # set new values
+        self.browser.getControl(label='Title').value = 'Other Title'
+        self.browser.getControl(label='Summary').value = 'My Other Descr.'
+        # upload new source
+        file_upload = self.browser.getControl(
+            name='form.widgets.psj_office_doc')
+        myfile = StringIO('My Other File')
+        file_upload.add_file(myfile, 'text/plain', 'other.txt')
+        # also 'check' the 'Replace file' radio checkbox
+        replace_ctl = self.browser.getControl(
+            name= "form.widgets.psj_office_doc.action")
+        replace_ctl.value = ['replace']
+        self.browser.getControl("Save").click()
+
+        assert 'Other Title' in self.browser.contents
+        assert 'My Other Title' not in self.browser.contents
+        assert 'My Other Descr.' in self.browser.contents
+        assert 'My Description' not in self.browser.contents
+        assert 'My Other File' in self.browser.contents
+        assert 'My File Contents' not in self.browser.contents
+        assert 'other.txt.pdf' in self.browser.contents
+        assert 'sample.txt.pdf' not in self.browser.contents
