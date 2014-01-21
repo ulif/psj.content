@@ -47,6 +47,7 @@ setup(name='psj.content',
           'zope.interface',
           'zope.schema',
           'Products.ATVocabularyManager',
+          'Products.FacultyStaffDirectory',
           'psj.policy',
           'ulif.openoffice',           # mention here to get scripts
       ],
