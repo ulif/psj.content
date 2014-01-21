@@ -1,23 +1,23 @@
 <?xml version="1.0"?>
-<object name="psj.content.officedoc"
+<object name="psj.content.basedoc"
         meta_type="Dexterity FTI"
         i18n:domain="psj.content"
         xmlns:i18n="http://xml.zope.org/namespaces/i18n">
 
   <!-- Basic metadata -->
-  <property name="title" i18n:translate="">Office Document</property>
+  <property name="title" i18n:translate="">PSJ Base Document</property>
   <property name="description"
-            i18n:translate="">An office document</property>
+            i18n:translate="">An PSJ document</property>
   <property name="icon_expr">string:${portal_url}/document_icon.png</property>
-  <property name="factory">psj.content.officedoc</property>
+  <property name="factory">psj.content.psj_basedoc</property>
   <property name="global_allow">True</property>
   <property name="filter_content_types">False</property>
   <property name="allowed_content_types" />
   <property name="allow_discussion">False</property>
 
   <!-- schema and class used for content items -->
-  <property name="schema">psj.content.officedoc.IOfficeDoc</property>
-  <property name="klass">psj.content.officedoc.OfficeDoc</property>
+  <property name="schema">psj.content.psj_basedoc.IBaseDoc</property>
+  <property name="klass">psj.content.psj_basedoc.BaseDoc</property>
 
   <property name="behaviors">
     <element
@@ -28,17 +28,14 @@
     <!-- IReferenceable might not be available, but it will not break. -->
     <element
         value="plone.app.referenceablebehavior.referenceable.IReferenceable" />
-    <element
-        value="plone.app.relationfield.behavior.IRelatedItems" />
   </property>
 
   <!-- View information -->
   <property name="link_target"></property>
   <property name="immediate_view">view</property>
-  <property name="default_view">psj_view</property>
+  <property name="default_view">view</property>
   <property name="view_methods">
     <element value="view"/>
-    <element value="psj_view" />
   </property>
   <property name="default_view_fallback">False</property>
   <property name="add_permission">cmf.AddPortalContent</property>
