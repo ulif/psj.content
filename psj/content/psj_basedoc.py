@@ -22,9 +22,7 @@
 from psj.content import _
 from five import grok
 from plone.dexterity.content import Container
-from plone.formwidget.contenttree import (
-    ObjPathSourceBinder, PathSourceBinder, UUIDSourceBinder,
-    )
+from plone.formwidget.contenttree import ObjPathSourceBinder
 from plone.supermodel import model
 from z3c.relationfield.schema import RelationChoice, RelationList
 from zope import schema

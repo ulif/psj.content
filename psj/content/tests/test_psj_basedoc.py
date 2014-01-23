@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 # Tests for psj_basedoc module.
 import unittest
-from cStringIO import StringIO
 from plone.app.testing import (
-    TEST_USER_ID, TEST_USER_NAME, TEST_USER_PASSWORD,
-    SITE_OWNER_NAME, SITE_OWNER_PASSWORD,
-    setRoles, login, logout,
+    TEST_USER_ID, SITE_OWNER_NAME, SITE_OWNER_PASSWORD, setRoles,
     )
 from plone.dexterity.interfaces import IDexterityFTI
-from plone.namedfile.file import NamedBlobFile
 from plone.testing.z2 import Browser
-from zope.component import queryUtility, createObject, getMultiAdapter
+from zope.component import queryUtility, createObject
 from zope.event import notify
 from zope.interface import verify
 from zope.lifecycleevent import ObjectModifiedEvent
