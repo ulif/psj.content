@@ -45,6 +45,7 @@ class TestCase(ptc.PloneTestCase):
         def tearDown(cls):
             pass
 
+
 class Fixture(PloneSandboxLayer):
 
     defaultBases = (PLONE_FIXTURE,)

@@ -278,7 +278,7 @@ class OfficeDocBrowserTests(unittest.TestCase):
         file_upload.add_file(myfile, 'text/plain', 'other.txt')
         # also 'check' the 'Replace file' radio checkbox
         replace_ctl = self.browser.getControl(
-            name= "form.widgets.psj_office_doc.action")
+            name="form.widgets.psj_office_doc.action")
         replace_ctl.value = ['replace']
         self.browser.getControl("Save").click()
 

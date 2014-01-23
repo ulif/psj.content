@@ -12,7 +12,7 @@
 #
 #  You should have received a copy of the GNU General Public License
 #  along with this program; if not, write to the Free Software
-#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, 
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 #  MA 02111-1307 USA.
 #
 """Plone Behaviors for `psj.content`.
@@ -43,6 +43,7 @@ class PSJMetadataBase(object):
     def __init__(self, context):
         self.context = context
 
+
 class PSJFieldProperty(DCFieldProperty):
     """A PSJ field property.
 
@@ -50,74 +51,79 @@ class PSJFieldProperty(DCFieldProperty):
     """
     pass
 
+
 class IPSJBehavior(Schema):
     """A behavior supporting PSJ content types.
     """
+
 
 class IPSJAuthor(IPSJBehavior):
     """A document author.
     """
     fieldset(
         'psj_metadata',
-        label = _(u'PSJ Metadata'),
-        fields = ('psj_author',),
+        label=_(u'PSJ Metadata'),
+        fields=('psj_author', ),
         )
 
     psj_author = TextLine(
-        title = _(u'Author'),
-        description = _(u'Document Author'),
-        required = False,
+        title=_(u'Author'),
+        description=_(u'Document Author'),
+        required=False,
         )
 
 alsoProvides(IPSJAuthor, IFormFieldProvider)
+
 
 class IPSJTitle(IPSJBehavior):
     """A document title.
     """
     fieldset(
         'psj_metadata',
-        label = _(u'PSJ Metadata'),
-        fields = ('psj_title',),
+        label=_(u'PSJ Metadata'),
+        fields=('psj_title',),
         )
 
     psj_title = TextLine(
-        title = _(u'Title'),
-        description = _(u'Document Title'),
-        required = False,
+        title=_(u'Title'),
+        description=_(u'Document Title'),
+        required=False,
         )
 
 alsoProvides(IPSJTitle, IFormFieldProvider)
+
 
 class IPSJSubtitle(IPSJBehavior):
     """A document subtitle.
     """
     fieldset(
         'psj_metadata',
-        label = _(u'PSJ Metadata'),
-        fields = ('psj_subtitle',),
+        label=_(u'PSJ Metadata'),
+        fields=('psj_subtitle',),
         )
 
     psj_subtitle = TextLine(
-        title = _(u'Subtitle'),
-        description = _(u'Document Subtitle'),
-        required = False,
+        title=_(u'Subtitle'),
+        description=_(u'Document Subtitle'),
+        required=False,
         )
 
 alsoProvides(IPSJSubtitle, IFormFieldProvider)
+
 
 class IPSJAbstract(IPSJBehavior):
     """A document abstract.
     """
     fieldset(
         'psj_metadata',
-        label = _(u'PSJ Metadata'),
-        fields = ('psj_abstract',),
+        label=_(u'PSJ Metadata'),
+        fields=('psj_abstract',),
         )
 
     psj_abstract = Text(
-        title = _(u'Abstract'),
-        description = _(u'Document Abstract'),
-        required = False,
+        title=_(u'Abstract'),
+        description=_(u'Document Abstract'),
+        required=False,
         )
 
 alsoProvides(IPSJAbstract, IFormFieldProvider)
@@ -128,8 +134,8 @@ class IPSJBaseData(IPSJBehavior):
     """
     fieldset(
         'psj_metadata',
-        label = _(u'PSJ Metadata'),
-        fields = ('psj_author', 'psj_title', 'psj_subtitle', 'psj_abstract'),
+        label=_(u'PSJ Metadata'),
+        fields=('psj_author', 'psj_title', 'psj_subtitle', 'psj_abstract'),
         )
 
     psj_author = IPSJAuthor['psj_author']
@@ -148,21 +154,21 @@ class IPSJOfficeDocTransformer(IPSJBehavior):
     """
     fieldset(
         'psj_docholder',
-        label = _(u'Office Docs'),
-        fields = ('psj_office_doc', 'psj_pdf_repr'),
+        label=_(u'Office Docs'),
+        fields=('psj_office_doc', 'psj_pdf_repr'),
         )
 
     psj_office_doc = NamedBlobFileField(
-        title = _(u'Source Office File (.doc, .docx, .odt)'),
-        description = _(u'Document Abstract'),
-        required = True,
+        title=_(u'Source Office File (.doc, .docx, .odt)'),
+        description=_(u'Document Abstract'),
+        required=True,
         )
 
     psj_pdf_repr = NamedBlobFileField(
-        title = _(u'PDF version'),
-        description = _(u'The PDF representation of the source document.'),
-        required = False,
-        readonly = True,
+        title=_(u'PDF version'),
+        description=_(u'The PDF representation of the source document.'),
+        required=False,
+        readonly=True,
         )
 
 
@@ -176,7 +182,7 @@ class PSJAuthor(PSJMetadataBase):
 
     psj_author = DCFieldProperty(
         IPSJAuthor['psj_author'],
-        get_name = 'psj_author'
+        get_name='psj_author'
         )
 
 
@@ -187,8 +193,9 @@ class PSJTitle(PSJMetadataBase):
 
     psj_title = DCFieldProperty(
         IPSJTitle['psj_title'],
-        get_name = 'psj_title'
+        get_name='psj_title'
         )
+
 
 class PSJSubtitle(PSJMetadataBase):
     """A behaviour allowing to set the subtitle of a PSJ document.
@@ -197,8 +204,9 @@ class PSJSubtitle(PSJMetadataBase):
 
     psj_subtitle = DCFieldProperty(
         IPSJSubtitle['psj_subtitle'],
-        get_name = 'psj_subtitle'
+        get_name='psj_subtitle'
         )
+
 
 class PSJAbstract(PSJMetadataBase):
     """A behaviour allowing to set the abstract of a PSJ document.
@@ -207,8 +215,9 @@ class PSJAbstract(PSJMetadataBase):
 
     psj_abstract = DCFieldProperty(
         IPSJAbstract['psj_abstract'],
-        get_name = 'psj_abstract'
+        get_name='psj_abstract'
         )
+
 
 class PSJBaseData(PSJAuthor, PSJTitle, PSJSubtitle, PSJAbstract):
     """A behavior providing base metadata.
@@ -223,12 +232,12 @@ class PSJOfficeDocTransformer(PSJMetadataBase):
 
     psj_office_doc = DCFieldProperty(
         IPSJOfficeDocTransformer['psj_office_doc'],
-        get_name = 'psj_office_doc',
+        get_name='psj_office_doc',
         )
 
     psj_pdf_repr = DCFieldProperty(
         IPSJOfficeDocTransformer['psj_pdf_repr'],
-        get_name = 'psj_pdf_repr',
+        get_name='psj_pdf_repr',
         )
 
 

@@ -68,4 +68,3 @@ class BaseDoc(Container):
     psj_author = FieldProperty(IBaseDoc["psj_author"])
     psj_author_relation = None
     psj_title = FieldProperty(IBaseDoc["psj_title"])
-
