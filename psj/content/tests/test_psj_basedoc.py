@@ -44,27 +44,32 @@ class BaseDocIntegrationTests(unittest.TestCase):
         # we can add BaseDoc instances
         self.folder.invokeFactory(
             'psj.content.basedoc', 'doc1',
-            title=u'My Doc', description=u'My description.'
+            title=u'My Doc', description=u'My description.',
+            psj_title=u'My Title',
             )
         d1 = self.folder['doc1']
         self.assertTrue(IBaseDoc.providedBy(d1))
         self.assertEqual(d1.title, u'My Doc')
         self.assertEqual(d1.description, u'My description.')
         # additional attributes were set
+        self.assertEqual(d1.psj_title, u'My Title')
 
     def test_editing(self):
         # we can modify BaseDocs. Changes are reflected.
         self.folder.invokeFactory(
             'psj.content.basedoc', 'doc1',
-            title=u'My doc', description=u'My description.'
+            title=u'My doc', description=u'My description.',
+            psj_title=u'My title',
             )
         d1 = self.folder['doc1']
         d1.title = u'My changed title'
         d1.description = u'My changed description'
+        d1.psj_title = u'My changed title'
         # we have to fire an event here
         notify(ObjectModifiedEvent(d1))
         self.assertEqual(d1.title, u'My changed title')
         self.assertEqual(d1.description, u'My changed description')
+        self.assertEqual(d1.psj_title, u'My changed title')
 
     def test_fti(self):
         # we can get factory type infos for base docs
@@ -96,7 +101,9 @@ class BaseDocIntegrationTests(unittest.TestCase):
         # searchableText contains the base doc content
         self.folder.invokeFactory(
             'psj.content.basedoc', 'doc1',
-            title=u'Foo Doc', description=u'My Description')
+            title=u'Foo Doc', description=u'My Description',
+            psj_title=u'Baz'
+            )
         d1 = self.folder['doc1']
         self.assertEqual(
             'Foo Doc My Description',
@@ -106,7 +113,8 @@ class BaseDocIntegrationTests(unittest.TestCase):
         # searchableText is indexed properly
         self.folder.invokeFactory(
             'psj.content.basedoc', 'doc1',
-            title=u'Foo Doc', description=u'My Description')
+            title=u'Foo Doc', description=u'My Description',
+            psj_title=u'Baz')
         d1 = self.folder['doc1']
         d1.reindexObject()
         result = self.portal.portal_catalog(SearchableText="Foo")
@@ -173,10 +181,12 @@ class BasedocBrowserTests(unittest.TestCase):
         # fill form
         self.browser.getControl(label='Title').value = 'My Title'
         self.browser.getControl(label='Summary').value = 'My Description'
+        self.browser.getControl(label='Titel').value = 'My Book Title'
         self.browser.getControl("Save").click()
 
         assert 'My Title' in self.browser.contents
         assert 'My Description' in self.browser.contents
+        assert 'My Book Title' in self.browser.contents
 
         # edit tests follow here.
 
@@ -190,9 +200,12 @@ class BasedocBrowserTests(unittest.TestCase):
         # set new values
         self.browser.getControl(label='Title').value = 'Other Title'
         self.browser.getControl(label='Summary').value = 'My Other Descr.'
+        self.browser.getControl(label='Titel').value = 'Other Book Title'
         self.browser.getControl("Save").click()
 
         assert 'Other Title' in self.browser.contents
         assert 'My Other Title' not in self.browser.contents
         assert 'My Other Descr.' in self.browser.contents
         assert 'My Description' not in self.browser.contents
+        assert 'Other Book Title' in self.browser.contents
+        assert 'My Book Title' not in self.browser.contents

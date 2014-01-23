@@ -53,6 +53,12 @@ class IBaseDoc(model.Schema):
             source=ObjPathSourceBinder(portal_type='FSDPerson')),
         )
 
+    psj_title = schema.TextLine(
+        title=_(u'Titel'),
+        description=_(u'Titel der Publikation'),
+        required=True,
+        )
+
 
 class BaseDoc(Container):
     """A PSJ document.
@@ -63,3 +69,5 @@ class BaseDoc(Container):
 
     psj_author = FieldProperty(IBaseDoc["psj_author"])
     psj_author_relation = None
+    psj_title = FieldProperty(IBaseDoc["psj_title"])
+
