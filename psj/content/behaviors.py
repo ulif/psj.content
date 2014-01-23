@@ -26,7 +26,7 @@ from plone.namedfile.field import NamedBlobFile as NamedBlobFileField
 from plone.namedfile.file import NamedBlobFile
 from Products.CMFCore.utils import getToolByName
 from zope.component import adapts
-from zope.interface import implements, alsoProvides, Interface
+from zope.interface import implements, alsoProvides
 from zope.lifecycleevent.interfaces import IObjectCreatedEvent
 from zope.schema import TextLine, Text
 from psj.content import _
