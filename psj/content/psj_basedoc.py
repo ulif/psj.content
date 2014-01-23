@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #  psj.content is copyright (c) 2014 Uli Fouquet
 #
 #  This program is free software; you can redistribute it and/or modify
@@ -21,7 +22,11 @@
 from psj.content import _
 from five import grok
 from plone.dexterity.content import Container
+from plone.formwidget.contenttree import (
+    ObjPathSourceBinder, PathSourceBinder, UUIDSourceBinder,
+    )
 from plone.supermodel import model
+from z3c.relationfield.schema import RelationChoice, RelationList
 from zope import schema
 from zope.schema.fieldproperty import FieldProperty
 
@@ -37,6 +42,17 @@ class IBaseDoc(model.Schema):
         value_type=schema.TextLine(),
         )
 
+    psj_author_relation = RelationList(
+        title=_(u'Autor Relation'),
+        description=_(u'Autor oder Herausgeber. '),
+        required=False,
+        value_type=RelationChoice(
+            title=_(
+                u'Wählen Sie einen Personensatz aus Relation '
+                u'zum Contenttype FSDPerson (Person)'),
+            source=ObjPathSourceBinder(portal_type='FSDPerson')),
+        )
+
 
 class BaseDoc(Container):
     """A PSJ document.
@@ -46,3 +62,4 @@ class BaseDoc(Container):
     __allow_access_to_unprotected_subobjects__ = 1
 
     psj_author = FieldProperty(IBaseDoc["psj_author"])
+    psj_author_relation = None
