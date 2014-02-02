@@ -41,7 +41,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
         self.folder.invokeFactory(
             'psj.content.basedoc', 'doc1',
             title=u'My Doc', description=u'My description.',
-            psj_title=u'My Title',
+            psj_title=u'My Title', psj_subtitle=u'My Subtitle',
             )
         d1 = self.folder['doc1']
         self.assertTrue(IBaseDoc.providedBy(d1))
@@ -49,23 +49,26 @@ class BaseDocIntegrationTests(unittest.TestCase):
         self.assertEqual(d1.description, u'My description.')
         # additional attributes were set
         self.assertEqual(d1.psj_title, u'My Title')
+        self.assertEqual(d1.psj_subtitle, u'My Subtitle')
 
     def test_editing(self):
         # we can modify BaseDocs. Changes are reflected.
         self.folder.invokeFactory(
             'psj.content.basedoc', 'doc1',
             title=u'My doc', description=u'My description.',
-            psj_title=u'My title',
+            psj_title=u'My title', osj_subtitle=u'My Subtitle',
             )
         d1 = self.folder['doc1']
         d1.title = u'My changed title'
         d1.description = u'My changed description'
         d1.psj_title = u'My changed title'
+        d1.psj_subtitle = u'My changed subtitle'
         # we have to fire an event here
         notify(ObjectModifiedEvent(d1))
         self.assertEqual(d1.title, u'My changed title')
         self.assertEqual(d1.description, u'My changed description')
         self.assertEqual(d1.psj_title, u'My changed title')
+        self.assertEqual(d1.psj_subtitle, u'My changed subtitle')
 
     def test_fti(self):
         # we can get factory type infos for base docs
@@ -98,7 +101,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
         self.folder.invokeFactory(
             'psj.content.basedoc', 'doc1',
             title=u'Foo Doc', description=u'My Description',
-            psj_title=u'Baz'
+            psj_title=u'Baz', psj_subtitle=u'Furor',
             )
         d1 = self.folder['doc1']
         self.assertEqual(
@@ -110,7 +113,8 @@ class BaseDocIntegrationTests(unittest.TestCase):
         self.folder.invokeFactory(
             'psj.content.basedoc', 'doc1',
             title=u'Foo Doc', description=u'My Description',
-            psj_title=u'Baz')
+            psj_title=u'Baz', psj_subtitle=u'Furor',
+            )
         d1 = self.folder['doc1']
         d1.reindexObject()
         result = self.portal.portal_catalog(SearchableText="Foo")
@@ -178,11 +182,13 @@ class BasedocBrowserTests(unittest.TestCase):
         self.browser.getControl(label='Title').value = 'My Title'
         self.browser.getControl(label='Summary').value = 'My Description'
         self.browser.getControl(label='Titel').value = 'My Book Title'
+        self.browser.getControl(label='Untertitel').value = 'My Subtitle'
         self.browser.getControl("Save").click()
 
         assert 'My Title' in self.browser.contents
         assert 'My Description' in self.browser.contents
         assert 'My Book Title' in self.browser.contents
+        assert 'My Subtitle' in self.browser.contents
 
         # edit tests follow here.
 
@@ -197,6 +203,7 @@ class BasedocBrowserTests(unittest.TestCase):
         self.browser.getControl(label='Title').value = 'Other Title'
         self.browser.getControl(label='Summary').value = 'My Other Descr.'
         self.browser.getControl(label='Titel').value = 'Other Book Title'
+        self.browser.getControl(label='Untertitel').value = 'Other Subtitle'
         self.browser.getControl("Save").click()
 
         assert 'Other Title' in self.browser.contents
@@ -205,3 +212,5 @@ class BasedocBrowserTests(unittest.TestCase):
         assert 'My Description' not in self.browser.contents
         assert 'Other Book Title' in self.browser.contents
         assert 'My Book Title' not in self.browser.contents
+        assert 'Other Subtitle' in self.browser.contents
+        assert 'My Subtitle' not in self.browser.contents
