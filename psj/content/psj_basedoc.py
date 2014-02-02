@@ -63,6 +63,7 @@ class IBaseDoc(model.Schema):
         required=False,
         )
 
+
 class BaseDoc(Container):
     """A PSJ document.
     """
