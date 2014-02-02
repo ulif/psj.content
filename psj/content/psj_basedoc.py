@@ -57,6 +57,11 @@ class IBaseDoc(model.Schema):
         required=True,
         )
 
+    psj_subtitle = schema.TextLine(
+        title=_(u'Untertitel'),
+        description=_(u'Untertitel der Publikation'),
+        required=False,
+        )
 
 class BaseDoc(Container):
     """A PSJ document.
@@ -68,3 +73,4 @@ class BaseDoc(Container):
     psj_author = FieldProperty(IBaseDoc["psj_author"])
     psj_author_relation = None
     psj_title = FieldProperty(IBaseDoc["psj_title"])
+    psj_subtitle = FieldProperty(IBaseDoc["psj_subtitle"])
