@@ -20,16 +20,20 @@
 
 """
 from five import grok
-from zope.schema.interfaces import IContextSourceBinder
+from zope.component import queryUtility
+from zope.schema.interfaces import IContextSourceBinder, IVocabularyFactory
 from zope.schema.vocabulary import SimpleVocabulary
-from Products.CMFCore.utils import getToolByName
 
 
-# See: http://developer.plone.org/reference_manuals/external/plone.app.dexterity/advanced/vocabularies.html
 @grok.provider(IContextSourceBinder)
 def institutes_source(context):
-    atvm = getToolByName(context, 'portal_vocabularies', default=None)
-    # see https://github.com/collective/Products.ATVocabularyManager/blob/master/Products/ATVocabularyManager/tests/testATVocabularyManager.py
-    if atvm is None:
-        return SimpleVocabulary()
-    return SimpleVocabulary()
+    """A source for institutes.
+
+    We expect a named vocabulary registered as `psj.content.Institues`
+    to lookup valid institute entries.
+    """
+    vocab_factory = queryUtility(
+        IVocabularyFactory, name=u'psj.content.Institutes', default=None)
+    if vocab_factory is None:
+        return SimpleVocabulary([])
+    return vocab_factory(context)

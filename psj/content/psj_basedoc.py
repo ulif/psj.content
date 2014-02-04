@@ -27,6 +27,7 @@ from plone.supermodel import model
 from z3c.relationfield.schema import RelationChoice, RelationList
 from zope import schema
 from zope.schema.fieldproperty import FieldProperty
+from psj.content.sources import institutes_source
 
 
 class IBaseDoc(model.Schema):
@@ -63,6 +64,13 @@ class IBaseDoc(model.Schema):
         required=False,
         )
 
+    psj_institute = schema.Choice(
+        title=_(u'Institut'),
+        description=_(u'Wählen Sie ein Institut aus der Options-Liste'),
+        source=institutes_source,
+        required=False,
+        )
+
 
 class BaseDoc(Container):
     """A PSJ document.
@@ -75,3 +83,4 @@ class BaseDoc(Container):
     psj_author_relation = None
     psj_title = FieldProperty(IBaseDoc["psj_title"])
     psj_subtitle = FieldProperty(IBaseDoc["psj_subtitle"])
+    psj_institute = FieldProperty(IBaseDoc["psj_institute"])
