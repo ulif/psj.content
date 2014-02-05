@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Tests for sources module.
 import unittest
-from five import grok
 from zope.component import getGlobalSiteManager
 from zope.interface import verify
 from zope.schema.interfaces import (
@@ -9,12 +8,7 @@ from zope.schema.interfaces import (
     )
 from zope.schema.vocabulary import SimpleVocabulary
 from psj.content.sources import institutes_source
-
-
-@grok.implementer(IVocabularyFactory)
-class SampleVocabFactory(object):
-    def __call__(self):
-        return SimpleVocabulary.fromValues(['one', 'two', 'three'])
+from psj.content.testing import SampleVocabFactory
 
 
 class SourcesUnitTests(unittest.TestCase):

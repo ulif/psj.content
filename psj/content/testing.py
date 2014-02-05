@@ -18,6 +18,7 @@
 """Testing support for `psj.content`.
 
 """
+from five import grok
 from plone.app.testing import (
     PloneSandboxLayer, PLONE_FIXTURE, IntegrationTesting,
     FunctionalTesting
@@ -26,8 +27,17 @@ from Products.Five import fiveconfigure
 from Products.PloneTestCase import PloneTestCase as ptc
 from Products.PloneTestCase.layer import PloneSite
 from Testing import ZopeTestCase as ztc
+from zope.schema.interfaces import IVocabularyFactory
+from zope.schema.vocabulary import SimpleVocabulary
+
 
 ptc.setupPloneSite()
+
+
+@grok.implementer(IVocabularyFactory)
+class SampleVocabFactory(object):
+    def __call__(self):
+        return SimpleVocabulary.fromValues(['one', 'two', 'three'])
 
 
 class TestCase(ptc.PloneTestCase):
