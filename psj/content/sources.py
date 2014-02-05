@@ -21,19 +21,25 @@
 """
 from five import grok
 from zope.component import queryUtility
-from zope.schema.interfaces import IContextSourceBinder, IVocabularyFactory
+from zope.schema.interfaces import (
+    IContextSourceBinder, ISource, IVocabularyFactory,
+    )
 from zope.schema.vocabulary import SimpleVocabulary
 
 
-@grok.provider(IContextSourceBinder)
-def institutes_source(context):
+@grok.implementer(IContextSourceBinder)
+class institutes_source(object):
     """A source for institutes.
 
     We expect a named vocabulary registered as `psj.content.Institues`
     to lookup valid institute entries.
     """
-    vocab_factory = queryUtility(
-        IVocabularyFactory, name=u'psj.content.Institutes', default=None)
-    if vocab_factory is None:
-        return SimpleVocabulary([])
-    return vocab_factory(context)
+    def __init__(self, context):
+        self.context = context
+
+    def __call__(self, context):
+        vocab_factory = queryUtility(
+            IVocabularyFactory, name=u'psj.content.Institutes', default=None)
+        if vocab_factory is None:
+            return SimpleVocabulary([])
+        return vocab_factory()
