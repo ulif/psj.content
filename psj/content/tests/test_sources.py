@@ -2,14 +2,10 @@
 # Tests for sources module.
 import unittest
 from five import grok
-from plone.app.testing import (
-    TEST_USER_ID, SITE_OWNER_NAME, SITE_OWNER_PASSWORD, setRoles,
-    )
-from psj.content.testing import INTEGRATION_TESTING
 from zope.component import getGlobalSiteManager
 from zope.interface import verify
 from zope.schema.interfaces import (
-    IContextSourceBinder, ISource, IVocabularyFactory,
+    IContextSourceBinder, IVocabularyFactory,
     )
 from zope.schema.vocabulary import SimpleVocabulary
 from psj.content.sources import institutes_source
