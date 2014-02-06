@@ -16,30 +16,40 @@
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston,
 #  MA 02111-1307 USA.
 #
-"""Sources (in the zope.schema sense).
+"""Sources (in the zope.schema sense) and source context binders.
 
 """
 from five import grok
 from zope.component import queryUtility
 from zope.schema.interfaces import (
-    IContextSourceBinder, IVocabularyFactory,
+    IContextSourceBinder, IVocabularyFactory, ISource,
     )
 from zope.schema.vocabulary import SimpleVocabulary
+from zope.component.interfaces import ComponentLookupError
 
 
-@grok.implementer(IContextSourceBinder)
-class institutes_source(object):
+class InstitutesSourceBinder(object):
     """A source for institutes.
 
     We expect a named vocabulary registered as `psj.content.Institues`
     to lookup valid institute entries.
     """
-    def __init__(self, context):
-        self.context = context
+    grok.implements(IContextSourceBinder)
 
     def __call__(self, context):
-        vocab_factory = queryUtility(
-            IVocabularyFactory, name=u'psj.content.Institutes', default=None)
+        try:
+            vocab_factory = queryUtility(
+                IVocabularyFactory, name=u'psj.content.Institutes',
+                context=context, default=None)
+        except ComponentLookupError:
+            # Certain contexts may cause this kind of error.
+            # We retry lookup within the global registry then.
+            vocab_factory = queryUtility(
+                IVocabularyFactory, name=u'psj.content.Institutes',
+                context=None, default=None)
         if vocab_factory is None:
-            return SimpleVocabulary([])
+            return SimpleVocabulary.fromValues([])
         return vocab_factory()
+
+
+institutes_source = InstitutesSourceBinder()
