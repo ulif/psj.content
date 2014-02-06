@@ -32,7 +32,7 @@ class SourcesUnitTests(unittest.TestCase):
     def test_inst_src_wo_vocab(self):
         src = institutes_source(context=None)
         assert isinstance(src, SimpleVocabulary)
-        assert 'one' not in src
+        assert 'InstOne' not in src
 
     def test_inst_src_w_vocab(self):
         factory = SampleVocabFactory()
@@ -41,4 +41,4 @@ class SourcesUnitTests(unittest.TestCase):
                             name=u'psj.content.Institutes')
         src = institutes_source(context=None)
         assert isinstance(src, SimpleVocabulary)
-        assert 'one' in src
+        assert 'InstOne' in src

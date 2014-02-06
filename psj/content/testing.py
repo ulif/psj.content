@@ -37,7 +37,7 @@ ptc.setupPloneSite()
 @grok.implementer(IVocabularyFactory)
 class SampleVocabFactory(object):
     def __call__(self):
-        return SimpleVocabulary.fromValues(['one', 'two', 'three'])
+        return SimpleVocabulary.fromValues(['InstOne', 'InstTwo', 'InstThree'])
 
 
 class TestCase(ptc.PloneTestCase):
