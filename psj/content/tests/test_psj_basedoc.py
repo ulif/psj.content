@@ -222,6 +222,7 @@ class BasedocBrowserTests(unittest.TestCase):
         self.browser.getControl(label='Summary').value = 'My Other Descr.'
         self.browser.getControl(label='Titel').value = 'Other Book Title'
         self.browser.getControl(label='Untertitel').value = 'Other Subtitle'
+        self.browser.getControl(label='Institut').value = ['InstTwo',]
         self.browser.getControl("Save").click()
 
         assert 'Other Title' in self.browser.contents
@@ -232,3 +233,5 @@ class BasedocBrowserTests(unittest.TestCase):
         assert 'My Book Title' not in self.browser.contents
         assert 'Other Subtitle' in self.browser.contents
         assert 'My Subtitle' not in self.browser.contents
+        assert 'InstTwo' in self.browser.contents
+        assert 'InstOne' not in self.browser.contents
