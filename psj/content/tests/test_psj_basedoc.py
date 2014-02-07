@@ -67,7 +67,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
         self.folder.invokeFactory(
             'psj.content.basedoc', 'doc1',
             title=u'My doc', description=u'My description.',
-            psj_title=u'My title', osj_subtitle=u'My Subtitle',
+            psj_title=u'My title', psj_subtitle=u'My Subtitle',
             psj_institute=u'InstOne',
             )
         d1 = self.folder['doc1']
