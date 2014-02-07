@@ -35,6 +35,15 @@ class BaseDocIntegrationTests(unittest.TestCase):
         self.portal.invokeFactory('Folder', 'test-folder')
         setRoles(self.portal, TEST_USER_ID, ['Member'])
         self.folder = self.portal['test-folder']
+        vocab_factory = SampleVocabFactory()
+        gsm = getGlobalSiteManager()
+        gsm.registerUtility(
+            vocab_factory, provided=IVocabularyFactory,
+            name=u'psj.content.Institutes')
+        # XXX: This should work as well!!!
+        #self.portal.getSiteManager().registerUtility(
+        #    vocab_factory, provided=IVocabularyFactory,
+        #    name=u'psj.content.Institutes')
 
     def test_adding(self):
         # we can add BaseDoc instances
@@ -42,6 +51,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
             'psj.content.basedoc', 'doc1',
             title=u'My Doc', description=u'My description.',
             psj_title=u'My Title', psj_subtitle=u'My Subtitle',
+            psj_institute='InstOne',
             )
         d1 = self.folder['doc1']
         self.assertTrue(IBaseDoc.providedBy(d1))
@@ -50,6 +60,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
         # additional attributes were set
         self.assertEqual(d1.psj_title, u'My Title')
         self.assertEqual(d1.psj_subtitle, u'My Subtitle')
+        self.assertEqual(d1.psj_institute, 'InstOne')
 
     def test_editing(self):
         # we can modify BaseDocs. Changes are reflected.
@@ -57,18 +68,21 @@ class BaseDocIntegrationTests(unittest.TestCase):
             'psj.content.basedoc', 'doc1',
             title=u'My doc', description=u'My description.',
             psj_title=u'My title', osj_subtitle=u'My Subtitle',
+            psj_institute=u'InstOne',
             )
         d1 = self.folder['doc1']
         d1.title = u'My changed title'
         d1.description = u'My changed description'
         d1.psj_title = u'My changed title'
         d1.psj_subtitle = u'My changed subtitle'
+        d1.psj_institute = u'InstTwo'
         # we have to fire an event here
         notify(ObjectModifiedEvent(d1))
         self.assertEqual(d1.title, u'My changed title')
         self.assertEqual(d1.description, u'My changed description')
         self.assertEqual(d1.psj_title, u'My changed title')
         self.assertEqual(d1.psj_subtitle, u'My changed subtitle')
+        self.assertEqual(d1.psj_institute, u'InstTwo')
 
     def test_fti(self):
         # we can get factory type infos for base docs
