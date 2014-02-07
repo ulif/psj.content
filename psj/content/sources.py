@@ -22,7 +22,7 @@
 from five import grok
 from zope.component import queryUtility
 from zope.schema.interfaces import (
-    IContextSourceBinder, IVocabularyFactory, ISource,
+    IContextSourceBinder, IVocabularyFactory,
     )
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.component.interfaces import ComponentLookupError
