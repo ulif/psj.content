@@ -6,15 +6,15 @@ from plone.app.testing import (
     )
 from plone.dexterity.interfaces import IDexterityFTI
 from plone.testing.z2 import Browser
-from zope.component import queryUtility, createObject
+from zope.component import queryUtility, createObject, getGlobalSiteManager
 from zope.event import notify
 from zope.interface import verify
 from zope.lifecycleevent import ObjectModifiedEvent
+from zope.schema.interfaces import IVocabularyFactory
 from psj.content.psj_basedoc import (
     IBaseDoc, BaseDoc,
     )
-from psj.content.testing import INTEGRATION_TESTING
-
+from psj.content.testing import INTEGRATION_TESTING, SampleVocabFactory
 
 class BaseDocUnitTests(unittest.TestCase):
 
@@ -157,11 +157,27 @@ class BasedocBrowserTests(unittest.TestCase):
 
     layer = INTEGRATION_TESTING
 
+    def setup_vocabs(self):
+        vocab_factory = SampleVocabFactory()
+        gsm = getGlobalSiteManager()
+        gsm.registerUtility(
+            vocab_factory, provided=IVocabularyFactory,
+            name=u'psj.content.Institutes')
+
+    def teardown_vocabs(self):
+        gsm = getGlobalSiteManager()
+        for name in [u'psj.content.Institutes', ]:
+            gsm.unregisterUtility(name=name, provided=IVocabularyFactory)
+
     def setUp(self):
         self.portal = self.layer['portal']
         setRoles(self.portal, TEST_USER_ID, ['Member', 'Manager'])
         self.portal_url = self.portal.absolute_url()
         self.browser = Browser(self.layer['app'])
+        self.setup_vocabs()
+
+    def tearDown(self):
+        self.teardown_vocabs()
 
     def do_login(self, browser):
         browser.open(self.portal_url + '/login')
@@ -183,12 +199,14 @@ class BasedocBrowserTests(unittest.TestCase):
         self.browser.getControl(label='Summary').value = 'My Description'
         self.browser.getControl(label='Titel').value = 'My Book Title'
         self.browser.getControl(label='Untertitel').value = 'My Subtitle'
+        self.browser.getControl(label='Institut').value = ['InstOne',]
         self.browser.getControl("Save").click()
 
         assert 'My Title' in self.browser.contents
         assert 'My Description' in self.browser.contents
         assert 'My Book Title' in self.browser.contents
         assert 'My Subtitle' in self.browser.contents
+        assert 'InstOne' in self.browser.contents
 
         # edit tests follow here.
 
