@@ -16,6 +16,7 @@ from psj.content.psj_basedoc import (
     )
 from psj.content.testing import INTEGRATION_TESTING, SampleVocabFactory
 
+
 class BaseDocUnitTests(unittest.TestCase):
 
     def test_iface(self):
@@ -213,7 +214,7 @@ class BasedocBrowserTests(unittest.TestCase):
         self.browser.getControl(label='Summary').value = 'My Description'
         self.browser.getControl(label='Titel').value = 'My Book Title'
         self.browser.getControl(label='Untertitel').value = 'My Subtitle'
-        self.browser.getControl(label='Institut').value = ['InstOne',]
+        self.browser.getControl(label='Institut').value = ['InstOne', ]
         self.browser.getControl("Save").click()
 
         assert 'My Title' in self.browser.contents
@@ -236,7 +237,7 @@ class BasedocBrowserTests(unittest.TestCase):
         self.browser.getControl(label='Summary').value = 'My Other Descr.'
         self.browser.getControl(label='Titel').value = 'Other Book Title'
         self.browser.getControl(label='Untertitel').value = 'Other Subtitle'
-        self.browser.getControl(label='Institut').value = ['InstTwo',]
+        self.browser.getControl(label='Institut').value = ['InstTwo', ]
         self.browser.getControl("Save").click()
 
         assert 'Other Title' in self.browser.contents
