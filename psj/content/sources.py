@@ -25,28 +25,26 @@ from zope.schema.interfaces import (
     IContextSourceBinder, IVocabularyFactory,
     )
 from zope.schema.vocabulary import SimpleVocabulary
+from zope.site.hooks import getSite
 from zope.component.interfaces import ComponentLookupError
 
 
 class InstitutesSourceBinder(object):
     """A source for institutes.
 
-    We expect a named vocabulary registered as `psj.content.Institues`
-    to lookup valid institute entries.
+    We expect a named vocabulary factory registered as
+    `psj.content.Institues` to lookup valid institute entries.
+
+    The factory is looked up in the local site, therefore it should be
+    registered there or globally.
     """
     grok.implements(IContextSourceBinder)
 
     def __call__(self, context):
-        try:
-            vocab_factory = queryUtility(
-                IVocabularyFactory, name=u'psj.content.Institutes',
-                context=context, default=None)
-        except ComponentLookupError:
-            # Certain contexts may cause this kind of error.
-            # We retry lookup within the global registry then.
-            vocab_factory = queryUtility(
-                IVocabularyFactory, name=u'psj.content.Institutes',
-                context=None, default=None)
+        site = getSite()
+        vocab_factory = queryUtility(
+            IVocabularyFactory, name=u'psj.content.Institutes',
+            context=site, default=None)
         if vocab_factory is None:
             return SimpleVocabulary.fromValues([])
         return vocab_factory()
