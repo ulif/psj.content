@@ -26,7 +26,6 @@ from zope.schema.interfaces import (
     )
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.site.hooks import getSite
-from zope.component.interfaces import ComponentLookupError
 
 
 class InstitutesSourceBinder(object):
