@@ -37,14 +37,9 @@ class BaseDocIntegrationTests(unittest.TestCase):
         setRoles(self.portal, TEST_USER_ID, ['Member'])
         self.folder = self.portal['test-folder']
         vocab_factory = SampleVocabFactory()
-        gsm = getGlobalSiteManager()
-        gsm.registerUtility(
+        self.portal.getSiteManager().registerUtility(
             vocab_factory, provided=IVocabularyFactory,
             name=u'psj.content.Institutes')
-        # XXX: This should work as well!!!
-        #self.portal.getSiteManager().registerUtility(
-        #    vocab_factory, provided=IVocabularyFactory,
-        #    name=u'psj.content.Institutes')
 
     def test_adding(self):
         # we can add BaseDoc instances
