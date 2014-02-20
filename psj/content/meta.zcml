@@ -1,0 +1,23 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:meta="http://namespaces.zope.org/meta">
+
+  <!--
+    This directive can be used in `site.zcml` or other
+    ZCML files parsed during startup. Typical use:
+
+    <configure xmlns="http://namespaces.zope.org/zope"
+               xmlns:psj="http://namespaces.zope.org/psj">
+      <psj:external-vocab path="/foo/bar" name="psj.content.Institutes" />
+    </configure>
+
+    This registers a vocab config under name ``psj.content.Institutes``.
+  -->
+  <meta:directive
+      namespace="http://namespaces.zope.org/psj"
+      name="external-vocab"
+      schema=".zcml.IExternalVocabConfig"
+      handler=".zcml.external_vocab_conf"
+      />
+
+</configure>
