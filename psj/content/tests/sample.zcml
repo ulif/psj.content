@@ -1,0 +1,6 @@
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:psj="http://namespaces.zope.org/psj">
+  <include package="psj.content" file="meta.zcml" />
+  <psj:external-vocab path="/foo" name="psj.content.bar" />
+  <psj:external-vocab path="/bar" name="psj.content.baz" />
+</configure>
