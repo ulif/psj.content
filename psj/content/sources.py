@@ -19,6 +19,7 @@
 """Sources (in the zope.schema sense) and source context binders.
 
 """
+import os
 from five import grok
 from zope.component import queryUtility
 from zope.schema.interfaces import (
@@ -26,6 +27,7 @@ from zope.schema.interfaces import (
     )
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.site.hooks import getSite
+from psj.content.interfaces import IExternalVocabConfig
 
 
 class InstitutesSourceBinder(object):
@@ -40,13 +42,17 @@ class InstitutesSourceBinder(object):
     grok.implements(IContextSourceBinder)
 
     def __call__(self, context):
-        site = getSite()
-        vocab_factory = queryUtility(
-            IVocabularyFactory, name=u'psj.content.Institutes',
-            context=site, default=None)
-        if vocab_factory is None:
+        util = queryUtility(
+            IExternalVocabConfig, name=u'psj.content.Institutes')
+        if util is None:
             return SimpleVocabulary.fromValues([])
-        return vocab_factory()
+        path = util.get('path', None)
+        if not path:
+            return SimpleVocabulary.fromValues([])
+        if not os.path.isfile(path):
+            return SimpleVocabulary.fromValues([])
+        return SimpleVocabulary.fromValues(
+            [line.strip() for line in open(path, 'r')])
 
 
 institutes_source = InstitutesSourceBinder()
