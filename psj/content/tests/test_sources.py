@@ -6,13 +6,10 @@ import tempfile
 import unittest
 from zope.component import getGlobalSiteManager
 from zope.interface import verify
-from zope.schema.interfaces import (
-    IContextSourceBinder, IVocabularyFactory,
-    )
+from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
 from psj.content.interfaces import IExternalVocabConfig
 from psj.content.sources import InstitutesSourceBinder, institutes_source
-from psj.content.testing import SampleVocabFactory
 
 
 class SourcesUnitTests(unittest.TestCase):

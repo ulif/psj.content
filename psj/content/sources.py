@@ -22,11 +22,8 @@
 import os
 from five import grok
 from zope.component import queryUtility
-from zope.schema.interfaces import (
-    IContextSourceBinder, IVocabularyFactory,
-    )
+from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
-from zope.site.hooks import getSite
 from psj.content.interfaces import IExternalVocabConfig
 
 
