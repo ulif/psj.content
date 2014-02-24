@@ -27,6 +27,7 @@ from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content.interfaces import IExternalVocabConfig
 
+
 def make_terms(strings):
     """Create zope.schema.SimpleTermss from strings.
 

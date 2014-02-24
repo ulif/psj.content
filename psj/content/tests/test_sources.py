@@ -14,6 +14,7 @@ from psj.content.sources import (
     InstitutesSourceBinder, institutes_source, make_terms,
     )
 
+
 class MakeTermsTests(unittest.TestCase):
     # tests for the make_terms function
 
