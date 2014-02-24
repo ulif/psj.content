@@ -4,12 +4,40 @@ import os
 import shutil
 import tempfile
 import unittest
+from base64 import b64encode
 from zope.component import getGlobalSiteManager
 from zope.interface import verify
 from zope.schema.interfaces import IContextSourceBinder
-from zope.schema.vocabulary import SimpleVocabulary
+from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content.interfaces import IExternalVocabConfig
-from psj.content.sources import InstitutesSourceBinder, institutes_source
+from psj.content.sources import (
+    InstitutesSourceBinder, institutes_source, make_terms,
+    )
+
+class MakeTermsTests(unittest.TestCase):
+    # tests for the make_terms function
+
+    def test_make_terms(self):
+        result = make_terms(['foo', 'bar', 'baz'])
+        for term in result:
+            assert isinstance(term, SimpleTerm)
+        assert len(result) == 3
+        term_strings = [(x.title, x.token, x.value) for x in result]
+        self.assertEqual(
+            term_strings,
+            [(u'foo', 'Zm9v', 'Zm9v'),
+             (u'bar', 'YmFy', 'YmFy'),
+             (u'baz', 'YmF6', 'YmF6')]
+            )
+
+    def test_make_terms_umlauts(self):
+        result = make_terms(['ümläut', 'ömläut'])
+        term_strings = [(x.title, x.token, x.value) for x in result]
+        self.assertEqual(
+            term_strings,
+            [(u'\xfcml\xe4ut', 'w7xtbMOkdXQ=', 'w7xtbMOkdXQ='),
+             (u'\xf6ml\xe4ut', 'w7ZtbMOkdXQ=', 'w7ZtbMOkdXQ=')]
+            )
 
 
 class SourcesUnitTests(unittest.TestCase):
@@ -45,9 +73,9 @@ class SourcesUnitTests(unittest.TestCase):
         self.create_working_external_vocab('psj.content.Institutes')
         src = institutes_source(context=None)
         assert isinstance(src, SimpleVocabulary)
-        assert "Vocab Entry 1" in src
+        assert b64encode("Vocab Entry 1") in src
 
     def test_inst_src_wo_vocab(self):
         src = institutes_source(context=None)
         assert isinstance(src, SimpleVocabulary)
-        assert 'Vocab Entry 1' not in src
+        assert b64encode("Vocab Entry 1") not in src
