@@ -19,7 +19,7 @@ from psj.content.interfaces import IExternalVocabConfig
 from psj.content.psj_basedoc import (
     IBaseDoc, BaseDoc,
     )
-from psj.content.testing import INTEGRATION_TESTING, SampleVocabFactory
+from psj.content.testing import INTEGRATION_TESTING
 
 
 VOCAB_ENTRIES = u'Vocab Entry 1\nVocab Entry 2\nÜmlaut Entry\n'
@@ -68,10 +68,6 @@ class BaseDocIntegrationTests(unittest.TestCase):
         self.folder = self.portal['test-folder']
         self.setup_vocabs()
         return
-        vocab_factory = SampleVocabFactory()
-        self.portal.getSiteManager().registerUtility(
-            vocab_factory, provided=IVocabularyFactory,
-            name=u'psj.content.Institutes')
 
     def tearDown(self):
         self.teardown_vocabs()
