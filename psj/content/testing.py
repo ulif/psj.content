@@ -34,12 +34,6 @@ from zope.schema.vocabulary import SimpleVocabulary
 ptc.setupPloneSite()
 
 
-@grok.implementer(IVocabularyFactory)
-class SampleVocabFactory(object):
-    def __call__(self):
-        return SimpleVocabulary.fromValues(['InstOne', 'InstTwo', 'InstThree'])
-
-
 class TestCase(ptc.PloneTestCase):
 
     class layer(PloneSite):
