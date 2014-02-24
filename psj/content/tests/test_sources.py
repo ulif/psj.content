@@ -4,7 +4,6 @@ import os
 import shutil
 import tempfile
 import unittest
-from base64 import b64encode
 from zope.component import getGlobalSiteManager
 from zope.interface import verify
 from zope.schema.interfaces import IContextSourceBinder
