@@ -20,11 +20,27 @@
 
 """
 import os
+from base64 import b64encode
 from five import grok
 from zope.component import queryUtility
 from zope.schema.interfaces import IContextSourceBinder
-from zope.schema.vocabulary import SimpleVocabulary
+from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content.interfaces import IExternalVocabConfig
+
+def make_terms(strings):
+    """Create zope.schema.SimpleTermss from strings.
+
+    `strings` is expected to be a list of bytes in `utf-8` encoding.
+
+    This function returns a list of `SimpleTerm` instances with
+    unicode formatted titles and encoded tokens and values.
+
+    `make_terms` guarantees that tokens and values are unique for each
+    string put in and are representable as ASCII.
+    """
+    tuples = [(b64encode(s), s.decode('utf-8')) for s in strings]
+    return [SimpleTerm(value=t[0], token=t[0], title=t[1])
+            for t in tuples]
 
 
 class InstitutesSourceBinder(object):
@@ -44,12 +60,10 @@ class InstitutesSourceBinder(object):
         if util is None:
             return SimpleVocabulary.fromValues([])
         path = util.get('path', None)
-        if not path:
+        if not path or not os.path.isfile(path):
             return SimpleVocabulary.fromValues([])
-        if not os.path.isfile(path):
-            return SimpleVocabulary.fromValues([])
-        return SimpleVocabulary.fromValues(
-            [line.strip() for line in open(path, 'r')])
+        return SimpleVocabulary(
+            make_terms([line.strip() for line in open(path, 'r')]))
 
 
 institutes_source = InstitutesSourceBinder()
