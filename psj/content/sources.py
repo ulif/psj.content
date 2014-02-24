@@ -33,13 +33,13 @@ def make_terms(strings):
     `strings` is expected to be a list of bytes in `utf-8` encoding.
 
     This function returns a list of `SimpleTerm` instances with
-    unicode formatted titles and encoded tokens and values.
+    unicode formatted titles and values and base 64 encoded tokens.
 
-    `make_terms` guarantees that tokens and values are unique for each
-    string put in and are representable as ASCII.
+    `make_terms` guarantees that tokens are unique for each string put
+    in and are representable as ASCII.
     """
     tuples = [(b64encode(s), s.decode('utf-8')) for s in strings]
-    return [SimpleTerm(value=t[0], token=t[0], title=t[1])
+    return [SimpleTerm(value=t[1], token=t[0], title=t[1])
             for t in tuples]
 
 
