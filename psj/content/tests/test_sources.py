@@ -25,9 +25,9 @@ class MakeTermsTests(unittest.TestCase):
         term_strings = [(x.title, x.token, x.value) for x in result]
         self.assertEqual(
             term_strings,
-            [(u'foo', 'Zm9v', 'Zm9v'),
-             (u'bar', 'YmFy', 'YmFy'),
-             (u'baz', 'YmF6', 'YmF6')]
+            [(u'foo', 'Zm9v', u'foo'),
+             (u'bar', 'YmFy', u'bar'),
+             (u'baz', 'YmF6', u'baz')]
             )
 
     def test_make_terms_umlauts(self):
@@ -35,8 +35,8 @@ class MakeTermsTests(unittest.TestCase):
         term_strings = [(x.title, x.token, x.value) for x in result]
         self.assertEqual(
             term_strings,
-            [(u'\xfcml\xe4ut', 'w7xtbMOkdXQ=', 'w7xtbMOkdXQ='),
-             (u'\xf6ml\xe4ut', 'w7ZtbMOkdXQ=', 'w7ZtbMOkdXQ=')]
+            [(u'\xfcml\xe4ut', 'w7xtbMOkdXQ=', u'\xfcml\xe4ut'),
+             (u'\xf6ml\xe4ut', 'w7ZtbMOkdXQ=', u'\xf6ml\xe4ut')]
             )
 
 
@@ -73,9 +73,9 @@ class SourcesUnitTests(unittest.TestCase):
         self.create_working_external_vocab('psj.content.Institutes')
         src = institutes_source(context=None)
         assert isinstance(src, SimpleVocabulary)
-        assert b64encode("Vocab Entry 1") in src
+        assert "Vocab Entry 1" in src
 
     def test_inst_src_wo_vocab(self):
         src = institutes_source(context=None)
         assert isinstance(src, SimpleVocabulary)
-        assert b64encode("Vocab Entry 1") not in src
+        assert "Vocab Entry 1" not in src
