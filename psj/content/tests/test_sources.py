@@ -55,12 +55,13 @@ class SourcesUnitTests(unittest.TestCase):
         self._unregister()
         shutil.rmtree(self.workdir)
 
-    def create_working_external_vocab(self, name):
+    def create_external_vocab(self, name, valid_path=True):
         # create a working external vocab and register it
         gsm = getGlobalSiteManager()
         path = os.path.join(self.workdir, 'sample_vocab.csv')
-        open(path, 'w').write(
-            u'Vocab Entry 1\nVocab Entry 2\nÜmlaut Entry\n'.encode('utf-8'))
+        if valid_path:
+            open(path, 'w').write(
+                u'Vocab Entry 1\nVocab Entry 2\nÜmlaut Entry\n'.encode('utf-8'))
         conf = {'path': path, 'name': name}
         gsm.registerUtility(conf, provided=IExternalVocabConfig, name=name)
 
@@ -69,8 +70,23 @@ class SourcesUnitTests(unittest.TestCase):
         verify.verifyClass(IContextSourceBinder, ExternalVocabBinder)
         verify.verifyObject(IContextSourceBinder, binder)
 
+    def test_external_vocab_binder_no_conf(self):
+        # we cope with not registered utils
+        binder = ExternalVocabBinder(name='not-a-registered-util-name')
+        vocab = binder(context=None)
+        assert isinstance(vocab, SimpleVocabulary)
+        assert len([x for x in vocab]) == 0
+
+    def test_external_vocab_binder_no_valid_path(self):
+        # we cope with external confs where path is invalid
+        self.create_external_vocab('psj.content.testvocab', valid_path=False)
+        binder = ExternalVocabBinder(name='psj.content.testvocab')
+        vocab = binder(context=None)
+        assert isinstance(vocab, SimpleVocabulary)
+        assert len([x for x in vocab]) == 0
+
     def test_inst_src_w_vocab(self):
-        self.create_working_external_vocab('psj.content.Institutes')
+        self.create_external_vocab('psj.content.Institutes')
         src = institutes_source(context=None)
         assert isinstance(src, SimpleVocabulary)
         assert "Vocab Entry 1" in src
