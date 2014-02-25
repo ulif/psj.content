@@ -74,8 +74,3 @@ class SourcesUnitTests(unittest.TestCase):
         src = institutes_source(context=None)
         assert isinstance(src, SimpleVocabulary)
         assert "Vocab Entry 1" in src
-
-    def test_inst_src_wo_vocab(self):
-        src = institutes_source(context=None)
-        assert isinstance(src, SimpleVocabulary)
-        assert "Vocab Entry 1" not in src
