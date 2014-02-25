@@ -10,7 +10,7 @@ from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content.interfaces import IExternalVocabConfig
 from psj.content.sources import (
-    InstitutesSourceBinder, institutes_source, make_terms,
+    ExternalVocabBinder, institutes_source, make_terms,
     )
 
 
@@ -64,9 +64,9 @@ class SourcesUnitTests(unittest.TestCase):
         conf = {'path': path, 'name': name}
         gsm.registerUtility(conf, provided=IExternalVocabConfig, name=name)
 
-    def test_inst_src_binder_iface(self):
-        binder = InstitutesSourceBinder()
-        verify.verifyClass(IContextSourceBinder, InstitutesSourceBinder)
+    def test_external_vocab_binder_iface(self):
+        binder = ExternalVocabBinder(None)
+        verify.verifyClass(IContextSourceBinder, ExternalVocabBinder)
         verify.verifyObject(IContextSourceBinder, binder)
 
     def test_inst_src_w_vocab(self):

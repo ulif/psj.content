@@ -44,6 +44,44 @@ def make_terms(strings):
             for t in tuples]
 
 
+class ExternalVocabBinder(object):
+    """A source retrieving data from an external vocabulary.
+
+    We expect some IExternalVocabConfig registered under name `name`.
+
+    This binder is initialized with a `name` under which we will look
+    up IExternalVocabConfigs when binding.
+
+    When an instance of this binder is called for the first time, it
+    tries to find the appropriate external vocab config, tries to read
+    the file linked to the config and returns a SimpleVocabulary.
+
+    If one of these steps fails (the external vocab was not
+    registered, the path given in a config does not exist, etc.), we
+    return an empty vocabulary.
+    """
+    grok.implements(IContextSourceBinder)
+
+    name = None
+    vocab = None
+
+    def __init__(self, name):
+        self.name = name
+
+    def __call__(self, context):
+        if self.vocab is not None:
+            return self.vocab
+        util = queryUtility(IExternalVocabConfig, name=self.name)
+        if util is None:
+            return SimpleVocabulary.fromValues([])
+        path = util.get('path', None)
+        if not path or not os.path.isfile(path):
+            return SimpleVocabulary.fromValues([])
+        self.vocab = SimpleVocabulary(
+            make_terms([line.strip() for line in open(path, 'r')]))
+        return self.vocab
+
+
 class InstitutesSourceBinder(object):
     """A source for institutes.
 
@@ -55,7 +93,11 @@ class InstitutesSourceBinder(object):
     """
     grok.implements(IContextSourceBinder)
 
+    vocab = None
+
     def __call__(self, context):
+        if self.vocab is not None:
+            return self.vocab
         util = queryUtility(
             IExternalVocabConfig, name=u'psj.content.Institutes')
         if util is None:
@@ -63,8 +105,9 @@ class InstitutesSourceBinder(object):
         path = util.get('path', None)
         if not path or not os.path.isfile(path):
             return SimpleVocabulary.fromValues([])
-        return SimpleVocabulary(
+        self.vocab = SimpleVocabulary(
             make_terms([line.strip() for line in open(path, 'r')]))
+        return self.vocab
 
 
-institutes_source = InstitutesSourceBinder()
+institutes_source = ExternalVocabBinder(u'psj.content.Institutes')
