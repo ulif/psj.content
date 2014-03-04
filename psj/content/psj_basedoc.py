@@ -66,7 +66,7 @@ class IBaseDoc(model.Schema):
 
     psj_institute = schema.Choice(
         title=_(u'Institut'),
-        description=_(u'Wählen Sie ein Institut aus der Liste'),
+        description=_(u'Institut'),
         source=institutes_source,
         required=False,
         )
