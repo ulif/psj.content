@@ -265,7 +265,7 @@ class BasedocBrowserTests(unittest.TestCase):
         self.browser.getControl(label='Titel').value = 'My Book Title'
         self.browser.getControl(label='Untertitel').value = 'My Subtitle'
         self.browser.getControl(label='Institut').value = [
-            b64encode('First Institute Entry'), ] #VOCAB_TOKEN1, ]
+            b64encode('First Institute Entry'), ]
         self.browser.getControl("Save").click()
 
         assert 'My Title' in self.browser.contents
@@ -292,7 +292,7 @@ class BasedocBrowserTests(unittest.TestCase):
         self.browser.getControl("Save").click()
 
         assert 'Other Title' in self.browser.contents
-        assert 'My Other Title' not in self.browser.contents
+        assert 'My Title' not in self.browser.contents
         assert 'My Other Descr.' in self.browser.contents
         assert 'My Description' not in self.browser.contents
         assert 'Other Book Title' in self.browser.contents
