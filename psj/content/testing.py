@@ -65,7 +65,7 @@ INTEGRATION_TESTING = IntegrationTesting(
     bases=(FIXTURE,),
     name='psj.content:Integration',
     )
-FUCTIONAL_TESTING = FunctionalTesting(
+FUNCTIONAL_TESTING = FunctionalTesting(
     bases=(FIXTURE,),
     name='psj.content:Functional',
     )
