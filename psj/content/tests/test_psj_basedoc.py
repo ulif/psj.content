@@ -19,7 +19,7 @@ from psj.content.interfaces import IExternalVocabConfig
 from psj.content.psj_basedoc import (
     IBaseDoc, BaseDoc,
     )
-from psj.content.testing import INTEGRATION_TESTING
+from psj.content.testing import INTEGRATION_TESTING, FUNCTIONAL_TESTING
 
 
 VOCAB_ENTRIES = u'Vocab Entry 1\nVocab Entry 2\nÜmlaut Entry\n'
@@ -199,7 +199,18 @@ class BaseDocIntegrationTests(unittest.TestCase):
 
 class BasedocBrowserTests(unittest.TestCase):
 
-    layer = INTEGRATION_TESTING
+    layer = FUNCTIONAL_TESTING
+
+    def create_doc(self):
+        portal = self.layer['portal']
+        portal.invokeFactory(
+            'psj.content.basedoc', 'myeditdoc',
+            title=u'My Edit Doc', description=u'My description.',
+            psj_title=u'My Title', psj_subtitle=u'My Subtitle',
+            psj_institute=u'First Institute Entry',
+            )
+        import transaction
+        transaction.commit()
 
     def create_external_vocab(self, name, readable=None):
         # create a working external vocab and register it
@@ -240,7 +251,7 @@ class BasedocBrowserTests(unittest.TestCase):
         browser.getControl("Log in").click()
 
     def test_add(self):
-        # we can add base docs (and edit it; see below)
+        # we can add base docs.
         self.do_login(self.browser)
         self.browser.open(self.portal_url)
         # find add link and click it
@@ -263,13 +274,12 @@ class BasedocBrowserTests(unittest.TestCase):
         assert 'My Subtitle' in self.browser.contents
         assert 'First Institute Entry' in self.browser.contents
 
-        # edit tests follow here.
-
-        # XXX: These should be in a separate test, but it looks as
-        # test isolation does not work sufficiently: the my-title doc
-        # created above shows up in other tests in this browser test
-        # case. Therefore we do the edit tests right here.
-        edit_link = self.browser.getLink('Edit')
+    def test_edit(self):
+        # we can edit base docs
+        self.do_login(self.browser)
+        self.create_doc()
+        self.browser.open(self.portal_url + '/myeditdoc')
+        edit_link = self.browser.getLink('Edit', index=1)
         edit_link.click()
 
         # set new values
