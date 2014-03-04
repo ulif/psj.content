@@ -20,7 +20,7 @@
 """
 from plone.app.testing import (
     PloneSandboxLayer, PLONE_FIXTURE, IntegrationTesting,
-    FunctionalTesting
+    FunctionalTesting, pushGlobalRegistry, popGlobalRegistry, ploneSite
     )
 from Products.Five import fiveconfigure
 from Products.PloneTestCase import PloneTestCase as ptc
@@ -50,6 +50,16 @@ class TestCase(ptc.PloneTestCase):
 class Fixture(PloneSandboxLayer):
 
     defaultBases = (PLONE_FIXTURE,)
+
+    def setUp(self):
+        with ploneSite() as portal:
+            pushGlobalRegistry(portal)
+        super(Fixture, self).setUp()
+
+    def tearDown(self):
+        super(Fixture, self).tearDown()
+        with ploneSite() as portal:
+            popGlobalRegistry(portal)
 
     def setUpZope(self, app, configuration_context):
         # load ZCML
