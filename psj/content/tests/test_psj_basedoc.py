@@ -41,18 +41,20 @@ class BaseDocIntegrationTests(unittest.TestCase):
 
     layer = INTEGRATION_TESTING
 
-    def create_external_vocab(self, name):
+    def create_external_vocab(self, name, readable=None):
         # create a working external vocab and register it
+        readable = readable or name
         gsm = getGlobalSiteManager()
         path = os.path.join(self.workdir, 'sample_vocab-%s.csv' % name)
-        open(path, 'w').write(
-            u'Vocab Entry 1\nVocab Entry 2\nÜmlaut Entry\n'.encode('utf-8'))
+        entries = u'First %s Entry\nOther %s Entry\nÜmlautEntry\n' % (
+            readable, readable)
+        open(path, 'w').write(entries.encode('utf-8'))
         conf = {'path': path, 'name': name}
         gsm.registerUtility(conf, provided=IExternalVocabConfig, name=name)
 
     def setup_vocabs(self):
-        for name in [u'psj.content.Institutes', ]:
-            self.create_external_vocab(name)
+        for name, readable in [(u'psj.content.Institutes', 'Institute'), ]:
+            self.create_external_vocab(name, readable)
 
     def teardown_vocabs(self):
         gsm = getGlobalSiteManager()
@@ -79,7 +81,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
             'psj.content.basedoc', 'doc1',
             title=u'My Doc', description=u'My description.',
             psj_title=u'My Title', psj_subtitle=u'My Subtitle',
-            psj_institute=u'Vocab Entry 1',
+            psj_institute=u'First Institute Entry',
             )
         d1 = self.folder['doc1']
         self.assertTrue(IBaseDoc.providedBy(d1))
@@ -88,7 +90,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
         # additional attributes were set
         self.assertEqual(d1.psj_title, u'My Title')
         self.assertEqual(d1.psj_subtitle, u'My Subtitle')
-        self.assertEqual(d1.psj_institute, u'Vocab Entry 1')
+        self.assertEqual(d1.psj_institute, u'First Institute Entry')
 
     def test_editing(self):
         # we can modify BaseDocs. Changes are reflected.
@@ -96,21 +98,21 @@ class BaseDocIntegrationTests(unittest.TestCase):
             'psj.content.basedoc', 'doc1',
             title=u'My doc', description=u'My description.',
             psj_title=u'My title', psj_subtitle=u'My Subtitle',
-            psj_institute=u'Vocab Entry 1',
+            psj_institute=u'First Institute Entry',
             )
         d1 = self.folder['doc1']
         d1.title = u'My changed title'
         d1.description = u'My changed description'
         d1.psj_title = u'My changed title'
         d1.psj_subtitle = u'My changed subtitle'
-        d1.psj_institute = u'Vocab Entry 2'
+        d1.psj_institute = u'Other Institute Entry'
         # we have to fire an event here
         notify(ObjectModifiedEvent(d1))
         self.assertEqual(d1.title, u'My changed title')
         self.assertEqual(d1.description, u'My changed description')
         self.assertEqual(d1.psj_title, u'My changed title')
         self.assertEqual(d1.psj_subtitle, u'My changed subtitle')
-        self.assertEqual(d1.psj_institute, u'Vocab Entry 2')
+        self.assertEqual(d1.psj_institute, u'Other Institute Entry')
 
     def test_fti(self):
         # we can get factory type infos for base docs
@@ -199,18 +201,20 @@ class BasedocBrowserTests(unittest.TestCase):
 
     layer = INTEGRATION_TESTING
 
-    def create_external_vocab(self, name):
+    def create_external_vocab(self, name, readable=None):
         # create a working external vocab and register it
+        readable = readable or name
         gsm = getGlobalSiteManager()
         path = os.path.join(self.workdir, 'sample_vocab-%s.csv' % name)
-        open(path, 'w').write(
-            u'Vocab Entry 1\nVocab Entry 2\nÜmlaut Entry\n'.encode('utf-8'))
+        entries = u'First %s Entry\nOther %s Entry\nÜmlautEntry\n' % (
+            readable, readable)
+        open(path, 'w').write(entries.encode('utf-8'))
         conf = {'path': path, 'name': name}
         gsm.registerUtility(conf, provided=IExternalVocabConfig, name=name)
 
     def setup_vocabs(self):
-        for name in [u'psj.content.Institutes', ]:
-            self.create_external_vocab(name)
+        for name, readable in [(u'psj.content.Institutes', 'Institute'),]:
+            self.create_external_vocab(name, readable)
 
     def teardown_vocabs(self):
         gsm = getGlobalSiteManager()
@@ -249,14 +253,15 @@ class BasedocBrowserTests(unittest.TestCase):
         self.browser.getControl(label='Summary').value = 'My Description'
         self.browser.getControl(label='Titel').value = 'My Book Title'
         self.browser.getControl(label='Untertitel').value = 'My Subtitle'
-        self.browser.getControl(label='Institut').value = [VOCAB_TOKEN1, ]
+        self.browser.getControl(label='Institut').value = [
+            b64encode('First Institute Entry'), ] #VOCAB_TOKEN1, ]
         self.browser.getControl("Save").click()
 
         assert 'My Title' in self.browser.contents
         assert 'My Description' in self.browser.contents
         assert 'My Book Title' in self.browser.contents
         assert 'My Subtitle' in self.browser.contents
-        assert 'Vocab Entry 1' in self.browser.contents
+        assert 'First Institute Entry' in self.browser.contents
 
         # edit tests follow here.
 
@@ -272,7 +277,8 @@ class BasedocBrowserTests(unittest.TestCase):
         self.browser.getControl(label='Summary').value = 'My Other Descr.'
         self.browser.getControl(label='Titel').value = 'Other Book Title'
         self.browser.getControl(label='Untertitel').value = 'Other Subtitle'
-        self.browser.getControl(label='Institut').value = [VOCAB_TOKEN2, ]
+        self.browser.getControl(label='Institut').value = [
+            b64encode('Other Institute Entry'), ]
         self.browser.getControl("Save").click()
 
         assert 'Other Title' in self.browser.contents
@@ -283,5 +289,5 @@ class BasedocBrowserTests(unittest.TestCase):
         assert 'My Book Title' not in self.browser.contents
         assert 'Other Subtitle' in self.browser.contents
         assert 'My Subtitle' not in self.browser.contents
-        assert 'Vocab Entry 2' in self.browser.contents
-        assert 'Vocab Entry 1' not in self.browser.contents
+        assert 'Other Institute Entry' in self.browser.contents
+        assert 'First Institute Entry' not in self.browser.contents
