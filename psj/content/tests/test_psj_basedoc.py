@@ -224,7 +224,7 @@ class BasedocBrowserTests(unittest.TestCase):
         gsm.registerUtility(conf, provided=IExternalVocabConfig, name=name)
 
     def setup_vocabs(self):
-        for name, readable in [(u'psj.content.Institutes', 'Institute'),]:
+        for name, readable in [(u'psj.content.Institutes', 'Institute'), ]:
             self.create_external_vocab(name, readable)
 
     def teardown_vocabs(self):

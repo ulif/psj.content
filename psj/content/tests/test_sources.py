@@ -40,6 +40,7 @@ class MakeTermsTests(unittest.TestCase):
              (u'\xf6ml\xe4ut', 'w7ZtbMOkdXQ=', u'\xf6ml\xe4ut')]
             )
 
+
 class SourcesUnitTests(unittest.TestCase):
 
     def setUp(self):
@@ -56,7 +57,8 @@ class SourcesUnitTests(unittest.TestCase):
         path = os.path.join(self.workdir, 'sample_vocab.csv')
         if valid_path:
             open(path, 'w').write(
-                u'Vocab Entry 1\nVocab Entry 2\nÜmlaut Entry\n'.encode('utf-8'))
+                u'Vocab Entry 1\nVocab Entry 2\nÜmlaut Entry\n'.encode(
+                    'utf-8'))
         conf = {'path': path, 'name': name}
         gsm.registerUtility(conf, provided=IExternalVocabConfig, name=name)
 
