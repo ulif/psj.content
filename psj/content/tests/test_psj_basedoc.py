@@ -22,6 +22,12 @@ from psj.content.psj_basedoc import (
 from psj.content.testing import INTEGRATION_TESTING, FUNCTIONAL_TESTING
 
 
+VOCABS = [
+    (u'psj.content.Institutes', 'Institute'),
+    (u'psj.content.Licenses', 'License')
+    ]
+
+
 class BaseDocUnitTests(unittest.TestCase):
 
     def test_iface(self):
@@ -47,13 +53,13 @@ class BaseDocIntegrationTests(unittest.TestCase):
         gsm.registerUtility(conf, provided=IExternalVocabConfig, name=name)
 
     def setup_vocabs(self):
-        for name, readable in [(u'psj.content.Institutes', 'Institute'), ]:
+        for name, readable in VOCABS:
             self.create_external_vocab(name, readable)
 
     def teardown_vocabs(self):
         gsm = getGlobalSiteManager()
-        for name in [u'psj.content.Institutes', ]:
-            gsm.unregisterUtility(name=name, provided=IVocabularyFactory)
+        for entry in VOCABS:
+            gsm.unregisterUtility(name=entry[0], provided=IVocabularyFactory)
 
     def setUp(self):
         self.workdir = tempfile.mkdtemp()
