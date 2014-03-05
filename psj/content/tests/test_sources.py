@@ -40,6 +40,16 @@ class MakeTermsTests(unittest.TestCase):
              (u'\xf6ml\xe4ut', 'w7ZtbMOkdXQ=', u'\xf6ml\xe4ut')]
             )
 
+    def test_make_terms_ignore_empty(self):
+        # emtpy strings are ignored when creating terms
+        result = make_terms(['', 'foo', '', 'bar', ''])
+        term_strings = [(x.title, x.token, x.value) for x in result]
+        self.assertEqual(
+            term_strings,
+            [(u'foo', 'Zm9v', u'foo'),
+             (u'bar', 'YmFy', u'bar')]
+            )
+
 
 class SourcesUnitTests(unittest.TestCase):
 
@@ -84,14 +94,14 @@ class SourcesUnitTests(unittest.TestCase):
 
     def test_inst_src_w_vocab(self):
         self.create_external_vocab('psj.content.Institutes')
+        institutes_source.vocab = None  # make sure not to get cached entries
         src = institutes_source(context=None)
-        src.vocab = None      # make sure not to get cached entries
         assert isinstance(src, SimpleVocabulary)
         assert u'Vocab Entry 1' in src
 
     def test_licenses_src_w_vocab(self):
         self.create_external_vocab('psj.content.Licenses')
+        licenses_source.vocab = None  # make sure not to get cached entries
         src = licenses_source(context=None)
-        src.vocab = None      # make sure not to get cached entries
         assert isinstance(src, SimpleVocabulary)
         assert u'Vocab Entry 1' in src
