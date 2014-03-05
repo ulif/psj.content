@@ -82,32 +82,4 @@ class ExternalVocabBinder(object):
         return self.vocab
 
 
-class InstitutesSourceBinder(object):
-    """A source for institutes.
-
-    We expect a named vocabulary factory registered as
-    `psj.content.Institues` to lookup valid institute entries.
-
-    The factory is looked up in the local site, therefore it should be
-    registered there or globally.
-    """
-    grok.implements(IContextSourceBinder)
-
-    vocab = None
-
-    def __call__(self, context):
-        if self.vocab is not None:
-            return self.vocab
-        util = queryUtility(
-            IExternalVocabConfig, name=u'psj.content.Institutes')
-        if util is None:
-            return SimpleVocabulary.fromValues([])
-        path = util.get('path', None)
-        if not path or not os.path.isfile(path):
-            return SimpleVocabulary.fromValues([])
-        self.vocab = SimpleVocabulary(
-            make_terms([line.strip() for line in open(path, 'r')]))
-        return self.vocab
-
-
 institutes_source = ExternalVocabBinder(u'psj.content.Institutes')
