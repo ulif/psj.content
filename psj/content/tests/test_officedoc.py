@@ -3,9 +3,7 @@
 import unittest
 from cStringIO import StringIO
 from plone.app.testing import (
-    TEST_USER_ID, TEST_USER_NAME, TEST_USER_PASSWORD,
-    SITE_OWNER_NAME, SITE_OWNER_PASSWORD,
-    setRoles, login, logout,
+    TEST_USER_ID, SITE_OWNER_NAME, SITE_OWNER_PASSWORD, setRoles
     )
 from plone.dexterity.interfaces import IDexterityFTI
 from plone.namedfile.file import NamedBlobFile
