@@ -22,29 +22,6 @@ from plone.app.testing import (
     PloneSandboxLayer, PLONE_FIXTURE, IntegrationTesting,
     FunctionalTesting, pushGlobalRegistry, popGlobalRegistry, ploneSite
     )
-from Products.Five import fiveconfigure
-from Products.PloneTestCase import PloneTestCase as ptc
-from Products.PloneTestCase.layer import PloneSite
-from Testing import ZopeTestCase as ztc
-
-
-ptc.setupPloneSite()
-
-
-class TestCase(ptc.PloneTestCase):
-
-    class layer(PloneSite):
-
-        @classmethod
-        def setUp(cls):
-            import psj.content
-            fiveconfigure.debug_mode = True
-            ztc.installPackage(psj.content)
-            fiveconfigure.debug_mode = False
-
-        @classmethod
-        def tearDown(cls):
-            pass
 
 
 class Fixture(PloneSandboxLayer):
