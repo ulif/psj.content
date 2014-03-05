@@ -82,6 +82,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
             title=u'My Doc', description=u'My description.',
             psj_title=u'My Title', psj_subtitle=u'My Subtitle',
             psj_institute=u'First Institute Entry',
+            psj_license=u'First License Entry',
             )
         d1 = self.folder['doc1']
         self.assertTrue(IBaseDoc.providedBy(d1))
@@ -91,6 +92,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
         self.assertEqual(d1.psj_title, u'My Title')
         self.assertEqual(d1.psj_subtitle, u'My Subtitle')
         self.assertEqual(d1.psj_institute, u'First Institute Entry')
+        self.assertEqual(d1.psj_license, u'First License Entry')
 
     def test_editing(self):
         # we can modify BaseDocs. Changes are reflected.
@@ -99,6 +101,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
             title=u'My doc', description=u'My description.',
             psj_title=u'My title', psj_subtitle=u'My Subtitle',
             psj_institute=u'First Institute Entry',
+            psj_license=u'First License Entry',
             )
         d1 = self.folder['doc1']
         d1.title = u'My changed title'
@@ -106,6 +109,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
         d1.psj_title = u'My changed title'
         d1.psj_subtitle = u'My changed subtitle'
         d1.psj_institute = u'Other Institute Entry'
+        d1.psj_license = u'Other License Entry'
         # we have to fire an event here
         notify(ObjectModifiedEvent(d1))
         self.assertEqual(d1.title, u'My changed title')
@@ -113,6 +117,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
         self.assertEqual(d1.psj_title, u'My changed title')
         self.assertEqual(d1.psj_subtitle, u'My changed subtitle')
         self.assertEqual(d1.psj_institute, u'Other Institute Entry')
+        self.assertEqual(d1.psj_license, u'Other License Entry')
 
     def test_fti(self):
         # we can get factory type infos for base docs
@@ -208,6 +213,7 @@ class BasedocBrowserTests(unittest.TestCase):
             title=u'My Edit Doc', description=u'My description.',
             psj_title=u'My Title', psj_subtitle=u'My Subtitle',
             psj_institute=u'First Institute Entry',
+            psj_license=u'First License Entry',
             )
         import transaction
         transaction.commit()
@@ -224,13 +230,13 @@ class BasedocBrowserTests(unittest.TestCase):
         gsm.registerUtility(conf, provided=IExternalVocabConfig, name=name)
 
     def setup_vocabs(self):
-        for name, readable in [(u'psj.content.Institutes', 'Institute'), ]:
+        for name, readable in VOCABS:
             self.create_external_vocab(name, readable)
 
     def teardown_vocabs(self):
         gsm = getGlobalSiteManager()
-        for name in [u'psj.content.Institutes', ]:
-            gsm.unregisterUtility(name=name, provided=IVocabularyFactory)
+        for name in VOCABS:
+            gsm.unregisterUtility(name=name[0], provided=IVocabularyFactory)
 
     def setUp(self):
         self.portal = self.layer['portal']
@@ -266,6 +272,8 @@ class BasedocBrowserTests(unittest.TestCase):
         self.browser.getControl(label='Untertitel').value = 'My Subtitle'
         self.browser.getControl(label='Institut').value = [
             b64encode('First Institute Entry'), ]
+        self.browser.getControl(label='Lizenz').value = [
+            b64encode('First License Entry'), ]
         self.browser.getControl("Save").click()
 
         assert 'My Title' in self.browser.contents
@@ -273,6 +281,7 @@ class BasedocBrowserTests(unittest.TestCase):
         assert 'My Book Title' in self.browser.contents
         assert 'My Subtitle' in self.browser.contents
         assert 'First Institute Entry' in self.browser.contents
+        assert 'First License Entry' in self.browser.contents
 
     def test_edit(self):
         # we can edit base docs
@@ -289,6 +298,8 @@ class BasedocBrowserTests(unittest.TestCase):
         self.browser.getControl(label='Untertitel').value = 'Other Subtitle'
         self.browser.getControl(label='Institut').value = [
             b64encode('Other Institute Entry'), ]
+        self.browser.getControl(label='Lizenz').value = [
+            b64encode('Other License Entry'), ]
         self.browser.getControl("Save").click()
 
         assert 'Other Title' in self.browser.contents
@@ -301,3 +312,5 @@ class BasedocBrowserTests(unittest.TestCase):
         assert 'My Subtitle' not in self.browser.contents
         assert 'Other Institute Entry' in self.browser.contents
         assert 'First Institute Entry' not in self.browser.contents
+        assert 'Other License Entry' in self.browser.contents
+        assert 'First License Entry' not in self.browser.contents
