@@ -22,12 +22,6 @@ from psj.content.psj_basedoc import (
 from psj.content.testing import INTEGRATION_TESTING, FUNCTIONAL_TESTING
 
 
-VOCAB_ENTRIES = u'Vocab Entry 1\nVocab Entry 2\nÜmlaut Entry\n'
-VOCAB_TOKEN1 = b64encode('Vocab Entry 1')
-VOCAB_TOKEN2 = b64encode('Vocab Entry 2')
-VOCAB_TOKEN3 = b64encode('Ümlaut Entry')
-
-
 class BaseDocUnitTests(unittest.TestCase):
 
     def test_iface(self):
