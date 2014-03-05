@@ -17,7 +17,7 @@ from zope.lifecycleevent import ObjectModifiedEvent
 from psj.content.officedoc import (
     IOfficeDoc, OfficeDoc, DisplayView, strip_tags
     )
-from psj.content.testing import INTEGRATION_TESTING
+from psj.content.testing import INTEGRATION_TESTING, FUNCTIONAL_TESTING
 
 
 class HelperTests(unittest.TestCase):
@@ -221,7 +221,7 @@ class OfficeDocIntegrationTests(unittest.TestCase):
 
 class OfficeDocBrowserTests(unittest.TestCase):
 
-    layer = INTEGRATION_TESTING
+    layer = FUNCTIONAL_TESTING
 
     def setUp(self):
         self.portal = self.layer['portal']
