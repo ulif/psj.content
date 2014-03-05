@@ -8,6 +8,7 @@ from base64 import b64encode
 from plone.app.testing import (
     TEST_USER_ID, SITE_OWNER_NAME, SITE_OWNER_PASSWORD, setRoles,
     )
+from plone.app.textfield.value import RichTextValue
 from plone.dexterity.interfaces import IDexterityFTI
 from plone.testing.z2 import Browser
 from zope.component import queryUtility, createObject, getGlobalSiteManager
@@ -26,6 +27,14 @@ VOCABS = [
     (u'psj.content.Institutes', 'Institute'),
     (u'psj.content.Licenses', 'License')
     ]
+
+RICH_TEXT_VALUE1 = RichTextValue(
+    u"My Richtext Value\n",
+    'text/plain', 'text/x-html-safe', 'utf-8')
+
+RICH_TEXT_VALUE2 = RichTextValue(
+    u"Other Richtext Value\n",
+    'text/plain', 'text/x-html-safe', 'utf-8')
 
 
 class BaseDocUnitTests(unittest.TestCase):
@@ -83,6 +92,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
             psj_title=u'My Title', psj_subtitle=u'My Subtitle',
             psj_institute=u'First Institute Entry',
             psj_license=u'First License Entry',
+            psj_abstract=RICH_TEXT_VALUE1,
             )
         d1 = self.folder['doc1']
         self.assertTrue(IBaseDoc.providedBy(d1))
@@ -93,6 +103,8 @@ class BaseDocIntegrationTests(unittest.TestCase):
         self.assertEqual(d1.psj_subtitle, u'My Subtitle')
         self.assertEqual(d1.psj_institute, u'First Institute Entry')
         self.assertEqual(d1.psj_license, u'First License Entry')
+        self.assertEqual(d1.psj_abstract.output,
+                         u'<p>My Richtext Value</p>')
 
     def test_editing(self):
         # we can modify BaseDocs. Changes are reflected.
@@ -102,6 +114,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
             psj_title=u'My title', psj_subtitle=u'My Subtitle',
             psj_institute=u'First Institute Entry',
             psj_license=u'First License Entry',
+            psj_abstract=RICH_TEXT_VALUE1,
             )
         d1 = self.folder['doc1']
         d1.title = u'My changed title'
@@ -110,6 +123,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
         d1.psj_subtitle = u'My changed subtitle'
         d1.psj_institute = u'Other Institute Entry'
         d1.psj_license = u'Other License Entry'
+        d1.psj_abstract = RICH_TEXT_VALUE2
         # we have to fire an event here
         notify(ObjectModifiedEvent(d1))
         self.assertEqual(d1.title, u'My changed title')
@@ -118,6 +132,8 @@ class BaseDocIntegrationTests(unittest.TestCase):
         self.assertEqual(d1.psj_subtitle, u'My changed subtitle')
         self.assertEqual(d1.psj_institute, u'Other Institute Entry')
         self.assertEqual(d1.psj_license, u'Other License Entry')
+        self.assertEqual(d1.psj_abstract.output,
+                         u'<p>Other Richtext Value</p>')
 
     def test_fti(self):
         # we can get factory type infos for base docs
@@ -214,6 +230,7 @@ class BasedocBrowserTests(unittest.TestCase):
             psj_title=u'My Title', psj_subtitle=u'My Subtitle',
             psj_institute=u'First Institute Entry',
             psj_license=u'First License Entry',
+            psj_abstract=RICH_TEXT_VALUE1,
             )
         import transaction
         transaction.commit()
@@ -274,6 +291,8 @@ class BasedocBrowserTests(unittest.TestCase):
             b64encode('First Institute Entry'), ]
         self.browser.getControl(label='Lizenz').value = [
             b64encode('First License Entry'), ]
+        self.browser.getControl(
+            name='form.widgets.psj_abstract').value = 'My Abstract\n'
         self.browser.getControl("Save").click()
 
         assert 'My Title' in self.browser.contents
@@ -282,6 +301,7 @@ class BasedocBrowserTests(unittest.TestCase):
         assert 'My Subtitle' in self.browser.contents
         assert 'First Institute Entry' in self.browser.contents
         assert 'First License Entry' in self.browser.contents
+        assert 'My Abstract' in self.browser.contents
 
     def test_edit(self):
         # we can edit base docs
@@ -300,6 +320,8 @@ class BasedocBrowserTests(unittest.TestCase):
             b64encode('Other Institute Entry'), ]
         self.browser.getControl(label='Lizenz').value = [
             b64encode('Other License Entry'), ]
+        self.browser.getControl(
+            name='form.widgets.psj_abstract').value = 'Other Abstract\n'
         self.browser.getControl("Save").click()
 
         assert 'Other Title' in self.browser.contents
@@ -314,3 +336,5 @@ class BasedocBrowserTests(unittest.TestCase):
         assert 'First Institute Entry' not in self.browser.contents
         assert 'Other License Entry' in self.browser.contents
         assert 'First License Entry' not in self.browser.contents
+        assert 'Other Abstract' in self.browser.contents
+        assert 'My Abstract' not in self.browser.contents

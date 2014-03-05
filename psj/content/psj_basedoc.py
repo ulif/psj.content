@@ -21,6 +21,7 @@
 """
 from psj.content import _
 from five import grok
+from plone.app.textfield import RichText
 from plone.dexterity.content import Container
 from plone.formwidget.contenttree import ObjPathSourceBinder
 from plone.supermodel import model
@@ -78,6 +79,15 @@ class IBaseDoc(model.Schema):
         required=False,
         )
 
+    psj_abstract = RichText(
+        title=_(u'Abstract'),
+        default_mime_type="text/html",
+        output_mime_type="text/html",
+        allowed_mime_types=('text/structured', 'text/plain', 'text/html'),
+        default=u'',
+        required=False,
+        )
+
 
 class BaseDoc(Container):
     """A PSJ document.
@@ -92,3 +102,4 @@ class BaseDoc(Container):
     psj_subtitle = FieldProperty(IBaseDoc["psj_subtitle"])
     psj_institute = FieldProperty(IBaseDoc["psj_institute"])
     psj_license = FieldProperty(IBaseDoc["psj_license"])
+    psj_abstract = FieldProperty(IBaseDoc["psj_abstract"])
