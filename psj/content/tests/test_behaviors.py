@@ -1,4 +1,5 @@
 # tests for psj.content.behaviors
+import unittest
 from plone.behavior.interfaces import IBehavior, IBehaviorAssignable
 from plone.dexterity.interfaces import IDexterityContent
 from plone.directives.form import IFormFieldProvider
@@ -8,7 +9,7 @@ from zope.schema.interfaces import WrongType
 from psj.content.behaviors import (
     IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract,
     )
-from psj.content.testing import TestCase
+from psj.content.testing import INTEGRATION_TESTING
 
 
 class DummyDocument(object):
@@ -50,8 +51,10 @@ class TestingAssignable(object):
             yield queryUtility(IBehavior, name=e.__identifier__)
 
 
-class MetadataBehaviorsTestCase(TestCase):
+class MetadataBehaviorsTests(unittest.TestCase):
     # Tests of behaviors concerning basic PSJ metadata.
+
+    layer = INTEGRATION_TESTING
 
     def behavior_installed(self, name, iface):
         # make sure we get the desired behavior after install
