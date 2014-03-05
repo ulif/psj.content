@@ -4,6 +4,7 @@ import os
 import shutil
 import tempfile
 import unittest
+from plone.testing.zca import pushGlobalRegistry, popGlobalRegistry
 from zope.component import getGlobalSiteManager
 from zope.interface import verify
 from zope.schema.interfaces import IContextSourceBinder
@@ -39,20 +40,14 @@ class MakeTermsTests(unittest.TestCase):
              (u'\xf6ml\xe4ut', 'w7ZtbMOkdXQ=', u'\xf6ml\xe4ut')]
             )
 
-
 class SourcesUnitTests(unittest.TestCase):
 
-    def _unregister(self):
-        gsm = getGlobalSiteManager()
-        for name in [u'psj.content.Institutes', ]:
-            gsm.unregisterUtility(name=name, provided=IExternalVocabConfig)
-
     def setUp(self):
+        pushGlobalRegistry()
         self.workdir = tempfile.mkdtemp()
-        self._unregister()
 
     def tearDown(self):
-        self._unregister()
+        popGlobalRegistry()
         shutil.rmtree(self.workdir)
 
     def create_external_vocab(self, name, valid_path=True):
@@ -89,4 +84,3 @@ class SourcesUnitTests(unittest.TestCase):
         self.create_external_vocab('psj.content.Institutes')
         src = institutes_source(context=None)
         assert isinstance(src, SimpleVocabulary)
-        assert "Vocab Entry 1" in src
