@@ -6,6 +6,7 @@ version = '2.0dev'
 tests_require = [
     'Pillow',
     'plone.app.testing',
+    'plone.testing',
     ]
 
 setup(name='psj.content',
@@ -37,14 +38,20 @@ setup(name='psj.content',
           'plone.app.dexterity [grok, relations]',
           'plone.app.referenceablebehavior',
           'plone.app.relationfield',
+          'plone.app.textfield',
           'plone.behavior',             # for behaviours
           'plone.dexterity',
           'plone.directives.form',      # for behaviours
+          'plone.formwidget.contenttree',
           'plone.formwidget.namedfile',  # for named files in behaviors
           'plone.namedfile[blobs]',      # for named files in behaviors
+          'plone.supermodel',
+          'z3c.relationfield',
           'zope.component',
+          'zope.event',
           'zope.i18nmessageid',
           'zope.interface',
+          'zope.lifecycleevent',
           'zope.schema',
           'Products.ATVocabularyManager',
           'Products.FacultyStaffDirectory',
