@@ -228,6 +228,8 @@ class OfficeDocBrowserTests(unittest.TestCase):
         setRoles(self.portal, TEST_USER_ID, ['Member', 'Manager'])
         self.portal_url = self.portal.absolute_url()
         self.browser = Browser(self.layer['app'])
+        self.src_file = NamedBlobFile(
+            data='Hi there!', filename=u'sample.txt')
 
     def do_login(self, browser):
         browser.open(self.portal_url + '/login')
@@ -235,8 +237,18 @@ class OfficeDocBrowserTests(unittest.TestCase):
         browser.getControl(label='Password').value = SITE_OWNER_PASSWORD
         browser.getControl("Log in").click()
 
+    def create_doc(self):
+        portal = self.layer['portal']
+        portal.invokeFactory(
+            'psj.content.officedoc', 'myeditdoc',
+            psj_office_doc=self.src_file, title=u'My Edit Doc',
+            description=u'My description.'
+            )
+        import transaction
+        transaction.commit()
+
     def test_add(self):
-        # we can add office docs (and edit it; see below)
+        # we can add office docs
         self.do_login(self.browser)
         self.browser.open(self.portal_url)
         # find add link and click it
@@ -259,13 +271,12 @@ class OfficeDocBrowserTests(unittest.TestCase):
         assert 'My File Contents' in self.browser.contents
         assert 'sample.txt.pdf' in self.browser.contents
 
-        # edit tests follow here.
-
-        # XXX: These should be in a separate test, but it looks as
-        # test isolation does not work sufficiently: the my-title doc
-        # created above shows up in other tests in this browser test
-        # case. Therefore we do the edit tests right here.
-        edit_link = self.browser.getLink('Edit')
+    def test_edit(self):
+        # we can edit office docs
+        self.do_login(self.browser)
+        self.create_doc()
+        self.browser.open(self.portal_url + '/myeditdoc')
+        edit_link = self.browser.getLink('Edit', index=1)
         edit_link.click()
 
         # set new values
