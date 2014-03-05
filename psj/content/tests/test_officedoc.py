@@ -232,10 +232,9 @@ class OfficeDocBrowserTests(unittest.TestCase):
             data='Hi there!', filename=u'sample.txt')
 
     def do_login(self, browser):
-        browser.open(self.portal_url + '/login')
-        browser.getControl(label='Login Name').value = SITE_OWNER_NAME
-        browser.getControl(label='Password').value = SITE_OWNER_PASSWORD
-        browser.getControl("Log in").click()
+        browser.addHeader(
+            'Authorization',
+            'Basic %s:%s' % (SITE_OWNER_NAME, SITE_OWNER_PASSWORD,))
 
     def create_doc(self):
         portal = self.layer['portal']
