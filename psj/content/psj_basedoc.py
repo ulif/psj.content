@@ -81,11 +81,18 @@ class IBaseDoc(model.Schema):
 
     psj_abstract = RichText(
         title=_(u'Abstract'),
+        description=_(u'Inhaltliche Zusammenfassung'),
         default_mime_type="text/html",
         output_mime_type="text/html",
         allowed_mime_types=('text/structured', 'text/plain', 'text/html'),
         default=u'',
         required=False,
+        )
+
+    psj_doi = schema.TextLine(
+        title=_(u'DOI'),
+        description=_(u'Digital Object Identifier'),
+        required=True,
         )
 
 
@@ -103,3 +110,4 @@ class BaseDoc(Container):
     psj_institute = FieldProperty(IBaseDoc["psj_institute"])
     psj_license = FieldProperty(IBaseDoc["psj_license"])
     psj_abstract = FieldProperty(IBaseDoc["psj_abstract"])
+    psj_doi = FieldProperty(IBaseDoc["psj_doi"])

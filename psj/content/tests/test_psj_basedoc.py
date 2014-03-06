@@ -93,6 +93,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
             psj_institute=u'First Institute Entry',
             psj_license=u'First License Entry',
             psj_abstract=RICH_TEXT_VALUE1,
+            psj_doi=u'My Identifier',
             )
         d1 = self.folder['doc1']
         self.assertTrue(IBaseDoc.providedBy(d1))
@@ -105,6 +106,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
         self.assertEqual(d1.psj_license, u'First License Entry')
         self.assertEqual(d1.psj_abstract.output,
                          u'<p>My Richtext Value</p>')
+        self.assertEqual(d1.psj_doi, u'My Identifier')
 
     def test_editing(self):
         # we can modify BaseDocs. Changes are reflected.
@@ -115,6 +117,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
             psj_institute=u'First Institute Entry',
             psj_license=u'First License Entry',
             psj_abstract=RICH_TEXT_VALUE1,
+            psj_doi=u'My Identifier',
             )
         d1 = self.folder['doc1']
         d1.title = u'My changed title'
@@ -124,6 +127,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
         d1.psj_institute = u'Other Institute Entry'
         d1.psj_license = u'Other License Entry'
         d1.psj_abstract = RICH_TEXT_VALUE2
+        d1.psj_doi = u'My changed identifier'
         # we have to fire an event here
         notify(ObjectModifiedEvent(d1))
         self.assertEqual(d1.title, u'My changed title')
@@ -134,6 +138,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
         self.assertEqual(d1.psj_license, u'Other License Entry')
         self.assertEqual(d1.psj_abstract.output,
                          u'<p>Other Richtext Value</p>')
+        self.assertEqual(d1.psj_doi, u'My changed identifier')
 
     def test_fti(self):
         # we can get factory type infos for base docs
@@ -166,7 +171,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
         self.folder.invokeFactory(
             'psj.content.basedoc', 'doc1',
             title=u'Foo Doc', description=u'My Description',
-            psj_title=u'Baz', psj_subtitle=u'Furor',
+            psj_title=u'Baz', psj_subtitle=u'Furor', psj_doi=u'Bar',
             )
         d1 = self.folder['doc1']
         self.assertEqual(
@@ -178,7 +183,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
         self.folder.invokeFactory(
             'psj.content.basedoc', 'doc1',
             title=u'Foo Doc', description=u'My Description',
-            psj_title=u'Baz', psj_subtitle=u'Furor',
+            psj_title=u'Baz', psj_subtitle=u'Furor', psj_doi=u'Bar',
             )
         d1 = self.folder['doc1']
         d1.reindexObject()
@@ -189,7 +194,8 @@ class BaseDocIntegrationTests(unittest.TestCase):
     def test_title_indexed(self):
         # titles of basedocs are indexed (also after change)
         self.folder.invokeFactory(
-            'psj.content.basedoc', 'doc1', title=u'My DocTitle')
+            'psj.content.basedoc', 'doc1', title=u'My DocTitle',
+            psj_doi=u'Bar',)
         d1 = self.folder['doc1']
         result = self.portal.portal_catalog(Title='DocTitle')
         self.assertEqual(1, len(result))
@@ -205,7 +211,7 @@ class BaseDocIntegrationTests(unittest.TestCase):
         # descriptions of basedocs are indexed (also after change)
         self.folder.invokeFactory(
             'psj.content.basedoc', 'doc1',
-            description=u'My DocDescription')
+            description=u'My DocDescription', psj_doi=u'Bar')
         d1 = self.folder['doc1']
         result = self.portal.portal_catalog(Description='DocDescription')
         self.assertEqual(1, len(result))
@@ -231,6 +237,7 @@ class BasedocBrowserTests(unittest.TestCase):
             psj_institute=u'First Institute Entry',
             psj_license=u'First License Entry',
             psj_abstract=RICH_TEXT_VALUE1,
+            psj_doi=u'My identifier',
             )
         import transaction
         transaction.commit()
@@ -293,6 +300,7 @@ class BasedocBrowserTests(unittest.TestCase):
             b64encode('First License Entry'), ]
         self.browser.getControl(
             name='form.widgets.psj_abstract').value = 'My Abstract\n'
+        self.browser.getControl(label='DOI').value = 'My Identifier'
         self.browser.getControl("Save").click()
 
         assert 'My Title' in self.browser.contents
@@ -302,6 +310,7 @@ class BasedocBrowserTests(unittest.TestCase):
         assert 'First Institute Entry' in self.browser.contents
         assert 'First License Entry' in self.browser.contents
         assert 'My Abstract' in self.browser.contents
+        assert 'My Identifier' in self.browser.contents
 
     def test_edit(self):
         # we can edit base docs
@@ -322,6 +331,7 @@ class BasedocBrowserTests(unittest.TestCase):
             b64encode('Other License Entry'), ]
         self.browser.getControl(
             name='form.widgets.psj_abstract').value = 'Other Abstract\n'
+        self.browser.getControl(label='DOI').value = 'Other Identifier'
         self.browser.getControl("Save").click()
 
         assert 'Other Title' in self.browser.contents
@@ -338,3 +348,5 @@ class BasedocBrowserTests(unittest.TestCase):
         assert 'First License Entry' not in self.browser.contents
         assert 'Other Abstract' in self.browser.contents
         assert 'My Abstract' not in self.browser.contents
+        assert 'Other Identifier' in self.browser.contents
+        assert 'My Identifier' not in self.browser.contents
