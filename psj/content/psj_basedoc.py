@@ -103,7 +103,15 @@ class BaseDoc(Container):
 
     __allow_access_to_unprotected_subobjects__ = 1
 
-    psj_author = FieldProperty(IBaseDoc["psj_author"])
+    @property
+    def psj_author(self):
+        """Get persons from `psj_author_relation` as list of strings.
+        """
+        if self.psj_author_relation is None:
+            return []
+        persons = [rel.to_object for rel in self.psj_author_relation]
+        return [p.Title().decode('utf-8') for p in persons]
+
     psj_author_relation = None
     psj_title = FieldProperty(IBaseDoc["psj_title"])
     psj_subtitle = FieldProperty(IBaseDoc["psj_subtitle"])

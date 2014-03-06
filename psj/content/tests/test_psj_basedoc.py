@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 # Tests for psj_basedoc module.
+#
+# XXX: FSD-related tests (including author attr) are missing.
+#      These are blocked by difficulties installing FSD in tests.
+#
 import os
 import shutil
 import tempfile
