@@ -80,7 +80,7 @@ class IBaseDoc(model.Schema):
     psj_license = schema.List(
         title=_(u'Lizenz'),
         description=_(u'Wählen Sie eine Lizenz aus'),
-        value_type = schema.Choice(
+        value_type=schema.Choice(
             title=_(u'Lizenz'),
             description=_(u'Lizenz'),
             source=licenses_source,
