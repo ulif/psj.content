@@ -37,7 +37,7 @@ class IBaseDoc(model.Schema):
     psj_author = schema.List(
         title=_(u'Autor'),
         description=_(u'Autor(en) oder Herausgeber.'),
-        required=False,
+        required=True,
         readonly=True,
         value_type=schema.TextLine(),
         )
@@ -65,17 +65,27 @@ class IBaseDoc(model.Schema):
         required=False,
         )
 
-    psj_institute = schema.Choice(
+    psj_institute = schema.List(
         title=_(u'Institut'),
-        description=_(u'Institut'),
-        source=institutes_source,
+        description=_(u'Wählen Sie ein Institut aus'),
+        value_type=schema.Choice(
+            title=_(u'Institut'),
+            description=_(u'Institut'),
+            source=institutes_source,
+            required=False,
+            ),
         required=False,
         )
 
-    psj_license = schema.Choice(
+    psj_license = schema.List(
         title=_(u'Lizenz'),
-        description=_(u'Lizenz'),
-        source=licenses_source,
+        description=_(u'Wählen Sie eine Lizenz aus'),
+        value_type = schema.Choice(
+            title=_(u'Lizenz'),
+            description=_(u'Lizenz'),
+            source=licenses_source,
+            required=False,
+            ),
         required=False,
         )
 
