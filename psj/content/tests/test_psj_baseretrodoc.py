@@ -90,6 +90,7 @@ class BaseRetroDocIntegrationTests(unittest.TestCase):
         self.folder.invokeFactory(
             'psj.content.baseretrodoc', 'doc1',
             title=u'My Doc', description=u'My description.',
+            psj_author=[u'I', u'Me', u'Myself'],
             psj_title=u'My Title', psj_subtitle=u'My Subtitle',
             psj_institute=[u'First Institute Entry'],
             psj_license=u'First License Entry',
@@ -101,6 +102,7 @@ class BaseRetroDocIntegrationTests(unittest.TestCase):
         self.assertEqual(d1.title, u'My Doc')
         self.assertEqual(d1.description, u'My description.')
         # additional attributes were set
+        self.assertEqual(d1.psj_author, [u'I', u'Me', u'Myself'])
         self.assertEqual(d1.psj_title, u'My Title')
         self.assertEqual(d1.psj_subtitle, u'My Subtitle')
         self.assertEqual(d1.psj_institute, [u'First Institute Entry', ])
@@ -114,6 +116,7 @@ class BaseRetroDocIntegrationTests(unittest.TestCase):
         self.folder.invokeFactory(
             'psj.content.baseretrodoc', 'doc1',
             title=u'My doc', description=u'My description.',
+            psj_author=[u'My Author'],
             psj_title=u'My title', psj_subtitle=u'My Subtitle',
             psj_institute=[u'First Institute Entry', ],
             psj_license=u'First License Entry',
@@ -123,6 +126,7 @@ class BaseRetroDocIntegrationTests(unittest.TestCase):
         d1 = self.folder['doc1']
         d1.title = u'My changed title'
         d1.description = u'My changed description'
+        d1.psj_author = [u'My changed author', ]
         d1.psj_title = u'My changed title'
         d1.psj_subtitle = u'My changed subtitle'
         d1.psj_institute = [u'Other Institute Entry', ]
@@ -133,6 +137,7 @@ class BaseRetroDocIntegrationTests(unittest.TestCase):
         notify(ObjectModifiedEvent(d1))
         self.assertEqual(d1.title, u'My changed title')
         self.assertEqual(d1.description, u'My changed description')
+        self.assertEqual(d1.psj_author, [u'My changed author', ])
         self.assertEqual(d1.psj_title, u'My changed title')
         self.assertEqual(d1.psj_subtitle, u'My changed subtitle')
         self.assertEqual(d1.psj_institute, [u'Other Institute Entry', ])
@@ -234,6 +239,7 @@ class BasedocBrowserTests(unittest.TestCase):
         portal.invokeFactory(
             'psj.content.baseretrodoc', 'myeditdoc',
             title=u'My Edit Doc', description=u'My description.',
+            psj_author=[u'My Author', ],
             psj_title=u'My Title', psj_subtitle=u'My Subtitle',
             psj_institute=[u'First Institute Entry', ],
             psj_license=u'First License Entry',
@@ -291,6 +297,7 @@ class BasedocBrowserTests(unittest.TestCase):
         add_link.click()
 
         # fill form
+        self.browser.getControl(label='Autor').value = 'My Author'
         self.browser.getControl(label='Title').value = 'My Title'
         self.browser.getControl(label='Summary').value = 'My Description'
         self.browser.getControl(label='Titel').value = 'My Book Title'
@@ -307,6 +314,7 @@ class BasedocBrowserTests(unittest.TestCase):
 
         assert 'My Title' in self.browser.contents
         assert 'My Description' in self.browser.contents
+        assert 'My Author' in self.browser.contents
         assert 'My Book Title' in self.browser.contents
         assert 'My Subtitle' in self.browser.contents
         # XXX: Disabled; too hard to test JS-driven forms
@@ -326,6 +334,7 @@ class BasedocBrowserTests(unittest.TestCase):
         # set new values
         self.browser.getControl(label='Title').value = 'Other Title'
         self.browser.getControl(label='Summary').value = 'My Other Descr.'
+        self.browser.getControl(label='Autor').value = 'Other Author'
         self.browser.getControl(label='Titel').value = 'Other Book Title'
         self.browser.getControl(label='Untertitel').value = 'Other Subtitle'
         # XXX: Disabled; too hard to test JS-driven forms
@@ -342,6 +351,8 @@ class BasedocBrowserTests(unittest.TestCase):
         assert 'My Title' not in self.browser.contents
         assert 'My Other Descr.' in self.browser.contents
         assert 'My Description' not in self.browser.contents
+        assert 'Other Author' in self.browser.contents
+        assert 'My Author' not in self.browser.contents
         assert 'Other Book Title' in self.browser.contents
         assert 'My Book Title' not in self.browser.contents
         assert 'Other Subtitle' in self.browser.contents
