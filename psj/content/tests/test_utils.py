@@ -8,6 +8,12 @@ from psj.content.testing import INTEGRATION_TESTING
 from psj.content.utils import to_string, strip_tags, SearchableTextGetter
 
 
+class FakeHTMLProvider(object):
+    # fake a blob
+    def __init__(self, data):
+        self.data = data
+
+
 class FakeTextProvider(object):
 
     psj_author = 'My Author'
@@ -97,6 +103,14 @@ class SearchableTextGetterTests(unittest.TestCase):
         context.psj_author = value
         return context
 
+    def get_html_context(self, value):
+        # get a context object with psj_html_repr set to `value`
+        class FakeHTMLContext(object):
+            psj_html_repr = None
+        context = FakeHTMLContext()
+        context.psj_html_repr = value
+        return context
+
     def test_constructor(self):
         # we can construct searchableTextGetters without paramaters
         getter = SearchableTextGetter()
@@ -184,6 +198,19 @@ class SearchableTextGetterTests(unittest.TestCase):
         context = self.get_context(['aä', u'oö'])
         result = SearchableTextGetter()(context)
         self.assertEqual(result, 'aä oö')
+
+    def test_html_repr_is_None(self):
+        # psj_html_repr can be None
+        context = self.get_html_context(None)
+        result = SearchableTextGetter()(context)
+        self.assertEqual(result, '')
+
+    def test_html_repr_str(self):
+        # psj_html_repr can be a string
+        context = self.get_html_context(
+            FakeHTMLProvider('<body><h1>Title1</h1>\n<p>Some Text</p></body>'))
+        result = SearchableTextGetter()(context)
+        self.assertEqual(result, 'Title1 Some Text')
 
 
 class UtilsIntegrationTests(unittest.TestCase):

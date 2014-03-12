@@ -100,4 +100,11 @@ class SearchableTextGetter(grok.GlobalUtility):
                 attr_val = to_string(attr_val)
             attr_val = attr_val.replace('\n', ' ')
             result = '%s %s' % (result, attr_val.strip())
+        result = '%s %s' % (result.strip(), self.get_html_repr_text(context))
         return result.strip()
+
+    def get_html_repr_text(self, context):
+        if not hasattr(context, 'psj_html_repr'):
+            return ''
+        html_content = getattr(context.psj_html_repr, 'data', '')
+        return strip_tags(html_content)
