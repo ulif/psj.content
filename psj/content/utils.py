@@ -45,6 +45,30 @@ def to_string(text):
     return text
 
 
+def strip_tags(html):
+    """Strip tags from HTML text.
+
+    Returns the text in `html` with all tags removed. Any consecutive
+    whitespaces are reduced to a single space. Thus, ``<div> Foo \n
+    </div>`` becomes ``Foo``.
+    """
+    in_tag = False
+    in_quote = False
+    result = ''
+
+    for char in html:
+        if not in_tag and char == '<':
+            in_tag = True
+        elif not in_quote and char == '>':
+            in_tag = False
+        elif char in ['"', "'"]:
+            in_quote = not in_quote
+        elif not in_tag:
+            result += char
+    # replace consecutive whitespaces with single spaces
+    return ' '.join(result.split()).strip()
+
+
 class SearchableTextGetter(grok.GlobalUtility):
     """A utility extracting searchable text from objects.
 

@@ -5,7 +5,7 @@ from zope.component import queryUtility
 from zope.interface import verify
 from psj.content.interfaces import ISearchableTextGetter
 from psj.content.testing import INTEGRATION_TESTING
-from psj.content.utils import to_string, SearchableTextGetter
+from psj.content.utils import to_string, strip_tags, SearchableTextGetter
 
 
 class FakeTextProvider(object):
@@ -30,6 +30,9 @@ class FakeTextProvider(object):
 
 class HelperTests(unittest.TestCase):
 
+    #
+    # to_string() tests
+    #
     def test_to_string_from_string(self):
         # we can turn strings into strings
         result = to_string('äöü')
@@ -44,6 +47,44 @@ class HelperTests(unittest.TestCase):
         # we can turn numbers into strings
         result = to_string(999)
         self.assertEqual(result, '999')
+
+    #
+    # strip_tags() tests
+    #
+    def test_strip_tags_simple(self):
+        # simple one-leveled docs are stripped correctly
+        result = strip_tags('<div>foo</div>')
+        self.assertEqual('foo', result)
+
+    def test_strip_tags_nested(self):
+        # we can strip tags from nested HTML
+        result = strip_tags('<div>foo<div>bar</div>baz</div>')
+        self.assertEqual('foobarbaz', result)
+
+    def test_strip_tags_non_ascii(self):
+        # we handle non-ASCII chars correctly
+        result = strip_tags('<div>ä</div>')
+        self.assertEqual('ä', result)
+
+    def test_strip_tags_no_content(self):
+        # HTML w/o any tags is handled correctly
+        result = strip_tags('Hi there!')
+        self.assertEqual('Hi there!', result)
+
+    def test_strip_tags_no_linebreak(self):
+        # linebreaks are removed from HTML
+        result = strip_tags('foo\nbar\nbaz')
+        self.assertEqual('foo bar baz', result)
+
+    def test_strip_tags_only_single_spaces(self):
+        # concatenated spaces are reduced to a single one.
+        result = strip_tags('foo  bar \nbaz')
+        self.assertEqual('foo bar baz', result)
+
+    def test_strip_tags_result_stripped(self):
+        # leading/trailing whitespaces are stripped from result
+        result = strip_tags('  foo bar \n ')
+        self.assertEqual('foo bar', result)
 
 
 class SearchableTextGetterTests(unittest.TestCase):

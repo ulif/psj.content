@@ -19,7 +19,6 @@
 
 """
 import md5
-from psj.content import _
 from five import grok
 from plone.dexterity.content import Container
 from plone.directives.dexterity import DisplayForm
@@ -31,30 +30,8 @@ from zope import schema
 from zope.lifecycleevent.interfaces import (
     IObjectAddedEvent, IObjectModifiedEvent
     )
-
-
-def strip_tags(html):
-    """Strip tags from HTML text.
-
-    Returns the text in `html` with all tags removed. Any consecutive
-    whitespaces are reduced to a single space. Thus, ``<div> Foo \n
-    </div>`` becomes ``Foo``.
-    """
-    in_tag = False
-    in_quote = False
-    result = ''
-
-    for char in html:
-        if not in_tag and char == '<':
-            in_tag = True
-        elif not in_quote and char == '>':
-            in_tag = False
-        elif char in ['"', "'"]:
-            in_quote = not in_quote
-        elif not in_tag:
-            result += char
-    # replace consecutive whitespaces with single spaces
-    return ' '.join(result.split()).strip()
+from psj.content import _
+from psj.content.utils import strip_tags
 
 
 class IOfficeDoc(model.Schema):
