@@ -53,7 +53,7 @@ class IExternalVocabConfig(Interface):
 class ISearchableTextGetter(Interface):
     """A utility determining the searchable text of objects.
     """
-    def __call__(self, context):
+    def __call__(context):
         """Get the searchable text for `context`.
 
         Returns a string containing the text that should be
