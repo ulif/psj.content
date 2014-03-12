@@ -55,4 +55,7 @@ class ISearchableTextGetter(Interface):
     """
     def __call__(self, context):
         """Get the searchable text for `context`.
+
+        Returns a string containing the text that should be
+        searchable.
         """
