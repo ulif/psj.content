@@ -48,3 +48,11 @@ class IExternalVocabConfig(Interface):
         description=u'Name this vocab should be registered under.',
         required=True,
         )
+
+
+class ISearchableTextGetter(Interface):
+    """A utility determining the searchable text of objects.
+    """
+    def __call__(self, context):
+        """Get the searchable text for `context`.
+        """
