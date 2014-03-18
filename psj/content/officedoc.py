@@ -27,10 +27,12 @@ from plone.namedfile.file import NamedBlobFile
 from plone.supermodel import model
 from Products.CMFCore.utils import getToolByName
 from zope import schema
+from zope.component import queryUtility
 from zope.lifecycleevent.interfaces import (
     IObjectAddedEvent, IObjectModifiedEvent
     )
 from psj.content import _
+from psj.content.interfaces import ISearchableTextGetter
 from psj.content.utils import strip_tags
 
 
@@ -151,12 +153,15 @@ class OfficeDoc(Container):
         """The text searchable in this document.
 
         Additionally to the regular fields (title, description, etc.),
-        we take care for the HTML representation to be added to the
+        we take care for the PSJ specific fields to be added to the
         searchable text.
         """
         base_result = super(OfficeDoc, self).SearchableText()
-        html_content = getattr(self.psj_html_repr, 'data', '')
-        return '%s %s' % (base_result, strip_tags(html_content))
+        text_getter = queryUtility(ISearchableTextGetter)
+        psj_attribs_text = ''
+        if text_getter is not None:
+            psj_attribs_text = text_getter(context=self)
+        return '%s %s' % (base_result, psj_attribs_text)
 
 
 @grok.subscribe(IOfficeDoc, IObjectAddedEvent)
