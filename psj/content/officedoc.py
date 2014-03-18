@@ -33,7 +33,6 @@ from zope.lifecycleevent.interfaces import (
     )
 from psj.content import _
 from psj.content.interfaces import ISearchableTextGetter
-from psj.content.utils import strip_tags
 
 
 class IOfficeDoc(model.Schema):
