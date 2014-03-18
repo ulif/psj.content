@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Tests for utils module.
 import unittest
+from plone.app.textfield.value import RichTextValue
 from zope.component import queryUtility
 from zope.interface import verify
 from psj.content.interfaces import ISearchableTextGetter
@@ -174,6 +175,16 @@ class SearchableTextGetterTests(unittest.TestCase):
         context = self.get_context(999)
         result = SearchableTextGetter()(context)
         self.assertEqual(result, '999')
+
+    def test_richtext_attributes(self):
+        # attributes with richtext values are treated correctly
+        context = self.get_context(
+            RichTextValue(
+                u"My Richtext Value\n",
+                'text/plain', 'text/x-html-safe', 'utf-8')
+            )
+        result = SearchableTextGetter()(context)
+        self.assertEqual(result, 'My Richtext Value')
 
     def test_newlines_removed(self):
         # newlines are removed from values
