@@ -20,6 +20,7 @@
 
 """
 from five import grok
+from plone.app.textfield import RichTextValue
 from psj.content.interfaces import ISearchableTextGetter
 
 #: The attributes considered to hold fulltext.
@@ -96,6 +97,8 @@ class SearchableTextGetter(grok.GlobalUtility):
                 continue
             if isinstance(attr_val, list) or isinstance(attr_val, tuple):
                 attr_val = ' '.join([to_string(x.strip()) for x in attr_val])
+            elif isinstance(attr_val, RichTextValue):
+                attr_val = to_string(attr_val.raw)
             else:
                 attr_val = to_string(attr_val)
             attr_val = attr_val.replace('\n', ' ')
