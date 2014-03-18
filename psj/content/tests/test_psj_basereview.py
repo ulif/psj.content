@@ -176,10 +176,11 @@ class BaseReviewIntegrationTests(unittest.TestCase):
             'psj.content.basereview', 'doc1',
             title=u'Foo Doc', description=u'My Description',
             psj_title=u'Baz', psj_subtitle=u'Furor', psj_doi=u'Bar',
+            psj_abstract=RICH_TEXT_VALUE1,
             )
         d1 = self.folder['doc1']
         self.assertEqual(
-            'Foo Doc My Description',
+            'Foo Doc My Description Baz Furor My Richtext Value',
             d1.SearchableText())
 
     def test_searchable_text_indexed(self):

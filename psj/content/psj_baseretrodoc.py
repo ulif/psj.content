@@ -25,7 +25,9 @@ from plone.app.textfield import RichText
 from plone.dexterity.content import Container
 from plone.supermodel import model
 from zope import schema
+from zope.component import queryUtility
 from zope.schema.fieldproperty import FieldProperty
+from psj.content.interfaces import ISearchableTextGetter
 from psj.content.sources import institutes_source, licenses_source
 
 
@@ -108,3 +110,17 @@ class BaseRetroDoc(Container):
     psj_license = FieldProperty(IBaseRetroDoc["psj_license"])
     psj_abstract = FieldProperty(IBaseRetroDoc["psj_abstract"])
     psj_doi = FieldProperty(IBaseRetroDoc["psj_doi"])
+
+    def SearchableText(self):
+        """The text searchable in this document.
+
+        Additionally to the regular fields (title, description, etc.),
+        we take care for the PSJ specific fields to be added to the
+        searchable text.
+        """
+        base_result = super(BaseRetroDoc, self).SearchableText()
+        text_getter = queryUtility(ISearchableTextGetter)
+        psj_attribs_text = ''
+        if text_getter is not None:
+            psj_attribs_text = text_getter(context=self)
+        return '%s %s' % (base_result, psj_attribs_text)
