@@ -79,16 +79,11 @@ class IBaseDoc(model.Schema):
         required=False,
         )
 
-    psj_license = schema.List(
-        title=_(u'Lizenz'),
-        description=_(u'Wählen Sie eine Lizenz aus'),
-        value_type=schema.Choice(
+    psj_license = schema.Choice(
             title=_(u'Lizenz'),
-            description=_(u'Lizenz'),
+            description=_(u'Wählen Sie eine Lizenz aus'),
             source=licenses_source,
             required=False,
-            ),
-        required=False,
         )
 
     psj_abstract = RichText(
