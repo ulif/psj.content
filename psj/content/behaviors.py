@@ -21,7 +21,8 @@
 from five import grok
 from plone.app.dexterity.behaviors.metadata import DCFieldProperty
 from plone.dexterity.interfaces import IDexterityContent
-from plone.directives.form import Schema, fieldset, IFormFieldProvider
+from plone.directives.form import (
+    Schema, fieldset, IFormFieldProvider, mode)
 from plone.namedfile.field import NamedBlobFile as NamedBlobFileField
 from plone.namedfile.file import NamedBlobFile
 from Products.CMFCore.utils import getToolByName
@@ -146,6 +147,33 @@ class IPSJBaseData(IPSJBehavior):
 alsoProvides(IPSJBaseData, IFormFieldProvider)
 
 
+class IPSJAddRetro(IPSJBehavior):
+    """Technical metadata for retro articles and postprints.
+    """
+    fieldset(
+        'psj_metadata',
+        label=_(u'PSJ Metadata'),
+        fields=('psj_link_bsb', 'psj_ocr_text'),
+        )
+
+    psj_link_bsb = TextLine(
+        title=_(u'Link BSB'),
+        description=_(u'Link zum Bereitstellungssystem der BSB'),
+        required=False,
+        )
+
+    psj_ocr_text = Text(
+        title=_(u'OCR Text'),
+        description=_(u''),
+        required=False,
+        )
+
+    mode(psj_ocr_text='input')
+
+
+alsoProvides(IPSJAddRetro, IFormFieldProvider)
+
+
 class IPSJOfficeDocTransformer(IPSJBehavior):
     """A document that provides some office doc.
 
@@ -223,6 +251,22 @@ class PSJBaseData(PSJAuthor, PSJTitle, PSJSubtitle, PSJAbstract):
     """A behavior providing base metadata.
     """
     implements(IPSJBaseData)
+
+
+class PSJAddRetro(PSJMetadataBase):
+    """A behavior providing technical metadata for retro docs.
+    """
+    implements(IPSJAddRetro)
+
+    psj_link_bsb = DCFieldProperty(
+        IPSJAddRetro['psj_link_bsb'],
+        get_name='psj_link_bsb'
+        )
+
+    psj_ocr_text = DCFieldProperty(
+        IPSJAddRetro['psj_ocr_text'],
+        get_name='psj_ocr_text'
+        )
 
 
 class PSJOfficeDocTransformer(PSJMetadataBase):

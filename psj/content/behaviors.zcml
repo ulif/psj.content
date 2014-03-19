@@ -38,6 +38,13 @@
         />
 
     <plone:behavior
+	title="PSJAddRetro"
+	description="Technical metadata for retro docs."
+	provides=".behaviors.IPSJAddRetro"
+	factory=".behaviors.PSJAddRetro"
+	/>
+
+    <plone:behavior
         title="PSJ Base Data"
         description="Base Data for PSJ Documents, including author, title, etc."
         provides=".behaviors.IPSJBaseData"

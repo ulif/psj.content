@@ -7,7 +7,7 @@ from zope.component import queryUtility, adapts, provideAdapter
 from zope.interface import implements
 from zope.schema.interfaces import WrongType
 from psj.content.behaviors import (
-    IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract,
+    IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract, IPSJAddRetro,
     )
 from psj.content.testing import INTEGRATION_TESTING
 
@@ -38,7 +38,8 @@ class TestingAssignable(object):
     implements(IBehaviorAssignable)
     adapts(DummyDocument)
 
-    enabled = [IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract]
+    enabled = [IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract,
+               IPSJAddRetro, ]
 
     def __init__(self, context):
         self.context = context
@@ -123,3 +124,11 @@ class MetadataBehaviorsTests(unittest.TestCase):
         # we can get a behavior by adapter
         self.text_behavior_usable(b'psj_abstract', IPSJAbstract)
         return
+
+    def test_add_retro_behavior_installed(self):
+        self.behavior_installed('IPSJAddRetro', IPSJAddRetro)
+
+    def test_add_retro_behavior_usable(self):
+        # we can get a behavior by adapter
+        self.text_behavior_usable(b'psj_link_bsb', IPSJAddRetro)
+        self.text_behavior_usable(b'psj_ocr_text', IPSJAddRetro)
