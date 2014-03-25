@@ -107,6 +107,11 @@ class SearchableTextGetter(grok.GlobalUtility):
         return result.strip()
 
     def get_html_repr_text(self, context):
+        """Extract HTML from any `psj_html_repr` attribute of a
+        `context`.
+
+        The text is returned with all HTML tags stripped.
+        """
         if not hasattr(context, 'psj_html_repr'):
             return ''
         html_content = getattr(context.psj_html_repr, 'data', '')
