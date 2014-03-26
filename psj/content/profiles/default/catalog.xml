@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<object name="portal_catalog">
+  <!-- Please add real indexes in setuphandlers.py.
+       See http://maurits.vanrees.org/weblog/archive/2009/12/catalog
+       for explanations. -->
+  <column value="psj_author" />
+</object>
