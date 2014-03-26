@@ -21,6 +21,22 @@
         provides="Products.GenericSetup.interfaces.EXTENSION"
         />
 
+    <!-- Register the import step -->
+    <genericsetup:importStep
+        name="psj.content"
+        title="psj.content special import handlers"
+        description=""
+        handler="psj.content.setuphandlers.import_various" />
+
+    <!-- Register the upgrade step -->
+    <genericsetup:upgradeStep
+        title="Add catalog indexes"
+        description=""
+        source="1.0"
+        destination="2.0"
+        handler="psj.content.setuphandlers.add_catalog_indexes"
+        profile="psj.content:default" />
+
     <include package="." file="behaviors.zcml" />
 
 </configure>
