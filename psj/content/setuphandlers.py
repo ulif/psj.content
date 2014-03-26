@@ -51,8 +51,14 @@ def add_catalog_indexes(context, logger=None):
     indexes = catalog.indexes()
     # Specify the indexes you want, with ('index_name', 'index_type')
     wanted = (
-        # ('psj_author', 'FieldIndex'),
-        # ('psj_author', 'KeywordIndex'),
+        ('psj_author', 'KeywordIndex'),
+        ('psj_institute', 'KeywordIndex'),
+        ('psj_publication_year', 'FieldIndex'),
+        ('psj_subject_group', 'KeywordIndex'),
+        ('psj_ddc_geo', 'KeywordIndex'),
+        ('psj_ddc_sach', 'KeywordIndex'),
+        ('psj_ddc_zeit', 'KeywordIndex'),
+        ('psj_gnd_term', 'KeywordIndex'),
         )
     indexables = []
     for name, meta_type in wanted:

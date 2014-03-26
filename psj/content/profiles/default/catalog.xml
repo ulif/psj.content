@@ -4,4 +4,11 @@
        See http://maurits.vanrees.org/weblog/archive/2009/12/catalog
        for explanations. -->
   <column value="psj_author" />
+  <column value="psj_institute" />
+  <column value="psj_publication_year" />
+  <column value="psj_subject_group" />
+  <column value="psj_ddc_geo" />
+  <column value="psj_ddc_sach" />
+  <column value="psj_ddc_zeit" />
+  <column value="psj_ddc_term" />
 </object>
