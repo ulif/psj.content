@@ -11,7 +11,8 @@ from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content.interfaces import IExternalVocabConfig
 from psj.content.sources import (
-    ExternalVocabBinder, make_terms, institutes_source, licenses_source,
+    ExternalVocabBinder, make_terms,
+    institutes_source, licenses_source, publishers_source,
     )
 
 
@@ -103,5 +104,12 @@ class SourcesUnitTests(unittest.TestCase):
         self.create_external_vocab('psj.content.Licenses')
         licenses_source.vocab = None  # make sure not to get cached entries
         src = licenses_source(context=None)
+        assert isinstance(src, SimpleVocabulary)
+        assert u'Vocab Entry 1' in src
+
+    def test_publishers_src_w_vocab(self):
+        self.create_external_vocab('psj.content.Publishers')
+        publishers_source.vocab = None  # make sure not to get cached entries
+        src = publishers_source(context=None)
         assert isinstance(src, SimpleVocabulary)
         assert u'Vocab Entry 1' in src

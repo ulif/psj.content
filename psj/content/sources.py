@@ -85,3 +85,4 @@ class ExternalVocabBinder(object):
 
 institutes_source = ExternalVocabBinder(u'psj.content.Institutes')
 licenses_source = ExternalVocabBinder(u'psj.content.Licenses')
+publishers_source = ExternalVocabBinder(u'psj.content.Publishers')
