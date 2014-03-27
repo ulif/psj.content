@@ -1,4 +1,6 @@
-#  psj.content is copyright (c) 2013 Uli Fouquet
+# -*- coding: utf-8 -*-
+#
+#  psj.content is copyright (c) 2014 Uli Fouquet
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -18,10 +20,35 @@
 """Testing support for `psj.content`.
 
 """
+import os
+import shutil
+import tempfile
 from plone.app.testing import (
     PloneSandboxLayer, PLONE_FIXTURE, IntegrationTesting,
     FunctionalTesting, pushGlobalRegistry, popGlobalRegistry, ploneSite
     )
+from zope.component import getGlobalSiteManager
+from psj.content.interfaces import IExternalVocabConfig
+
+
+class ExternalVocabSetup(object):
+
+    def setUp(self):
+        self.workdir = tempfile.mkdtemp()
+
+    def tearDown(self):
+        shutil.rmtree(self.workdir)
+
+    def create_external_vocab(self, name, valid_path=True):
+        # create a working external vocab and register it
+        gsm = getGlobalSiteManager()
+        path = os.path.join(self.workdir, 'sample_vocab.csv')
+        if valid_path:
+            open(path, 'w').write(
+                u'Vocab Entry 1\nVocab Entry 2\nÜmlaut Entry\n'.encode(
+                    'utf-8'))
+        conf = {'path': path, 'name': name}
+        gsm.registerUtility(conf, provided=IExternalVocabConfig, name=name)
 
 
 class Fixture(PloneSandboxLayer):

@@ -1,19 +1,14 @@
 # -*- coding: utf-8 -*-
 # Tests for sources module.
-import os
-import shutil
-import tempfile
 import unittest
-from plone.testing.zca import pushGlobalRegistry, popGlobalRegistry
-from zope.component import getGlobalSiteManager
 from zope.interface import verify
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
-from psj.content.interfaces import IExternalVocabConfig
 from psj.content.sources import (
     ExternalVocabBinder, make_terms,
     institutes_source, licenses_source, publishers_source,
     )
+from psj.content.testing import ExternalVocabSetup
 
 
 class MakeTermsTests(unittest.TestCase):
@@ -52,26 +47,7 @@ class MakeTermsTests(unittest.TestCase):
             )
 
 
-class SourcesUnitTests(unittest.TestCase):
-
-    def setUp(self):
-        pushGlobalRegistry()
-        self.workdir = tempfile.mkdtemp()
-
-    def tearDown(self):
-        popGlobalRegistry()
-        shutil.rmtree(self.workdir)
-
-    def create_external_vocab(self, name, valid_path=True):
-        # create a working external vocab and register it
-        gsm = getGlobalSiteManager()
-        path = os.path.join(self.workdir, 'sample_vocab.csv')
-        if valid_path:
-            open(path, 'w').write(
-                u'Vocab Entry 1\nVocab Entry 2\nÜmlaut Entry\n'.encode(
-                    'utf-8'))
-        conf = {'path': path, 'name': name}
-        gsm.registerUtility(conf, provided=IExternalVocabConfig, name=name)
+class SourcesUnitTests(ExternalVocabSetup, unittest.TestCase):
 
     def test_external_vocab_binder_iface(self):
         binder = ExternalVocabBinder(None)
