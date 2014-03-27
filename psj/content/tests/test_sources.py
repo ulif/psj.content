@@ -7,7 +7,7 @@ from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content.sources import (
     ExternalVocabBinder, make_terms,
     institutes_source, licenses_source, publishers_source,
-    subjectgroup_source, ddcgeo_source,
+    subjectgroup_source, ddcgeo_source, ddcsach_source,
     )
 from psj.content.testing import ExternalVocabSetup
 
@@ -102,5 +102,12 @@ class SourcesUnitTests(ExternalVocabSetup, unittest.TestCase):
         self.create_external_vocab('psj.content.DDCGeo')
         ddcgeo_source.vocab = None  # avoid cached entries
         src = ddcgeo_source(context=None)
+        assert isinstance(src, SimpleVocabulary)
+        assert u'Vocab Entry 1' in src
+
+    def test_ddcsach_src_w_vocab(self):
+        self.create_external_vocab('psj.content.DDCSach')
+        ddcgeo_source.vocab = None  # avoid cached entries
+        src = ddcsach_source(context=None)
         assert isinstance(src, SimpleVocabulary)
         assert u'Vocab Entry 1' in src
