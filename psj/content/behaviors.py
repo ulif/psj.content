@@ -29,8 +29,9 @@ from Products.CMFCore.utils import getToolByName
 from zope.component import adapts
 from zope.interface import implements, alsoProvides
 from zope.lifecycleevent.interfaces import IObjectCreatedEvent
-from zope.schema import TextLine, Text
+from zope.schema import TextLine, Text, Choice
 from psj.content import _
+from psj.content.sources import publishers_source
 
 
 class PSJMetadataBase(object):
@@ -193,6 +194,32 @@ class IPSJPartOf(IPSJBehavior):
 alsoProvides(IPSJPartOf, IFormFieldProvider)
 
 
+class IPSJEdition(IPSJBehavior):
+    """The meta data fields to describe an edition.
+    """
+    psj_publisher = Choice(
+        title=_(u'Verlag'),
+        description=u'',
+        source=publishers_source,
+        required=False,
+        )
+
+    psj_isbn_issn = TextLine(
+        title=_(u'ISBN/ISSN'),
+        description=u'',
+        required=False,
+        )
+
+    psj_publication_year = TextLine(
+        title=_(u'Erscheinungsjahr'),
+        description=u'',
+        required=False,
+        )
+
+
+alsoProvides(IPSJEdition, IFormFieldProvider)
+
+
 class IPSJOfficeDocTransformer(IPSJBehavior):
     """A document that provides some office doc.
 
@@ -301,6 +328,27 @@ class PSJPartOf(PSJMetadataBase):
     psj_volume = DCFieldProperty(
         IPSJPartOf['psj_volume'],
         get_name='psj_volume'
+        )
+
+
+class PSJEdition(PSJMetadataBase):
+    """A behavior providing fields for edited documents.
+    """
+    implements(IPSJEdition)
+
+    psj_publisher = DCFieldProperty(
+        IPSJEdition['psj_publisher'],
+        get_name='psj_publisher'
+        )
+
+    psj_isbn_issn = DCFieldProperty(
+        IPSJEdition['psj_isbn_issn'],
+        get_name='psj_isbn_issn'
+        )
+
+    psj_publication_year = DCFieldProperty(
+        IPSJEdition['psj_publication_year'],
+        get_name='psj_publication_year'
         )
 
 

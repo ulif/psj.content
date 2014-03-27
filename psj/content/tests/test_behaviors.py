@@ -5,12 +5,12 @@ from plone.dexterity.interfaces import IDexterityContent
 from plone.directives.form import IFormFieldProvider
 from zope.component import queryUtility, adapts, provideAdapter
 from zope.interface import implements
-from zope.schema.interfaces import WrongType
+from zope.schema.interfaces import WrongType, ConstraintNotSatisfied
 from psj.content.behaviors import (
     IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract, IPSJAddRetro,
-    IPSJPartOf,
+    IPSJPartOf, IPSJEdition,
     )
-from psj.content.testing import INTEGRATION_TESTING
+from psj.content.testing import INTEGRATION_TESTING, ExternalVocabSetup
 
 
 class DummyDocument(object):
@@ -40,7 +40,7 @@ class TestingAssignable(object):
     adapts(DummyDocument)
 
     enabled = [IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract,
-               IPSJAddRetro, IPSJPartOf, ]
+               IPSJAddRetro, IPSJPartOf, IPSJEdition, ]
 
     def __init__(self, context):
         self.context = context
@@ -53,7 +53,7 @@ class TestingAssignable(object):
             yield queryUtility(IBehavior, name=e.__identifier__)
 
 
-class MetadataBehaviorsTests(unittest.TestCase):
+class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
     # Tests of behaviors concerning basic PSJ metadata.
 
     layer = INTEGRATION_TESTING
@@ -88,6 +88,24 @@ class MetadataBehaviorsTests(unittest.TestCase):
         # also byte streams (non-unicode) are rejected
         self.assertRaises(
             WrongType, setattr, behavior, attr_name, b'Cheese')
+        return
+
+    def choice_behavior_usable(self, attr_name, iface):
+        doc = DummyDocument(b'doc')
+        provideAdapter(TestingAssignable)
+        self.assertEqual(IDexterityContent.providedBy(doc), True)
+        self.create_external_vocab_from_choice(iface, attr_name)
+        behavior = iface(doc, None)
+        self.assertTrue(behavior is not None)
+        self.assertEqual(True, hasattr(behavior, attr_name))
+        # we can assign valid values to doc through the behavior
+        setattr(behavior, attr_name, u'Vocab Entry 1')
+        self.assertEqual(u'Vocab Entry 1', getattr(doc, attr_name))
+        # values not in the vocab are rejected
+        self.assertRaises(
+            ConstraintNotSatisfied,
+            setattr,
+            behavior, attr_name, u'Invalid Entry')
         return
 
     def test_author_installed(self):
@@ -140,3 +158,11 @@ class MetadataBehaviorsTests(unittest.TestCase):
     def test_partof_behavior_usable(self):
         self.text_behavior_usable(b'psj_series', IPSJPartOf)
         self.text_behavior_usable(b'psj_volume', IPSJPartOf)
+
+    def test_edition_behavior_installed(self):
+        self.behavior_installed('IPSJEdition', IPSJEdition)
+
+    def test_edition_behavior_usable(self):
+        self.choice_behavior_usable(b'psj_publisher', IPSJEdition)
+        self.text_behavior_usable(b'psj_isbn_issn', IPSJEdition)
+        self.text_behavior_usable(b'psj_publication_year', IPSJEdition)

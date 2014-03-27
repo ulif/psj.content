@@ -52,6 +52,13 @@
         />
 
     <plone:behavior
+        title="PSJEdition"
+        description="Publisher and similar fields for docs."
+        provides=".behaviors.IPSJEdition"
+        factory=".behaviors.PSJEdition"
+        />
+
+    <plone:behavior
         title="PSJ Base Data"
         description="Base Data for PSJ Documents, including author, title, etc."
         provides=".behaviors.IPSJBaseData"
