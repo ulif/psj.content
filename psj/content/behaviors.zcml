@@ -45,6 +45,13 @@
 	/>
 
     <plone:behavior
+        title="PSJPartOf"
+        description="Series and volume fields for docs."
+        provides=".behaviors.IPSJPartOf"
+        factory=".behaviors.PSJPartOf"
+        />
+
+    <plone:behavior
         title="PSJ Base Data"
         description="Base Data for PSJ Documents, including author, title, etc."
         provides=".behaviors.IPSJBaseData"

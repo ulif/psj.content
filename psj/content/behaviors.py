@@ -174,6 +174,25 @@ class IPSJAddRetro(IPSJBehavior):
 alsoProvides(IPSJAddRetro, IFormFieldProvider)
 
 
+class IPSJPartOf(IPSJBehavior):
+    """The meta data fields used to describe things being parts of others.
+    """
+    psj_series = TextLine(
+        title=_(u'Reihe'),
+        description=_(u'Reihentitel'),
+        required=False,
+        )
+
+    psj_volume = TextLine(
+        title=_(u'Band'),
+        description=_(u'Band'),
+        required=False,
+        )
+
+
+alsoProvides(IPSJPartOf, IFormFieldProvider)
+
+
 class IPSJOfficeDocTransformer(IPSJBehavior):
     """A document that provides some office doc.
 
@@ -266,6 +285,22 @@ class PSJAddRetro(PSJMetadataBase):
     psj_ocr_text = DCFieldProperty(
         IPSJAddRetro['psj_ocr_text'],
         get_name='psj_ocr_text'
+        )
+
+
+class PSJPartOf(PSJMetadataBase):
+    """A behavior providing fields for docs being part of others.
+    """
+    implements(IPSJPartOf)
+
+    psj_series = DCFieldProperty(
+        IPSJPartOf['psj_series'],
+        get_name='psj_series'
+        )
+
+    psj_volume = DCFieldProperty(
+        IPSJPartOf['psj_volume'],
+        get_name='psj_volume'
         )
 
 
