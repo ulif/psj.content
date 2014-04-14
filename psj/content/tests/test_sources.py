@@ -118,3 +118,10 @@ class SourcesUnitTests(ExternalVocabSetup, unittest.TestCase):
         src = ddczeit_source(context=None)
         assert isinstance(src, SimpleVocabulary)
         assert u'Vocab Entry 1' in src
+
+    def test_gndid_src_w_vocab(self):
+        self.create_external_vocab('psj.content.GND_ID')
+        gndid_source.vocab = None  # avoid cached entries
+        src = gndid_source(context=None)
+        assert isinstance(src, SimpleVocabulary)
+        assert u'Vocab Entry 1' in src
