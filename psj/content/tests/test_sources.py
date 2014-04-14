@@ -8,6 +8,7 @@ from psj.content.sources import (
     ExternalVocabBinder, make_terms,
     institutes_source, licenses_source, publishers_source,
     subjectgroup_source, ddcgeo_source, ddcsach_source, ddczeit_source,
+    gndid_source,
     )
 from psj.content.testing import ExternalVocabSetup
 
