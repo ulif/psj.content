@@ -50,14 +50,23 @@ class ExternalVocabSetup(object):
         conf = {'path': path, 'name': name}
         gsm.registerUtility(conf, provided=IExternalVocabConfig, name=name)
 
-    def create_external_vocab_from_choice(self, iface, attr_name):
+    def create_external_vocab_from_choice(
+        self, iface, attr_name, is_list=False):
         """Create an external vocab from a choice field.
         """
         choice = iface[attr_name]
+        if is_list:
+            choice = choice.value_type
         binder = choice.vocabulary
         v_name = binder.name
         self.create_external_vocab(v_name)
         return v_name, binder
+
+    def create_external_vocab_from_choicelist(self, iface, attr_name):
+        """Create an external vocab from a list of choices field.
+        """
+        return self.create_external_vocab_from_choice(
+            iface, attr_name, is_list=True)
 
 
 class Fixture(PloneSandboxLayer):
