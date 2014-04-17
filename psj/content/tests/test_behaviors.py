@@ -5,10 +5,12 @@ from plone.dexterity.interfaces import IDexterityContent
 from plone.directives.form import IFormFieldProvider
 from zope.component import queryUtility, adapts, provideAdapter
 from zope.interface import implements
-from zope.schema.interfaces import WrongType, ConstraintNotSatisfied
+from zope.schema.interfaces import (
+    WrongType, ConstraintNotSatisfied, WrongContainedType,
+    )
 from psj.content.behaviors import (
     IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract, IPSJAddRetro,
-    IPSJPartOf, IPSJEdition,
+    IPSJPartOf, IPSJEdition, IPSJSubjectIndexing
     )
 from psj.content.testing import INTEGRATION_TESTING, ExternalVocabSetup
 
@@ -40,7 +42,8 @@ class TestingAssignable(object):
     adapts(DummyDocument)
 
     enabled = [IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract,
-               IPSJAddRetro, IPSJPartOf, IPSJEdition, ]
+               IPSJAddRetro, IPSJPartOf, IPSJEdition, IPSJSubjectIndexing,
+               ]
 
     def __init__(self, context):
         self.context = context
@@ -90,6 +93,23 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
             WrongType, setattr, behavior, attr_name, b'Cheese')
         return
 
+    def textlist_behavior_usable(self, attr_name, iface):
+        # we can attach a behavior to a content type and modify some
+        # list of text/textline attribute
+        doc = DummyDocument(b'doc')
+        provideAdapter(TestingAssignable)
+        self.assertEqual(IDexterityContent.providedBy(doc), True)
+        behavior = iface(doc, None)
+        self.assertTrue(behavior is not None)
+        self.assertEqual(True, hasattr(behavior, attr_name))
+        # we can assign valid values to doc through the behavior
+        setattr(behavior, attr_name, [u'John Cleese',])
+        self.assertEqual([u'John Cleese',], getattr(doc, attr_name))
+        # byte streams (non-unicode) are rejected
+        self.assertRaises(
+            WrongContainedType, setattr, behavior, attr_name, [b'Cheese',])
+        return
+
     def choice_behavior_usable(self, attr_name, iface):
         doc = DummyDocument(b'doc')
         provideAdapter(TestingAssignable)
@@ -106,6 +126,24 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
             ConstraintNotSatisfied,
             setattr,
             behavior, attr_name, u'Invalid Entry')
+        return
+
+    def choicelist_behavior_usable(self, attr_name, iface):
+        doc = DummyDocument(b'doc')
+        provideAdapter(TestingAssignable)
+        self.assertEqual(IDexterityContent.providedBy(doc), True)
+        self.create_external_vocab_from_choicelist(iface, attr_name)
+        behavior = iface(doc, None)
+        self.assertTrue(behavior is not None)
+        self.assertEqual(True, hasattr(behavior, attr_name))
+        # we can assign valid values to doc through the behavior
+        setattr(behavior, attr_name, [u'Vocab Entry 1',])
+        self.assertEqual([u'Vocab Entry 1',], getattr(doc, attr_name))
+        # values not in the vocab are rejected
+        self.assertRaises(
+            WrongContainedType,
+            setattr,
+            behavior, attr_name, [u'Invalid Entry',])
         return
 
     def test_author_installed(self):
@@ -166,3 +204,32 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
         self.choice_behavior_usable(b'psj_publisher', IPSJEdition)
         self.text_behavior_usable(b'psj_isbn_issn', IPSJEdition)
         self.text_behavior_usable(b'psj_publication_year', IPSJEdition)
+
+    def test_subject_indexing_behavior_installed(self):
+        self.behavior_installed('IPSJSubjectIndexing', IPSJSubjectIndexing)
+
+    def test_subject_indexing_behavior_usable(self):
+        self.choicelist_behavior_usable(
+            b'psj_subject_group', IPSJSubjectIndexing)
+        self.choicelist_behavior_usable(
+            b'psj_ddc_geo', IPSJSubjectIndexing)
+        self.choicelist_behavior_usable(
+            b'psj_ddc_sach', IPSJSubjectIndexing)
+        self.choicelist_behavior_usable(
+            b'psj_ddc_zeit', IPSJSubjectIndexing)
+        self.choicelist_behavior_usable(
+            b'psj_gnd_id', IPSJSubjectIndexing)
+        #self.textlist_behavior_usable(
+        #    b'psj_gnd_terms', IPSJSubjectIndexing)
+        self.textlist_behavior_usable(
+            b'psj_free_keywords', IPSJSubjectIndexing)
+
+    def test_subject_indexing_behavior_gnd_terms(self):
+        # psj_gnd_terms is a special field
+        doc = DummyDocument(b'doc')
+        provideAdapter(TestingAssignable)
+        self.assertEqual(IDexterityContent.providedBy(doc), True)
+        behavior = IPSJSubjectIndexing(doc, None)
+        self.assertTrue(behavior is not None)
+        self.assertEqual(True, hasattr(behavior, 'psj_gnd_terms'))
+        self.create_external_vocab_from_choice(iface, 'psj_gnd_id')

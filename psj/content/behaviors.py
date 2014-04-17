@@ -1,4 +1,5 @@
-#  psj.content is copyright (c) 2013 Uli Fouquet
+# -*- coding: utf-8 -*-
+#  psj.content is copyright (c) 2014 Uli Fouquet
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -29,9 +30,12 @@ from Products.CMFCore.utils import getToolByName
 from zope.component import adapts
 from zope.interface import implements, alsoProvides
 from zope.lifecycleevent.interfaces import IObjectCreatedEvent
-from zope.schema import TextLine, Text, Choice
+from zope.schema import TextLine, Text, Choice, List
 from psj.content import _
-from psj.content.sources import publishers_source
+from psj.content.sources import (
+    publishers_source, subjectgroup_source, ddcgeo_source, ddcsach_source,
+    ddczeit_source,
+    )
 
 
 class PSJMetadataBase(object):
@@ -220,6 +224,94 @@ class IPSJEdition(IPSJBehavior):
 alsoProvides(IPSJEdition, IFormFieldProvider)
 
 
+class IPSJSubjectIndexing(IPSJBehavior):
+    """Fields to categorize some document.
+    """
+    psj_subject_group = List(
+        title=_(u'Epochenkategorie'),
+        description=_(u''),
+        value_type=Choice(
+            title=_(u'Kategorie'),
+            description=_(u''),
+            source=subjectgroup_source,
+            required=False,
+            ),
+        required=False,
+        )
+
+    psj_ddc_geo = List(
+        title=_(u'Land/Region'),
+        description=_(u''),
+        value_type=Choice(
+            title=_(u'Geo-Kategorie'),
+            description=_(u''),
+            source=ddcgeo_source,
+            required=False,
+            ),
+        required=False,
+        )
+
+    psj_ddc_sach = List(
+        title=_(u'Sach-Klassifikation'),
+        description=_(u''),
+        value_type=Choice(
+            title=_(u'Sach-Kategorie'),
+            description=_(u''),
+            source=ddcsach_source,
+            required=False,
+            ),
+        required=False,
+        )
+
+    psj_ddc_zeit = List(
+        title=_(u'Epoche'),
+        description=_(u''),
+        value_type=Choice(
+            title=_(u'Zeit-Kategorie nach DDC'),
+            description=_(u''),
+            source=ddczeit_source,
+            required=False,
+            ),
+        required=False,
+        )
+
+    psj_gnd_id = List(
+        title=_(u'Identnummern aus GND'),
+        description=_(u''),
+        value_type=Choice(
+            title=_(u'Identnummer'),
+            description=_(u''),
+            source=ddczeit_source,
+            required=True,
+            ),
+        required=True,
+        )
+
+    psj_gnd_terms = List(
+        title=_(u'GND Schlagwörter'),
+        description=_(u''),
+        value_type=TextLine(
+            title=_(u'GND Schlagwort'),
+            description=_(u''),
+            ),
+        required=False,
+        readonly=True,
+        )
+
+    psj_free_keywords = List(
+        title=_(u'Freie Schlagwörter'),
+        description=_(u''),
+        value_type=TextLine(
+            title=_(u'Freies Schlagwort'),
+            description=_(u''),
+            ),
+        required=False,
+        )
+
+
+alsoProvides(IPSJSubjectIndexing, IFormFieldProvider)
+
+
 class IPSJOfficeDocTransformer(IPSJBehavior):
     """A document that provides some office doc.
 
@@ -385,3 +477,52 @@ def create_representations(transformer, event):
     new_filename = transformer.psj_office_doc.filename + '.pdf'
     transformer.psj_pdf_repr = NamedBlobFile(
         data=out_data.getData(), filename=new_filename)
+
+
+class PSJSubjectIndexing(PSJMetadataBase):
+    """A behavior providing fields for subject indexing.
+    """
+    implements(IPSJSubjectIndexing)
+
+    psj_subject_group = DCFieldProperty(
+        IPSJSubjectIndexing['psj_subject_group'],
+        get_name='psj_subject_group',
+        )
+
+    psj_ddc_geo = DCFieldProperty(
+        IPSJSubjectIndexing['psj_ddc_geo'],
+        get_name='psj_ddc_geo',
+        )
+
+    psj_ddc_sach = DCFieldProperty(
+        IPSJSubjectIndexing['psj_ddc_sach'],
+        get_name='psj_ddc_sach',
+        )
+
+    psj_ddc_zeit = DCFieldProperty(
+        IPSJSubjectIndexing['psj_ddc_zeit'],
+        get_name='psj_ddc_zeit',
+        )
+
+    psj_gnd_id = DCFieldProperty(
+        IPSJSubjectIndexing['psj_gnd_id'],
+        get_name='psj_gnd_id',
+        )
+
+    #psj_gnd_terms = DCFieldProperty(
+    #    IPSJSubjectIndexing['psj_gnd_terms'],
+    #    get_name='psj_gnd_terms',
+    #    )
+
+    psj_free_keywords = DCFieldProperty(
+        IPSJSubjectIndexing['psj_free_keywords'],
+        get_name='psj_free_keywords',
+        )
+
+    @property
+    def psj_gnd_terms(self):
+        if not hasattr(self, 'psj_gnd_id'):
+            return []
+        term_finder = queryUtility(IPSJGNDTermFinder)
+        if not term_finder:
+            return []

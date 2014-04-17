@@ -73,4 +73,11 @@
         marker=".behaviors.IPSJOfficeDocTransformer"
         />
 
+    <plone:behavior
+        title="PSJ Subject Indexing"
+        description="Fields for indexing docs."
+        provides=".behaviors.IPSJSubjectIndexing"
+        factory=".behaviors.PSJSubjectIndexing"
+        />
+
 </configure>
