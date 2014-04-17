@@ -23,7 +23,7 @@ import os
 from base64 import b64encode
 from five import grok
 from zope.component import queryUtility
-from zope.schema.interfaces import IContextSourceBinder
+from zope.schema.interfaces import IContextSourceBinder, ISource
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content import _
 from psj.content.interfaces import IExternalVocabConfig
@@ -81,6 +81,20 @@ class ExternalVocabBinder(object):
         self.vocab = SimpleVocabulary(
             make_terms([line.strip() for line in open(path, 'r')]))
         return self.vocab
+
+
+class RedisSource(object):
+    """A zope.schema ISource containing values from a Redis Store.
+    """
+    grok.implements(ISource)
+
+    def __init__(self, host='localhost', port=6379, db=0):
+        self.host = host
+        self.port = port
+        self.db = db
+
+    def __contains__(self, value):
+        return False
 
 
 institutes_source = ExternalVocabBinder(u'psj.content.Institutes')
