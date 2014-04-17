@@ -7,6 +7,7 @@ tests_require = [
     'Pillow',
     'plone.app.testing',
     'plone.testing',
+    'testing.redis',
     ]
 
 setup(name='psj.content',
