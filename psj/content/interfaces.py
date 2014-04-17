@@ -49,6 +49,7 @@ class IExternalVocabConfig(Interface):
         required=True,
         )
 
+
 class IRedisStoreConfig(Interface):
     """Configuration for connections to a Redis store.
 
