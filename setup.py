@@ -56,6 +56,7 @@ setup(name='psj.content',
           'Products.ATVocabularyManager',
           'Products.FacultyStaffDirectory',
           'psj.policy',
+          'redis',
           'ulif.openoffice',           # mention here to get scripts
       ],
       tests_require=tests_require,
