@@ -20,7 +20,7 @@
 
 """
 from zope.component.zcml import handler
-from psj.content.interfaces import IExternalVocabConfig
+from psj.content.interfaces import IExternalVocabConfig, IRedisStoreConfig
 
 
 def external_vocab_conf(context, path, name):
@@ -53,5 +53,44 @@ def external_vocab_conf(context, path, name):
         args=('registerUtility',
               {'path': path, 'name': name},
               IExternalVocabConfig,
+              name)
+        )
+
+
+def redis_store_conf(context, name, host, port, db):
+    """Handler for ZCML ``redis-store`` directive.
+
+    Register a global utility under IRedisStoreConfig containing a
+    directory with connection parameters ``host``, ``port``, and
+    ``db``.
+
+    The utility will be registered under name ``name``.
+
+    Interested parties can ask for redis store configs like this:
+
+      >>> from psj.content.interfaces import IRedisStoreConfig
+      >>> from zope.component import queryUtility
+      >>> conf = queryUtility(IRedisStoreConfig, u'psj.redis-base')
+
+    Then, if `conf` is not ``None``, you can get the configured
+    parameters set in ``site.zcml`` (or other ZCML files parsed during
+    startup).
+
+      >>> conf['host']
+      'localhost'
+
+      >>> conf['port']
+      6379
+
+      >>> conf['db']
+      0
+
+    """
+    context.action(
+        discriminator=('utility', IRedisStoreConfig, name),
+        callable=handler,
+        args=('registerUtility',
+              {'host': host, 'port': port, 'db': db},
+              IRedisStoreConfig,
               name)
         )

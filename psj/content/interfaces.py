@@ -21,7 +21,7 @@
 """
 from zope.configuration.fields import Path
 from zope.interface import Interface
-from zope.schema import TextLine
+from zope.schema import TextLine, ASCIILine, Int
 
 
 class IExternalVocabConfig(Interface):
@@ -46,6 +46,38 @@ class IExternalVocabConfig(Interface):
     name = TextLine(
         title=u'Name',
         description=u'Name this vocab should be registered under.',
+        required=True,
+        )
+
+class IRedisStoreConfig(Interface):
+    """Configuration for connections to a Redis store.
+
+    See `zcml.py` for hints how to use this ZCML directive.
+    """
+    host = ASCIILine(
+        title=u'Host',
+        description=u'The machine where the Redis store is running',
+        required=True,
+        default='localhost',
+        )
+
+    port = Int(
+        title=u'Port',
+        description=u'Port number the Redis store runs at',
+        required=True,
+        default=6379,
+        )
+
+    db = Int(
+        title=u'DB',
+        description=u'Database number of Redis store to connect to',
+        required=True,
+        default=0,
+        )
+
+    name = TextLine(
+        title=u'Name',
+        description=u'Name this config should be registered under.',
         required=True,
         )
 

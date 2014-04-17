@@ -3,4 +3,10 @@
   <include package="psj.content" file="meta.zcml" />
   <psj:external-vocab path="/foo" name="psj.content.bar" />
   <psj:external-vocab path="/bar" name="psj.content.baz" />
+  <psj:redis-store-config
+      host="localhost" port="1234" db="23" name="psj.content.redis-foo" />
+  <psj:redis-store-config
+      name="psj.content.redis-bar" />
+  <psj:redis-store-config
+      port="666" name="psj.content.redis-baz" />
 </configure>
