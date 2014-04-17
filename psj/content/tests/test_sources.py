@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 # Tests for sources module.
+import redis
 import unittest
+from testing.redis import RedisServer
 from zope.interface import verify
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content.sources import (
-    ExternalVocabBinder, make_terms,
+    ExternalVocabBinder, RedisSource, make_terms,
     institutes_source, licenses_source, publishers_source,
     subjectgroup_source, ddcgeo_source, ddcsach_source, ddczeit_source,
     gndid_source,
@@ -47,6 +49,24 @@ class MakeTermsTests(unittest.TestCase):
             [(u'foo', 'Zm9v', u'foo'),
              (u'bar', 'YmFy', u'bar')]
             )
+
+
+class RedisSourceTests(unittest.TestCase):
+
+    def setUp(self):
+        self.redis_server = RedisServer()
+        settings = self.redis_server.settings['redis_conf']
+        port = settings['port']
+        self.redis = redis.StrictRedis(host='localhost', port=port, db=0)
+        self.redis.set(u'foo', u'bar')
+
+    def tearDown(self):
+        self.redis_server.stop()
+
+    def test_basic(self):
+        r = self.redis
+        result = r.get('foo')
+        self.assertEqual(result, 'bar')
 
 
 class SourcesUnitTests(ExternalVocabSetup, unittest.TestCase):
