@@ -92,3 +92,13 @@ class ISearchableTextGetter(Interface):
         Returns a string containing the text that should be
         searchable.
         """
+
+
+class IPSJGNDTermsGetter(Interface):
+    """A utility that can map GND ids to GND terms.
+    """
+    def terms_from_ids(ids):
+        """Return an iterable of terms.
+
+        `ids` is expected to be an iterable as well.
+        """
