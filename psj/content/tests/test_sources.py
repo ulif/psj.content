@@ -4,7 +4,7 @@ import redis
 import unittest
 from testing.redis import RedisServer
 from zope.interface import verify
-from zope.schema.interfaces import IContextSourceBinder
+from zope.schema.interfaces import IContextSourceBinder, ISource
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content.sources import (
     ExternalVocabBinder, RedisSource, make_terms, tokenize,
@@ -90,6 +90,12 @@ class RedisSourceTests(unittest.TestCase):
         self.redis.flushdb()
         self.redis.connection_pool.disconnect()
         self.redis_server.stop()
+
+    def test_iface(self):
+        # make sure we fullfill promised interfaces
+        source = RedisSource(host=self.redis_host, port=self.redis_port)
+        verify.verifyClass(ISource, RedisSource)
+        verify.verifyObject(ISource, source)
 
     def test_basic(self):
         # make sure, basic redis store test setup works
