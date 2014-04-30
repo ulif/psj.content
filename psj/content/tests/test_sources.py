@@ -58,15 +58,33 @@ class RedisSourceTests(unittest.TestCase):
         settings = self.redis_server.settings['redis_conf']
         port = settings['port']
         self.redis = redis.StrictRedis(host='localhost', port=port, db=0)
+        self.redis.flushdb()
         self.redis.set(u'foo', u'bar')
+        self.redis_host = settings['bind']
+        self.redis_port = settings['port']
 
     def tearDown(self):
+        self.redis.flushdb()
+        self.redis.connection_pool.disconnect()
         self.redis_server.stop()
 
     def test_basic(self):
+        # make sure, basic redis store test setup works
         r = self.redis
         result = r.get('foo')
         self.assertEqual(result, 'bar')
+
+    def test_get_contained(self):
+        # we can tell whether a certain key is stored in redis store
+        source = RedisSource(host=self.redis_host, port=self.redis_port)
+        result = u'foo' in source
+        self.assertEqual(result, True)
+
+    def test_get_uncontained(self):
+        # we can tell if a certain key is not in redis store
+        source = RedisSource(host=self.redis_host, port=self.redis_port)
+        result = u'bar' in source
+        self.assertEqual(result, False)
 
 
 class SourcesUnitTests(ExternalVocabSetup, unittest.TestCase):
