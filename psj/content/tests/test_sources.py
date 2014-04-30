@@ -7,12 +7,35 @@ from zope.interface import verify
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content.sources import (
-    ExternalVocabBinder, RedisSource, make_terms,
+    ExternalVocabBinder, RedisSource, make_terms, tokenize,
     institutes_source, licenses_source, publishers_source,
     subjectgroup_source, ddcgeo_source, ddcsach_source, ddczeit_source,
     gndid_source,
     )
 from psj.content.testing import ExternalVocabSetup
+
+
+class TokenizeTests(unittest.TestCase):
+    # tests for tokenize()
+
+    def is_7bit_ascii(self, string):
+        if len(string) != len(string.encode('ascii', 'ignore')):
+            raise ValueError('Token contains non-ASCII chars: %s' % string)
+
+    def test_empty_string(self):
+        result = tokenize('')
+        self.assertEqual(result, '')
+        self.is_7bit_ascii(result)
+
+    def test_simple_stream(self):
+        result = tokenize('abc')
+        self.assertEqual(result, 'YWJj')
+        self.is_7bit_ascii(result)
+
+    def test_utf8_stream(self):
+        result = tokenize('äöü')
+        self.assertEqual(result, 'w6TDtsO8')
+        self.is_7bit_ascii(result)
 
 
 class MakeTermsTests(unittest.TestCase):

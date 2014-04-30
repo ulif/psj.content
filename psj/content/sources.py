@@ -30,6 +30,21 @@ from psj.content import _
 from psj.content.interfaces import IExternalVocabConfig
 
 
+def tokenize(byte_string):
+    """Create a token from a byte stream.
+
+    The `byte_stream` is expected to be a utf-8-encoded sequence of
+    bytes.
+
+    The result is guaranteed to be unique (i.e.: different
+    `byte_streams` will give different results, same `byte_streams`
+    will give same results).
+
+    The result is guaranteed to be a valid 7-bit ASCII string.
+    """
+    return b64encode(byte_string)
+
+
 def make_terms(strings):
     """Create zope.schema.SimpleTermss from strings.
 
