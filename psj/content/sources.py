@@ -56,7 +56,7 @@ def make_terms(strings):
     `make_terms` guarantees that tokens are unique for each string put
     in and are representable as ASCII.
     """
-    tuples = [(b64encode(s), _(s.decode('utf-8'))) for s in strings if s]
+    tuples = [(tokenize(s), _(s.decode('utf-8'))) for s in strings if s]
     return [SimpleTerm(value=t[1], token=t[0], title=t[1])
             for t in tuples]
 
