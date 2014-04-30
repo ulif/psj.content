@@ -4,7 +4,9 @@ import redis
 import unittest
 from testing.redis import RedisServer
 from zope.interface import verify
-from zope.schema.interfaces import IContextSourceBinder, ISource
+from zope.schema.interfaces import (
+    IContextSourceBinder, ISource, IBaseVocabulary, ITitledTokenizedTerm,
+    )
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content.sources import (
     ExternalVocabBinder, RedisSource, make_terms, tokenize,
@@ -94,8 +96,8 @@ class RedisSourceTests(unittest.TestCase):
     def test_iface(self):
         # make sure we fullfill promised interfaces
         source = RedisSource(host=self.redis_host, port=self.redis_port)
-        verify.verifyClass(ISource, RedisSource)
-        verify.verifyObject(ISource, source)
+        verify.verifyClass(IBaseVocabulary, RedisSource)
+        verify.verifyObject(IBaseVocabulary, source)
 
     def test_basic(self):
         # make sure, basic redis store test setup works
@@ -114,6 +116,18 @@ class RedisSourceTests(unittest.TestCase):
         source = RedisSource(host=self.redis_host, port=self.redis_port)
         result = u'bar' in source
         self.assertEqual(result, False)
+
+    def test_get_term_contained(self):
+        # we can get contained terms as ITerm
+        source = RedisSource(host=self.redis_host, port=self.redis_port)
+        term = source.getTerm(u'foo')
+        assert ITitledTokenizedTerm.providedBy(term)
+        self.assertTrue(hasattr(term, 'value'))
+        self.assertEqual(term.value, u'foo')
+        self.assertTrue(hasattr(term, 'token'))
+        self.assertEqual(term.token, 'Zm9v')
+        self.assertTrue(hasattr(term, 'title'))
+        self.assertEqual(term.title, u'bar')
 
 
 class SourcesUnitTests(ExternalVocabSetup, unittest.TestCase):

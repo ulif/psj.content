@@ -24,7 +24,7 @@ import redis
 from base64 import b64encode
 from five import grok
 from zope.component import queryUtility
-from zope.schema.interfaces import IContextSourceBinder, ISource
+from zope.schema.interfaces import IContextSourceBinder, IBaseVocabulary
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content import _
 from psj.content.interfaces import IExternalVocabConfig
@@ -106,7 +106,7 @@ class RedisSource(object):
 
     This source contains keys of a Redis Store db.
     """
-    grok.implements(ISource)
+    grok.implements(IBaseVocabulary)
 
     _client = None
 
@@ -115,13 +115,24 @@ class RedisSource(object):
         self.port = port
         self.db = db
 
-    def __contains__(self, value):
+    def _get_client(self):
         if self._client is None:
             # create a client as late as possible but keep it then
             self._client = redis.StrictRedis(
                 host=self.host, port=self.port, db=self.db)
-        result = self._client.get(value)
+        return self._client
+
+    def __contains__(self, value):
+        result = self._get_client().get(value)
         return result is not None
+
+    def getTerm(self, value):
+        """Return the ITerm object for term `value`.
+        """
+        db_val = self._get_client().get(value)
+        if db_val is None:
+            raise LookupError('No such term: %s' % value)
+        return SimpleTerm(value, token=tokenize(value), title=db_val)
 
 
 institutes_source = ExternalVocabBinder(u'psj.content.Institutes')
