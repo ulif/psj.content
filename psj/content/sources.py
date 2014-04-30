@@ -20,6 +20,7 @@
 
 """
 import os
+import redis
 from base64 import b64encode
 from five import grok
 from zope.component import queryUtility
@@ -85,8 +86,12 @@ class ExternalVocabBinder(object):
 
 class RedisSource(object):
     """A zope.schema ISource containing values from a Redis Store.
+
+    This source contains keys of a Redis Store db.
     """
     grok.implements(ISource)
+
+    _client = None
 
     def __init__(self, host='localhost', port=6379, db=0):
         self.host = host
@@ -94,7 +99,12 @@ class RedisSource(object):
         self.db = db
 
     def __contains__(self, value):
-        return False
+        if self._client is None:
+            # create a client as late as possible but keep it then
+            self._client = redis.StrictRedis(
+                host=self.host, port=self.port, db=self.db)
+        result = self._client.get(value)
+        return result is not None
 
 
 institutes_source = ExternalVocabBinder(u'psj.content.Institutes')
