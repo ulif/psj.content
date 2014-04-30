@@ -41,8 +41,10 @@ def tokenize(byte_string):
     will give same results).
 
     The result is guaranteed to be a valid 7-bit ASCII string.
+
+    The result is guaranteed not to be empty.
     """
-    return b64encode(byte_string)
+    return b64encode(byte_string) or '#'
 
 
 def make_terms(strings):

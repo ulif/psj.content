@@ -24,7 +24,7 @@ class TokenizeTests(unittest.TestCase):
 
     def test_empty_string(self):
         result = tokenize('')
-        self.assertEqual(result, '')
+        assert len(result) > 0
         self.is_7bit_ascii(result)
 
     def test_simple_stream(self):
