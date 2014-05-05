@@ -20,6 +20,7 @@
 """Testing support for `psj.content`.
 
 """
+
 import os
 import shutil
 import tempfile
@@ -67,6 +68,38 @@ class ExternalVocabSetup(object):
         """
         return self.create_external_vocab_from_choice(
             iface, attr_name, is_list=True)
+
+
+class RedisStoreSetup(object):
+    """A plain layer that starts a redis server.
+
+    The server is torn down after tests within layer.
+
+    For some strange reason, it is not possible to import things from
+    `testing.redis` from within the layer. Therefore the server source
+    class has to be passed in when creating a layer instance like this::
+
+        class MyTest(unittest.TestCase):
+
+             layer = RedisStoreSetup(RedisServer)
+
+    You should call `flushdb` for any client created during tests.
+
+    From within tests the running server instance can be accessed via
+    `layer.server`.
+    """
+
+    __bases__ = ()
+    __name__ = 'redis store layer'
+
+    def __init__(self, server_cls):
+        self.server_cls = server_cls
+
+    def setUp(self):
+        self.server = self.server_cls()
+
+    def tearDown(self):
+        self.server.stop()
 
 
 class Fixture(PloneSandboxLayer):
