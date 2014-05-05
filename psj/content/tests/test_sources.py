@@ -14,7 +14,7 @@ from psj.content.sources import (
     subjectgroup_source, ddcgeo_source, ddcsach_source, ddczeit_source,
     gndid_source,
     )
-from psj.content.testing import ExternalVocabSetup
+from psj.content.testing import ExternalVocabSetup, RedisStoreSetup
 
 
 class TokenizeTests(unittest.TestCase):
@@ -78,9 +78,10 @@ class MakeTermsTests(unittest.TestCase):
 
 class RedisSourceTests(unittest.TestCase):
 
+    layer = RedisStoreSetup(RedisServer)
+
     def setUp(self):
-        self.redis_server = RedisServer()
-        settings = self.redis_server.settings['redis_conf']
+        settings = self.layer.server.settings['redis_conf']
         port = settings['port']
         self.redis = redis.StrictRedis(host='localhost', port=port, db=0)
         self.redis.flushdb()
@@ -90,7 +91,6 @@ class RedisSourceTests(unittest.TestCase):
 
     def tearDown(self):
         self.redis.flushdb()
-        self.redis_server.stop()
 
     def test_iface(self):
         # make sure we fullfill promised interfaces
