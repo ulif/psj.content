@@ -90,7 +90,6 @@ class RedisSourceTests(unittest.TestCase):
 
     def tearDown(self):
         self.redis.flushdb()
-        self.redis.connection_pool.disconnect()
         self.redis_server.stop()
 
     def test_iface(self):
