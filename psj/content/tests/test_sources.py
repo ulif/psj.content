@@ -5,7 +5,7 @@ import unittest
 from testing.redis import RedisServer
 from zope.interface import verify
 from zope.schema.interfaces import (
-    IContextSourceBinder, ISource, IBaseVocabulary, ITitledTokenizedTerm,
+    IContextSourceBinder, IBaseVocabulary, ITitledTokenizedTerm,
     )
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content.sources import (
