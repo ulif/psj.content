@@ -27,7 +27,7 @@ from zope.component import queryUtility
 from zope.schema.interfaces import IContextSourceBinder, IBaseVocabulary
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content import _
-from psj.content.interfaces import IExternalVocabConfig
+from psj.content.interfaces import IExternalVocabConfig, IRedisStoreConfig
 
 
 def tokenize(byte_string):
@@ -101,6 +101,18 @@ class ExternalVocabBinder(object):
         return self.vocab
 
 
+class ExternalRedisBinder(ExternalVocabBinder):
+    """A source that looks up an external REDIS store to retrieve
+    valid entries.
+    """
+    def __call__(self, context):
+        if self.vocab is not None:
+            return self.vocab
+        util = queryUtility(IRedisStoreConfig, name=self.name)
+        if util is None:
+            return SimpleVocabulary.fromValues([])
+
+
 class RedisSource(object):
     """A zope.schema ISource containing values from a Redis Store.
 
@@ -128,11 +140,29 @@ class RedisSource(object):
 
     def getTerm(self, value):
         """Return the ITerm object for term `value`.
+
+        Raises `LookupError` if no such value can be found in Redis
+        Store.
+
+        Returns ITerm of `value`, where `value` is expected to be an
+        existing *key* in a Redis store.
+
+        The `title` of any resulting term will be set to the
+        corresponding `value`.
         """
         db_val = self._get_client().get(value)
         if db_val is None:
             raise LookupError('No such term: %s' % value)
         return SimpleTerm(value, token=tokenize(value), title=db_val)
+
+
+class RedisKeysSource(RedisSource):
+    """A redis source that only looks for keys in Redis stores.
+    """
+    def getTerm(self, value):
+        result = super(RedisKeysSource, self).getTerm(value)
+        return SimpleTerm(
+            result.value, token=result.token, title=result.value)
 
 
 institutes_source = ExternalVocabBinder(u'psj.content.Institutes')
