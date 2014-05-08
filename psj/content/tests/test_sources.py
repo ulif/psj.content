@@ -9,7 +9,8 @@ from zope.schema.interfaces import (
     )
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content.sources import (
-    ExternalVocabBinder, RedisSource, RedisKeysSource, make_terms, tokenize,
+    ExternalVocabBinder, ExternalRedisBinder, RedisSource,
+    RedisKeysSource, make_terms, tokenize,
     institutes_source, licenses_source, publishers_source,
     subjectgroup_source, ddcgeo_source, ddcsach_source, ddczeit_source,
     gndid_source,
@@ -258,3 +259,55 @@ class ExternalVocabBinderTests(ExternalVocabSetup, unittest.TestCase):
         src = gndid_source(context=None)
         assert isinstance(src, SimpleVocabulary)
         assert u'Vocab Entry 1' in src
+
+
+class ExternalRedisBinderTests(unittest.TestCase):
+
+    layer = RedisLayer
+
+    def setUp(self):
+        settings = self.layer.server.settings['redis_conf']
+        port = settings['port']
+        self.redis = redis.StrictRedis(host='localhost', port=port, db=0)
+        self.redis.flushdb()
+        self.redis.set(u'foo', u'bar')
+        self.redis.set(u'bar', u'baz')
+        self.redis_host = settings['bind']
+        self.redis_port = settings['port']
+
+    def tearDown(self):
+        self.redis.flushdb()
+
+    def register_redis_conf(self, name='my-conf'):
+        # register a redis config as a named utility
+        from zope.component import getGlobalSiteManager
+        from psj.content.interfaces import IRedisStoreConfig
+        gsm = getGlobalSiteManager()
+        conf = {
+            'host': self.redis_host, 'port': self.redis_port, 'db': 0}
+        gsm.registerUtility(conf, provided=IRedisStoreConfig, name=name)
+
+    def test_external_redis_binder_iface(self):
+        binder = ExternalRedisBinder(None)
+        verify.verifyClass(IContextSourceBinder, ExternalRedisBinder)
+        verify.verifyObject(IContextSourceBinder, binder)
+
+    def test_external_redis_binder_no_conf(self):
+        # we cope with not registered redis confs
+        binder = ExternalRedisBinder(name='not-a-registered-util-name')
+        vocab = binder(context=None)
+        assert isinstance(vocab, SimpleVocabulary)
+        assert len([x for x in vocab]) == 0
+
+    def test_external_redis_binder_basic(self):
+        # with a valid redis conf, we get valid vocabs
+        self.register_redis_conf(name='my-test-redis-conf')
+        binder = ExternalRedisBinder(name='my-test-redis-conf')
+        source = binder(context=None)
+        term = source.getTerm(u'foo')
+        assert isinstance(source, RedisSource)
+        assert u'foo' in source
+        assert u'bar' in source
+        assert u'baz' not in source
+        self.assertEqual(term.value, u'foo')
+        self.assertEqual(term.title, u'bar')
