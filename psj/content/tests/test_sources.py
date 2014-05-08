@@ -278,13 +278,13 @@ class ExternalRedisBinderTests(unittest.TestCase):
     def tearDown(self):
         self.redis.flushdb()
 
-    def register_redis_conf(self, name='my-conf'):
+    def register_redis_conf(self, name='my-conf', invalid=0):
         # register a redis config as a named utility
         from zope.component import getGlobalSiteManager
         from psj.content.interfaces import IRedisStoreConfig
         gsm = getGlobalSiteManager()
         conf = {
-            'host': self.redis_host, 'port': self.redis_port, 'db': 0}
+            'host': self.redis_host, 'port': self.redis_port, 'db': 0 + invalid}
         gsm.registerUtility(conf, provided=IRedisStoreConfig, name=name)
 
     def test_external_redis_binder_iface(self):
@@ -299,7 +299,16 @@ class ExternalRedisBinderTests(unittest.TestCase):
         assert isinstance(vocab, SimpleVocabulary)
         assert len([x for x in vocab]) == 0
 
-    def test_external_redis_binder_basic(self):
+    def test_external_redis_binder_invalid_conf(self):
+        # with an invalid redis conf, we get empty sources
+        self.register_redis_conf(name='my-test-redis-conf', invalid=1)
+        binder = ExternalRedisBinder(name='my-test-redis-conf')
+        source = binder(context=None)
+        self.assertRaises(LookupError, source.getTerm, u'foo')
+        assert isinstance(source, RedisSource)
+        assert u'foo' not in source
+
+    def test_external_redis_binder_valid_conf(self):
         # with a valid redis conf, we get valid vocabs
         self.register_redis_conf(name='my-test-redis-conf')
         binder = ExternalRedisBinder(name='my-test-redis-conf')
