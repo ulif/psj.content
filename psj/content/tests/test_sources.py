@@ -181,7 +181,7 @@ class RedisKeysSourceTests(unittest.TestCase):
         self.assertEqual(term.title, u'foo')
 
 
-class SourcesUnitTests(ExternalVocabSetup, unittest.TestCase):
+class ExternalVocabBinderTests(ExternalVocabSetup, unittest.TestCase):
 
     def test_external_vocab_binder_iface(self):
         binder = ExternalVocabBinder(None)
