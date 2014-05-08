@@ -111,6 +111,8 @@ class ExternalRedisBinder(ExternalVocabBinder):
         util = queryUtility(IRedisStoreConfig, name=self.name)
         if util is None:
             return SimpleVocabulary.fromValues([])
+        return RedisSource(
+            host=util['host'], port=util['port'], db=util['db'])
 
 
 class RedisSource(object):
@@ -153,7 +155,8 @@ class RedisSource(object):
         db_val = self._get_client().get(value)
         if db_val is None:
             raise LookupError('No such term: %s' % value)
-        return SimpleTerm(value, token=tokenize(value), title=db_val)
+        return SimpleTerm(
+            value, token=tokenize(value), title=db_val.decode('utf-8'))
 
 
 class RedisKeysSource(RedisSource):
