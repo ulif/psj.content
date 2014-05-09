@@ -27,14 +27,15 @@ from plone.directives.form import (
 from plone.namedfile.field import NamedBlobFile as NamedBlobFileField
 from plone.namedfile.file import NamedBlobFile
 from Products.CMFCore.utils import getToolByName
-from zope.component import adapts
+from zope.component import adapts, queryUtility
 from zope.interface import implements, alsoProvides
 from zope.lifecycleevent.interfaces import IObjectCreatedEvent
 from zope.schema import TextLine, Text, Choice, List
 from psj.content import _
+from psj.content.interfaces import IPSJGNDTermsGetter, IRedisStoreConfig
 from psj.content.sources import (
     publishers_source, subjectgroup_source, ddcgeo_source, ddcsach_source,
-    ddczeit_source,
+    ddczeit_source, RedisSource,
     )
 
 
@@ -278,13 +279,12 @@ class IPSJSubjectIndexing(IPSJBehavior):
     psj_gnd_id = List(
         title=_(u'Identnummern aus GND'),
         description=_(u''),
-        value_type=Choice(
+        value_type=TextLine(
             title=_(u'Identnummer'),
             description=_(u''),
-            source=ddczeit_source,
             required=True,
             ),
-        required=True,
+        required=False,
         )
 
     psj_gnd_terms = List(
@@ -509,11 +509,6 @@ class PSJSubjectIndexing(PSJMetadataBase):
         get_name='psj_gnd_id',
         )
 
-    #psj_gnd_terms = DCFieldProperty(
-    #    IPSJSubjectIndexing['psj_gnd_terms'],
-    #    get_name='psj_gnd_terms',
-    #    )
-
     psj_free_keywords = DCFieldProperty(
         IPSJSubjectIndexing['psj_free_keywords'],
         get_name='psj_free_keywords',
@@ -523,6 +518,17 @@ class PSJSubjectIndexing(PSJMetadataBase):
     def psj_gnd_terms(self):
         if not hasattr(self, 'psj_gnd_id'):
             return []
-        term_finder = queryUtility(IPSJGNDTermFinder)
-        if not term_finder:
+        conf = queryUtility(IRedisStoreConfig, name="psj.content.redis-GND")
+        if conf is None:
             return []
+        redis_source = RedisSource(
+            host=conf.host, port=conf.port, db=conf.db)
+        result = []
+        for elem in self.psj_gnd_id:
+            try:
+                val = redis_source.getTerm(elem)
+                result.append(val)
+            except LookupError:
+                pass
+        return result
+
