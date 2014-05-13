@@ -81,7 +81,7 @@ class RedisSourceTests(unittest.TestCase):
     layer = RedisLayer
 
     def setUp(self):
-        settings = self.layer.server.settings['redis_conf']
+        settings = self.layer['redis_server'].settings['redis_conf']
         port = settings['port']
         self.redis = redis.StrictRedis(host='localhost', port=port, db=0)
         self.redis.flushdb()
@@ -134,7 +134,7 @@ class RedisKeysSourceTests(unittest.TestCase):
     layer = RedisLayer
 
     def setUp(self):
-        settings = self.layer.server.settings['redis_conf']
+        settings = self.layer['redis_server'].settings['redis_conf']
         port = settings['port']
         self.redis = redis.StrictRedis(host='localhost', port=port, db=0)
         self.redis.flushdb()
@@ -260,7 +260,7 @@ class ExternalRedisBinderTests(unittest.TestCase):
     layer = RedisLayer
 
     def setUp(self):
-        settings = self.layer.server.settings['redis_conf']
+        settings = self.layer['redis_server'].settings['redis_conf']
         port = settings['port']
         self.redis = redis.StrictRedis(host='localhost', port=port, db=0)
         self.redis.flushdb()
