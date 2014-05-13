@@ -14,7 +14,9 @@ from psj.content.behaviors import (
     IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract, IPSJAddRetro,
     IPSJPartOf, IPSJEdition, IPSJSubjectIndexing, IPSJGNDTermsGetter,
     )
-from psj.content.testing import INTEGRATION_TESTING, ExternalVocabSetup
+from psj.content.testing import (
+    INTEGRATION_TESTING, ExternalVocabSetup, REDIS_INTEGRATION_TESTING,
+    )
 
 
 class DummyDocument(object):
@@ -61,7 +63,7 @@ class TestingAssignable(object):
 class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
     # Tests of behaviors concerning basic PSJ metadata.
 
-    layer = INTEGRATION_TESTING
+    layer = REDIS_INTEGRATION_TESTING
 
     def setup_terms_getter(self):
         # setup a terms getter
@@ -250,5 +252,4 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
         behavior = IPSJSubjectIndexing(doc, None)
         self.assertTrue(behavior is not None)
         self.assertEqual(True, hasattr(behavior, 'psj_gnd_terms'))
-        #self.create_external_vocab_from_choicelist(
-        #    IPSJSubjectIndexing, 'psj_gnd_id')
+        assert self.layer['redis_server'] is not None
