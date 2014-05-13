@@ -2,7 +2,6 @@
 # Tests for sources module.
 import redis
 import unittest
-from testing.redis import RedisServer
 from zope.interface import verify
 from zope.schema.interfaces import (
     IContextSourceBinder, IBaseVocabulary, ITitledTokenizedTerm,
@@ -15,12 +14,7 @@ from psj.content.sources import (
     subjectgroup_source, ddcgeo_source, ddcsach_source, ddczeit_source,
     gndid_source,
     )
-from psj.content.testing import ExternalVocabSetup, RedisStoreSetup
-
-
-#: A test layer setting up a RedisServer in background.
-#: XXX: Move to`testing` module?
-RedisLayer = RedisStoreSetup(RedisServer)
+from psj.content.testing import ExternalVocabSetup, RedisLayer
 
 
 class TokenizeTests(unittest.TestCase):
