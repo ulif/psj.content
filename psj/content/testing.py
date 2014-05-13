@@ -71,17 +71,10 @@ class ExternalVocabSetup(object):
 
 
 class RedisStoreSetup(object):
-    """A plain layer that starts a redis server.
+    """A test layer class for a layer that starts a redis server.
 
-    The server is torn down after tests within layer.
-
-    For some strange reason, it is not possible to import things from
-    `testing.redis` from within the layer. Therefore the server source
-    class has to be passed in when creating a layer instance like this::
-
-        class MyTest(unittest.TestCase):
-
-             layer = RedisStoreSetup(RedisServer)
+    The server is torn down after tests within layer. An active
+    instance of this layer is available as `RedisLayer`.
 
     You should call `flushdb` for any client created during tests.
 
@@ -92,14 +85,23 @@ class RedisStoreSetup(object):
     __bases__ = ()
     __name__ = 'redis store layer'
 
-    def __init__(self, server_cls):
-        self.server_cls = server_cls
-
     def setUp(self):
-        self.server = self.server_cls()
+        # A complicate way to mimic 'from testing.redis import RedisServer'
+        # This is needed because the external package name (`testing`)
+        # is shadowed by the local module named `testing`. `testing.redis`
+        # can therefore not be found, normally.
+        redis_mod = __import__('testing.redis', (), (), ['RedisServer',], 0)
+        RedisServer = redis_mod.RedisServer
+        self.server = RedisServer()
 
     def tearDown(self):
         self.server.stop()
+
+#: A test layer that provides a Redis Server.
+#:
+#: Please see `RedisStoreSetup` for details. `RedisLayer` is an instance
+#: of `RedisStoreSetup` class.
+RedisLayer = RedisStoreSetup()
 
 
 class Fixture(PloneSandboxLayer):
