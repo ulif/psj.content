@@ -28,6 +28,7 @@ from plone.app.testing import (
     PloneSandboxLayer, PLONE_FIXTURE, IntegrationTesting,
     FunctionalTesting, pushGlobalRegistry, popGlobalRegistry, ploneSite
     )
+from plone.testing import Layer
 from zope.component import getGlobalSiteManager
 from psj.content.interfaces import IExternalVocabConfig
 
@@ -70,7 +71,7 @@ class ExternalVocabSetup(object):
             iface, attr_name, is_list=True)
 
 
-class RedisStoreSetup(object):
+class RedisStoreSetup(Layer):
     """A test layer class for a layer that starts a redis server.
 
     The server is torn down after tests within layer. An active
@@ -79,23 +80,22 @@ class RedisStoreSetup(object):
     You should call `flushdb` for any client created during tests.
 
     From within tests the running server instance can be accessed via
-    `layer.server`.
+    `layer['redis_server']`.
     """
-
-    __bases__ = ()
-    __name__ = 'redis store layer'
-
     def setUp(self):
         # A complicate way to mimic 'from testing.redis import RedisServer'
         # This is needed because the external package name (`testing`)
         # is shadowed by the local module named `testing`. `testing.redis`
         # can therefore not be found, normally.
-        redis_mod = __import__('testing.redis', (), (), ['RedisServer',], 0)
+        redis_mod = __import__('testing.redis', (), (), ['RedisServer', ], 0)
         RedisServer = redis_mod.RedisServer
-        self.server = RedisServer()
+        self['redis_server'] = RedisServer()
+        super(RedisStoreSetup, self).setUp()
 
     def tearDown(self):
-        self.server.stop()
+        super(RedisStoreSetup, self).tearDown()
+        self['redis_server'].stop()
+
 
 #: A test layer that provides a Redis Server.
 #:
@@ -106,7 +106,7 @@ RedisLayer = RedisStoreSetup()
 
 class Fixture(PloneSandboxLayer):
 
-    defaultBases = (PLONE_FIXTURE,)
+    defaultBases = (RedisLayer, PLONE_FIXTURE,)
 
     def setUp(self):
         with ploneSite() as portal:
@@ -135,4 +135,8 @@ INTEGRATION_TESTING = IntegrationTesting(
 FUNCTIONAL_TESTING = FunctionalTesting(
     bases=(FIXTURE,),
     name='psj.content:Functional',
+    )
+REDIS_INTEGRATION_TESTING = IntegrationTesting(
+    bases=(FIXTURE, RedisLayer,),
+    name='psj.content:Integration-redis',
     )
