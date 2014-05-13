@@ -32,7 +32,7 @@ from zope.interface import implements, alsoProvides
 from zope.lifecycleevent.interfaces import IObjectCreatedEvent
 from zope.schema import TextLine, Text, Choice, List
 from psj.content import _
-from psj.content.interfaces import IPSJGNDTermsGetter, IRedisStoreConfig
+from psj.content.interfaces import IRedisStoreConfig
 from psj.content.sources import (
     publishers_source, subjectgroup_source, ddcgeo_source, ddcsach_source,
     ddczeit_source, RedisSource,
@@ -531,4 +531,3 @@ class PSJSubjectIndexing(PSJMetadataBase):
             except LookupError:
                 pass
         return result
-

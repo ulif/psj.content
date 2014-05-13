@@ -278,7 +278,10 @@ class ExternalRedisBinderTests(unittest.TestCase):
         from psj.content.interfaces import IRedisStoreConfig
         gsm = getGlobalSiteManager()
         conf = {
-            'host': self.redis_host, 'port': self.redis_port, 'db': 0 + invalid}
+            'host': self.redis_host,
+            'port': self.redis_port,
+            'db': 0 + invalid
+            }
         gsm.registerUtility(conf, provided=IRedisStoreConfig, name=name)
 
     def test_external_redis_binder_iface(self):

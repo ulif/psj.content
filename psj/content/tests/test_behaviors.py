@@ -3,19 +3,17 @@ import unittest
 from plone.behavior.interfaces import IBehavior, IBehaviorAssignable
 from plone.dexterity.interfaces import IDexterityContent
 from plone.directives.form import IFormFieldProvider
-from zope.component import (
-    queryUtility, adapts, provideAdapter, getGlobalSiteManager
-)
+from zope.component import queryUtility, adapts, provideAdapter
 from zope.interface import implements
 from zope.schema.interfaces import (
     WrongType, ConstraintNotSatisfied, WrongContainedType,
     )
 from psj.content.behaviors import (
     IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract, IPSJAddRetro,
-    IPSJPartOf, IPSJEdition, IPSJSubjectIndexing, IPSJGNDTermsGetter,
+    IPSJPartOf, IPSJEdition, IPSJSubjectIndexing,
     )
 from psj.content.testing import (
-    INTEGRATION_TESTING, ExternalVocabSetup, REDIS_INTEGRATION_TESTING,
+    ExternalVocabSetup, REDIS_INTEGRATION_TESTING,
     )
 
 
@@ -65,21 +63,6 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
 
     layer = REDIS_INTEGRATION_TESTING
 
-    def setup_terms_getter(self):
-        # setup a terms getter
-        gsm = getGlobalSiteManager()
-        class MyGetter(object):
-            id_term_map = {
-                u'Vocab Entry 1': 'Term 1',
-                u'Vocab Entry 2': 'Term 2',
-                u'Other Entry': 'Term 3',
-                }
-            def terms_from_ids(self, ids):
-                return [self.id_term_map[x] for x in ids
-                        if x in self.id_term_map]
-        getter = MyGetter()
-        gsm.registerUtility(getter, provided=IPSJGNDTermsGetter, name=u'')
-
     def behavior_installed(self, name, iface):
         # make sure we get the desired behavior after install
         name = u'psj.content.behaviors.%s' % name
@@ -122,11 +105,11 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
         self.assertTrue(behavior is not None)
         self.assertEqual(True, hasattr(behavior, attr_name))
         # we can assign valid values to doc through the behavior
-        setattr(behavior, attr_name, [u'John Cleese',])
-        self.assertEqual([u'John Cleese',], getattr(doc, attr_name))
+        setattr(behavior, attr_name, [u'John Cleese', ])
+        self.assertEqual([u'John Cleese', ], getattr(doc, attr_name))
         # byte streams (non-unicode) are rejected
         self.assertRaises(
-            WrongContainedType, setattr, behavior, attr_name, [b'Cheese',])
+            WrongContainedType, setattr, behavior, attr_name, [b'Cheese', ])
         return
 
     def choice_behavior_usable(self, attr_name, iface):
@@ -156,13 +139,13 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
         self.assertTrue(behavior is not None)
         self.assertEqual(True, hasattr(behavior, attr_name))
         # we can assign valid values to doc through the behavior
-        setattr(behavior, attr_name, [u'Vocab Entry 1',])
-        self.assertEqual([u'Vocab Entry 1',], getattr(doc, attr_name))
+        setattr(behavior, attr_name, [u'Vocab Entry 1', ])
+        self.assertEqual([u'Vocab Entry 1', ], getattr(doc, attr_name))
         # values not in the vocab are rejected
         self.assertRaises(
             WrongContainedType,
             setattr,
-            behavior, attr_name, [u'Invalid Entry',])
+            behavior, attr_name, [u'Invalid Entry', ])
         return
 
     def test_author_installed(self):
@@ -245,7 +228,6 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
 
     def test_subject_indexing_behavior_gnd_terms(self):
         # psj_gnd_terms is a special field
-        self.setup_terms_getter()
         doc = DummyDocument(b'doc')
         provideAdapter(TestingAssignable)
         self.assertEqual(IDexterityContent.providedBy(doc), True)
