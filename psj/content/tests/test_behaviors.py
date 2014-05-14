@@ -1,9 +1,12 @@
 # tests for psj.content.behaviors
+import redis
 import unittest
 from plone.behavior.interfaces import IBehavior, IBehaviorAssignable
 from plone.dexterity.interfaces import IDexterityContent
 from plone.directives.form import IFormFieldProvider
-from zope.component import queryUtility, adapts, provideAdapter
+from zope.component import (
+    queryUtility, adapts, provideAdapter, getGlobalSiteManager
+    )
 from zope.interface import implements
 from zope.schema.interfaces import (
     WrongType, ConstraintNotSatisfied, WrongContainedType,
@@ -12,6 +15,7 @@ from psj.content.behaviors import (
     IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract, IPSJAddRetro,
     IPSJPartOf, IPSJEdition, IPSJSubjectIndexing,
     )
+from psj.content.interfaces import IRedisStoreConfig
 from psj.content.testing import (
     ExternalVocabSetup, REDIS_INTEGRATION_TESTING,
     )
@@ -221,10 +225,21 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
             b'psj_ddc_zeit', IPSJSubjectIndexing)
         self.textlist_behavior_usable(
             b'psj_gnd_id', IPSJSubjectIndexing)
-        #self.textlist_behavior_usable(
-        #    b'psj_gnd_terms', IPSJSubjectIndexing)
         self.textlist_behavior_usable(
             b'psj_free_keywords', IPSJSubjectIndexing)
+
+    def setup_redis_store(self):
+        # setup a redis store config providing GND terms
+        gsm = getGlobalSiteManager()
+        settings = self.layer['redis_server'].settings['redis_conf']
+        conf = {
+            'host': settings['bind'], 'port': settings['port'], 'db': 0
+            }
+        redis_client = redis.StrictRedis(
+            host=conf['host'], port=conf['port'], db=conf['db'])
+        redis_client.set(u'foo', u'bar')
+        gsm.registerUtility(
+            conf, provided=IRedisStoreConfig, name="psj.content.redis-GND")
 
     def test_subject_indexing_behavior_gnd_terms(self):
         # psj_gnd_terms is a special field
@@ -234,4 +249,7 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
         behavior = IPSJSubjectIndexing(doc, None)
         self.assertTrue(behavior is not None)
         self.assertEqual(True, hasattr(behavior, 'psj_gnd_terms'))
-        assert self.layer['redis_server'] is not None
+        behavior.psj_gnd_id = [u'foo', u'baz']
+        self.setup_redis_store()
+        self.assertEqual(behavior.psj_gnd_terms, [u'bar', u'baz'])
+
