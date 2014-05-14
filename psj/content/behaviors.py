@@ -522,12 +522,13 @@ class PSJSubjectIndexing(PSJMetadataBase):
         if conf is None:
             return []
         redis_source = RedisSource(
-            host=conf.host, port=conf.port, db=conf.db)
+            host=conf['host'], port=conf['port'], db=conf['db'])
         result = []
         for elem in self.psj_gnd_id:
             try:
                 val = redis_source.getTerm(elem)
-                result.append(val)
+                result.append(val.title)
             except LookupError:
-                pass
+                # id not in store.
+                result.append(elem)
         return result
