@@ -252,4 +252,3 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
         behavior.psj_gnd_id = [u'foo', u'baz']
         self.setup_redis_store()
         self.assertEqual(behavior.psj_gnd_terms, [u'bar', u'baz'])
-
