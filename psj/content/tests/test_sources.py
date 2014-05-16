@@ -6,74 +6,14 @@ from zope.interface import verify
 from zope.schema.interfaces import (
     IContextSourceBinder, IBaseVocabulary, ITitledTokenizedTerm,
     )
-from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
+from zope.schema.vocabulary import SimpleVocabulary
 from psj.content.sources import (
     ExternalVocabBinder, ExternalRedisBinder, RedisSource,
-    RedisKeysSource, make_terms, tokenize,
-    institutes_source, licenses_source, publishers_source,
+    RedisKeysSource, institutes_source, licenses_source, publishers_source,
     subjectgroup_source, ddcgeo_source, ddcsach_source, ddczeit_source,
     gndid_source,
     )
 from psj.content.testing import ExternalVocabSetup, RedisLayer
-
-
-class TokenizeTests(unittest.TestCase):
-    # tests for tokenize()
-
-    def is_7bit_ascii(self, string):
-        if len(string) != len(string.encode('ascii', 'ignore')):
-            raise ValueError('Token contains non-ASCII chars: %s' % string)
-
-    def test_empty_string(self):
-        result = tokenize('')
-        assert len(result) > 0
-        self.is_7bit_ascii(result)
-
-    def test_simple_stream(self):
-        result = tokenize('abc')
-        self.assertEqual(result, 'YWJj')
-        self.is_7bit_ascii(result)
-
-    def test_utf8_stream(self):
-        result = tokenize('äöü')
-        self.assertEqual(result, 'w6TDtsO8')
-        self.is_7bit_ascii(result)
-
-
-class MakeTermsTests(unittest.TestCase):
-    # tests for the make_terms function
-
-    def test_make_terms(self):
-        result = make_terms(['foo', 'bar', 'baz'])
-        for term in result:
-            assert isinstance(term, SimpleTerm)
-        assert len(result) == 3
-        term_strings = [(x.title, x.token, x.value) for x in result]
-        self.assertEqual(
-            term_strings,
-            [(u'foo', 'Zm9v', u'foo'),
-             (u'bar', 'YmFy', u'bar'),
-             (u'baz', 'YmF6', u'baz')]
-            )
-
-    def test_make_terms_umlauts(self):
-        result = make_terms(['ümläut', 'ömläut'])
-        term_strings = [(x.title, x.token, x.value) for x in result]
-        self.assertEqual(
-            term_strings,
-            [(u'\xfcml\xe4ut', 'w7xtbMOkdXQ=', u'\xfcml\xe4ut'),
-             (u'\xf6ml\xe4ut', 'w7ZtbMOkdXQ=', u'\xf6ml\xe4ut')]
-            )
-
-    def test_make_terms_ignore_empty(self):
-        # emtpy strings are ignored when creating terms
-        result = make_terms(['', 'foo', '', 'bar', ''])
-        term_strings = [(x.title, x.token, x.value) for x in result]
-        self.assertEqual(
-            term_strings,
-            [(u'foo', 'Zm9v', u'foo'),
-             (u'bar', 'YmFy', u'bar')]
-            )
 
 
 class RedisSourceTests(unittest.TestCase):
