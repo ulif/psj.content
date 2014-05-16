@@ -19,8 +19,11 @@
 """Utilities and helpers for PSJ.
 
 """
+from base64 import b64encode
 from five import grok
 from plone.app.textfield import RichTextValue
+from zope.schema.vocabulary import SimpleTerm
+from psj.content import _
 from psj.content.interfaces import ISearchableTextGetter
 
 #: The attributes considered to hold fulltext.
@@ -116,3 +119,36 @@ class SearchableTextGetter(grok.GlobalUtility):
             return ''
         html_content = getattr(context.psj_html_repr, 'data', '')
         return strip_tags(html_content)
+
+
+def tokenize(byte_string):
+    """Create a token from a byte stream.
+
+    The `byte_stream` is expected to be a utf-8-encoded sequence of
+    bytes.
+
+    The result is guaranteed to be unique (i.e.: different
+    `byte_streams` will give different results, same `byte_streams`
+    will give same results).
+
+    The result is guaranteed to be a valid 7-bit ASCII string.
+
+    The result is guaranteed not to be empty.
+    """
+    return b64encode(byte_string) or '#'
+
+
+def make_terms(strings):
+    """Create zope.schema.SimpleTermss from strings.
+
+    `strings` is expected to be a list of bytes in `utf-8` encoding.
+
+    This function returns a list of `SimpleTerm` instances with
+    unicode formatted titles and values and base 64 encoded tokens.
+
+    `make_terms` guarantees that tokens are unique for each string put
+    in and are representable as ASCII.
+    """
+    tuples = [(tokenize(s), _(s.decode('utf-8'))) for s in strings if s]
+    return [SimpleTerm(value=t[1], token=t[0], title=t[1])
+            for t in tuples]
