@@ -315,6 +315,12 @@ alsoProvides(IPSJSubjectIndexing, IFormFieldProvider)
 class IPSJRelatedContent(IPSJBehavior):
     """Some related document.
     """
+    fieldset(
+        'psj_related_content',
+        label=_(u'Related Content'),
+        fields=('psj_media', 'psj_primary_source'),
+        )
+
     psj_media = TextLine(
         title=_(u'Media'),
         description=_(u'Link to folder with images or videos. '
