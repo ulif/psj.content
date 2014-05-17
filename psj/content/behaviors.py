@@ -329,7 +329,7 @@ class IPSJRelatedContent(IPSJBehavior):
         )
 
 
-alsoProvides(IPSJSubjectIndexing, IFormFieldProvider)
+alsoProvides(IPSJRelatedContent, IFormFieldProvider)
 
 
 class IPSJOfficeDocTransformer(IPSJBehavior):
