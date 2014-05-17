@@ -312,6 +312,26 @@ class IPSJSubjectIndexing(IPSJBehavior):
 alsoProvides(IPSJSubjectIndexing, IFormFieldProvider)
 
 
+class IPSJRelatedContent(IPSJBehavior):
+    """Some related document.
+    """
+    psj_media = TextLine(
+        title=_(u'Media'),
+        description=_(u'Link to folder with images or videos. '
+                      u'Presented as tab'),
+        required=True,
+        )
+
+    psj_primary_source = TextLine(
+        title=_(u'Quellen'),
+        description=_(u'Link to related source on other site.'),
+        required=True,
+        )
+
+
+alsoProvides(IPSJSubjectIndexing, IFormFieldProvider)
+
+
 class IPSJOfficeDocTransformer(IPSJBehavior):
     """A document that provides some office doc.
 
