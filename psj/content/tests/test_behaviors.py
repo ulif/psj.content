@@ -67,6 +67,19 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
 
     layer = REDIS_INTEGRATION_TESTING
 
+    def setup_redis_store(self):
+        # setup a redis store config providing GND terms
+        gsm = getGlobalSiteManager()
+        settings = self.layer['redis_server'].settings['redis_conf']
+        conf = {
+            'host': settings['bind'], 'port': settings['port'], 'db': 0
+            }
+        redis_client = redis.StrictRedis(
+            host=conf['host'], port=conf['port'], db=conf['db'])
+        redis_client.set(u'foo', u'bar')
+        gsm.registerUtility(
+            conf, provided=IRedisStoreConfig, name="psj.content.redis-GND")
+
     def behavior_installed(self, name, iface):
         # make sure we get the desired behavior after install
         name = u'psj.content.behaviors.%s' % name
@@ -227,19 +240,6 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
             b'psj_gnd_id', IPSJSubjectIndexing)
         self.textlist_behavior_usable(
             b'psj_free_keywords', IPSJSubjectIndexing)
-
-    def setup_redis_store(self):
-        # setup a redis store config providing GND terms
-        gsm = getGlobalSiteManager()
-        settings = self.layer['redis_server'].settings['redis_conf']
-        conf = {
-            'host': settings['bind'], 'port': settings['port'], 'db': 0
-            }
-        redis_client = redis.StrictRedis(
-            host=conf['host'], port=conf['port'], db=conf['db'])
-        redis_client.set(u'foo', u'bar')
-        gsm.registerUtility(
-            conf, provided=IRedisStoreConfig, name="psj.content.redis-GND")
 
     def test_subject_indexing_behavior_gnd_terms(self):
         # psj_gnd_terms is a special field
