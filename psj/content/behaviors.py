@@ -228,6 +228,19 @@ alsoProvides(IPSJEdition, IFormFieldProvider)
 class IPSJSubjectIndexing(IPSJBehavior):
     """Fields to categorize some document.
     """
+    fieldset(
+        'psj_metadata',
+        label=_(u'PSJ Metadata'),
+        fields=('psj_subject_group',
+                'psj_ddc_geo',
+                'psj_ddc_sach',
+                'psj_ddc_zeit',
+                'psj_gnd_id',
+                'psj_gnd_terms',
+                'psj_free_keywords',
+                ),
+        )
+
     psj_subject_group = List(
         title=_(u'Epochenkategorie'),
         description=_(u''),
