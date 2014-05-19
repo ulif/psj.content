@@ -13,7 +13,7 @@ from zope.schema.interfaces import (
     )
 from psj.content.behaviors import (
     IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract, IPSJAddRetro,
-    IPSJPartOf, IPSJEdition, IPSJSubjectIndexing,
+    IPSJPartOf, IPSJEdition, IPSJSubjectIndexing, IPSJRelatedContent,
     )
 from psj.content.interfaces import IRedisStoreConfig
 from psj.content.testing import (
@@ -49,6 +49,7 @@ class TestingAssignable(object):
 
     enabled = [IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract,
                IPSJAddRetro, IPSJPartOf, IPSJEdition, IPSJSubjectIndexing,
+               IPSJRelatedContent,
                ]
 
     def __init__(self, context):
@@ -252,3 +253,7 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
         behavior.psj_gnd_id = [u'foo', u'baz']
         self.setup_redis_store()
         self.assertEqual(behavior.psj_gnd_terms, [u'bar', u'baz'])
+
+    def test_relatedcontent_behavior_usable(self):
+        self.text_behavior_usable(b'psj_media', IPSJRelatedContent)
+        self.text_behavior_usable(b'psj_primary_source', IPSJRelatedContent)
