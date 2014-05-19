@@ -80,4 +80,11 @@
         factory=".behaviors.PSJSubjectIndexing"
         />
 
+    <plone:behavior
+        title="PSJ Related Content"
+        description="Fields for linking to related documents."
+        provides=".behaviors.IPSJRelatedContent"
+        factory=".behaviors.PSJRelatedContent"
+        />
+
 </configure>
