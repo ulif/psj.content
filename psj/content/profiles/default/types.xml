@@ -4,4 +4,5 @@
   <object name="psj.content.basedoc" meta_type="Dexterity FTI" />
   <object name="psj.content.basereview" meta_type="Dexterity FTI" />
   <object name="psj.content.baseretrodoc" meta_type="Dexterity FTI" />
+  <object name="psj.content.magcontainer" meta_type="Dexterity FTI" />
 </object>
