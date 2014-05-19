@@ -67,7 +67,7 @@ class IPSJMagazineContainer(model.Schema):
 
     psj_publication_year = schema.TextLine(
         title=_(u'Ersterscheinungsdatum'),
-        description=_(u'Erstersceinungsdatum der Publikation'),
+        description=_(u'Ersterscheinungsdatum der Publikation'),
         required=True,
         )
 
