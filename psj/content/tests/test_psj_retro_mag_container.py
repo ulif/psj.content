@@ -27,7 +27,8 @@ class PSJRetroMagazineContainerUnitTests(unittest.TestCase):
     def test_iface(self):
         # make sure we fullfill all interface contracts
         obj = PSJRetroMagazineContainer()
-        verify.verifyClass(IPSJRetroMagazineContainer, PSJRetroMagazineContainer)
+        verify.verifyClass(IPSJRetroMagazineContainer,
+                           PSJRetroMagazineContainer)
         verify.verifyObject(IPSJRetroMagazineContainer, obj)
 
 
