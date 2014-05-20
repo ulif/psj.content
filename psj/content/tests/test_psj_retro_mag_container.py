@@ -211,8 +211,8 @@ class PSJRetroMagazineContainerBrowserTests(unittest.TestCase):
         self.do_login(self.browser)
         self.browser.open(self.portal_url)
         # find add link and click it
-        add_link = self.browser.getLink('PSJ Magazine Container')
-        self.assertEqual('psj-content-magcontainer', add_link.attrs['id'])
+        add_link = self.browser.getLink('PSJ Retro Magazine Container')
+        self.assertEqual('psj-content-retromagcontainer', add_link.attrs['id'])
         add_link.click()
 
         # fill form
