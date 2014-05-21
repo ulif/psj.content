@@ -32,7 +32,7 @@ FULLTEXT_ATTRIBUTES = (
     'psj_abstract', 'psj_publication_year', 'psj_ocr_text', 'psj_series',
     'psj_publisher', 'psj_subject_group', 'psj_ddc_geo', 'psj_ddc_geo',
     'psj_ddc_sach', 'psj_ddc_zeit', 'psj_gnd_term', 'psj_free_keywords',
-    'psj_contributors', 'psj_urn'
+    'psj_contributors', 'psj_urn', 'psj_issue_number',
     )
 
 
