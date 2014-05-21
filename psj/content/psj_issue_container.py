@@ -73,7 +73,7 @@ class IPSJIssueContainer(model.Schema):
 
     psj_issue_number = schema.TextLine(
         title=_(u'Nr.'),
-        descripion=_(u''),
+        description=_(u''),
         required=True,
         )
 
