@@ -38,6 +38,13 @@
         />
 
     <plone:behavior
+        title="Contributors"
+        description="FSD persons as contributors"
+        provides=".behaviors.IPSJContributors"
+        factory=".behaviors.PSJContributors"
+        />
+
+    <plone:behavior
 	title="PSJAddRetro"
 	description="Technical metadata for retro docs."
 	provides=".behaviors.IPSJAddRetro"
