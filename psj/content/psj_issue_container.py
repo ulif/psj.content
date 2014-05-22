@@ -101,7 +101,6 @@ class PSJIssueContainer(Container):
         IPSJIssueContainer["psj_publication_year"])
     psj_issue_number = FieldProperty(IPSJIssueContainer["psj_issue_number"])
 
-
     def SearchableText(self):
         """The text searchable in this document.
 
