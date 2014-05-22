@@ -12,8 +12,9 @@ from zope.schema.interfaces import (
     WrongType, ConstraintNotSatisfied, WrongContainedType,
     )
 from psj.content.behaviors import (
-    IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract, IPSJAddRetro,
-    IPSJPartOf, IPSJEdition, IPSJSubjectIndexing, IPSJRelatedContent,
+    IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract, IPSJContributors,
+    IPSJAddRetro, IPSJPartOf, IPSJEdition, IPSJSubjectIndexing,
+    IPSJRelatedContent,
     )
 from psj.content.interfaces import IRedisStoreConfig
 from psj.content.testing import (
@@ -48,8 +49,8 @@ class TestingAssignable(object):
     adapts(DummyDocument)
 
     enabled = [IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract,
-               IPSJAddRetro, IPSJPartOf, IPSJEdition, IPSJSubjectIndexing,
-               IPSJRelatedContent,
+               IPSJContributors, IPSJAddRetro, IPSJPartOf, IPSJEdition,
+               IPSJSubjectIndexing, IPSJRelatedContent,
                ]
 
     def __init__(self, context):
@@ -201,6 +202,13 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
         # we can get a behavior by adapter
         self.text_behavior_usable(b'psj_abstract', IPSJAbstract)
         return
+
+    def test_contributors_installed(self):
+        self.behavior_installed('IPSJContributors', IPSJContributors)
+
+    def test_contributors_bahavior_usable(self):
+        # XXX: we cannot test a relation?
+        pass
 
     def test_add_retro_behavior_installed(self):
         self.behavior_installed('IPSJAddRetro', IPSJAddRetro)
