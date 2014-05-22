@@ -24,9 +24,11 @@ from plone.app.dexterity.behaviors.metadata import DCFieldProperty
 from plone.dexterity.interfaces import IDexterityContent
 from plone.directives.form import (
     Schema, fieldset, IFormFieldProvider, mode)
+from plone.formwidget.contenttree import ObjPathSourceBinder
 from plone.namedfile.field import NamedBlobFile as NamedBlobFileField
 from plone.namedfile.file import NamedBlobFile
 from Products.CMFCore.utils import getToolByName
+from z3c.relationfield.schema import RelationChoice, RelationList
 from zope.component import adapts, queryUtility
 from zope.interface import implements, alsoProvides
 from zope.lifecycleevent.interfaces import IObjectCreatedEvent
@@ -134,6 +136,30 @@ class IPSJAbstract(IPSJBehavior):
         )
 
 alsoProvides(IPSJAbstract, IFormFieldProvider)
+
+
+class IPSJContributors(IPSJBehavior):
+    """FSDPersons as contributors.
+    """
+    fieldset(
+        'psj_metadata',
+        label=_(u'PSJ Metadata'),
+        fields=('psj_contributors',),
+        )
+
+    psj_contributors = RelationList(
+        title=_(u'Beitragende'),
+        description=_(u'Contributors'),
+        required=False,
+        value_type=RelationChoice(
+            title=_(
+                u'Wählen Sie einen Personensatz aus Relation '
+                u'zum Contenttype FSDPerson (Person)'),
+            source=ObjPathSourceBinder(portal_type='FSDPerson')),
+        )
+
+
+alsoProvides(IPSJContributors, IFormFieldProvider)
 
 
 class IPSJBaseData(IPSJBehavior):
@@ -421,6 +447,17 @@ class PSJAbstract(PSJMetadataBase):
     psj_abstract = DCFieldProperty(
         IPSJAbstract['psj_abstract'],
         get_name='psj_abstract'
+        )
+
+
+class PSJContributors(PSJMetadataBase):
+    """A behaviour allowing to set FSD persons as contributors.
+    """
+    implements(IPSJContributors)
+
+    psj_abstract = DCFieldProperty(
+        IPSJContributors['psj_contributors'],
+        get_name='psj_contributors'
         )
 
 
