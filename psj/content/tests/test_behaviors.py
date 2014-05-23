@@ -1,4 +1,9 @@
+# -*- coding: utf-8 -*-
 # tests for psj.content.behaviors
+#
+# XXX: FSD-related tests are missing. These are blocked by
+#      difficulties installing FSD in tests.
+#
 import redis
 import unittest
 from plone.behavior.interfaces import IBehavior, IBehaviorAssignable
