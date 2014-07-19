@@ -37,7 +37,7 @@ class IPSJRetroMagazineContainer(model.Schema):
     psj_author = schema.List(
         title=_(u'Autor'),
         description=_(u'Autor(en) oder Herausgeber.'),
-        required=True,
+        required=False,
         readonly=True,
         value_type=schema.TextLine(),
         )
