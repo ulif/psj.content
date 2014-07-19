@@ -543,7 +543,10 @@ def create_representations(transformer, event):
     Creates PDF representation of uploaded office doc on creation.
     """
     transforms = getToolByName(transformer, 'portal_transforms')
-    in_data = transformer.psj_office_doc.data
+    if transformer.psj_office_doc:
+        in_data = transformer.psj_office_doc.data
+    else:
+        return
     out_data = transforms.convertTo(
         'application/pdf', in_data,
         mimetype='application/vnd.oasis.opendocument.text')
