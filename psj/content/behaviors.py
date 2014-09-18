@@ -23,7 +23,7 @@ from five import grok
 from plone.app.dexterity.behaviors.metadata import DCFieldProperty
 from plone.dexterity.interfaces import IDexterityContent
 from plone.directives.form import (
-    Schema, fieldset, IFormFieldProvider, mode)
+    Schema, fieldset, IFormFieldProvider, mode, primary)
 from plone.formwidget.contenttree import ObjPathSourceBinder
 from plone.namedfile.field import NamedBlobFile as NamedBlobFileField
 from plone.namedfile.file import NamedBlobFile
@@ -389,6 +389,7 @@ class IPSJOfficeDocTransformer(IPSJBehavior):
         fields=('psj_office_doc', 'psj_pdf_repr'),
         )
 
+    primary('psj_office_doc')
     psj_office_doc = NamedBlobFileField(
         title=_(u'Source Office File (.doc, .docx, .odt)'),
         description=_(u'Document Abstract'),
@@ -556,6 +557,44 @@ def create_representations(transformer, event):
     new_filename = transformer.psj_office_doc.filename + '.pdf'
     transformer.psj_pdf_repr = NamedBlobFile(
         data=out_data.getData(), filename=new_filename)
+
+@grok.subscribe(IPSJOfficeDocTransformer, IObjectCreatedEvent)
+def psj_create_html(transformer, event):
+    """Create an HTML representation of `in_data`.
+
+    `in_data` is supposed to be the binary content of an office
+    document.
+
+    `transforms` are the portal transforms.
+    """
+    transforms = getToolByName(transformer, 'portal_transforms')
+    if transformer.psj_office_doc:    
+        in_data = transformer.psj_office_doc.data
+    else:
+        return
+
+    out_data = transforms.convertTo(
+        'text/html', in_data,
+        mimetype='application/vnd.oasis.opendocument.text')
+    if out_data is None:
+        # transform failed
+        return
+    new_filename = transformer.psj_office_doc.filename + '.html'
+    html = out_data.getData()
+    transformer.psj_html_repr = NamedBlobFile(
+        data=html, filename=new_filename)
+    # for name in transformer.keys():
+    #     # make sure all old extra-files (images, etc.) are
+    #     # deleted.
+    #     del transformer[name]
+    # for name, subdata in out_data.getSubObjects().items():
+    #     name = name.decode('utf8')
+    #     if name.lower()[-4:] in (u'.png', u'.jpg', u'.gif', u'.tif'):
+    #         new_name = transformer.invokeFactory('Image', name)
+    #     else:
+    #         new_name = transformer.invokeFactory('File', name)
+    #     new_context = transformer[new_name]
+    #     new_context.update_data(subdata)
 
 
 class PSJSubjectIndexing(PSJMetadataBase):
