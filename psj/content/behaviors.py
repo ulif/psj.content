@@ -185,7 +185,7 @@ class IPSJAddRetro(IPSJBehavior):
     fieldset(
         'psj_metadata',
         label=_(u'PSJ Metadata'),
-        fields=('psj_link_bsb', 'psj_ocr_text'),
+        fields=('psj_link_bsb', 'psj_ocr_text', 'psj_file'),
         )
 
     psj_link_bsb = TextLine(
@@ -197,6 +197,13 @@ class IPSJAddRetro(IPSJBehavior):
     psj_ocr_text = Text(
         title=_(u'OCR Text'),
         description=_(u''),
+        required=False,
+        )
+
+    primary('psj_file')
+    psj_file = NamedBlobFileField(
+        title=_(u'Digitized document'),
+        description=_(u'Digitized document'),
         required=False,
         )
 
@@ -483,6 +490,11 @@ class PSJAddRetro(PSJMetadataBase):
         get_name='psj_ocr_text'
         )
 
+    primary('psj_file')
+    psj_file = DCFieldProperty(
+        IPSJAddRetro['psj_file'],
+        get_name='psj_file'
+        )
 
 class PSJPartOf(PSJMetadataBase):
     """A behavior providing fields for docs being part of others.
