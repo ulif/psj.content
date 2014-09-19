@@ -39,7 +39,7 @@ from psj.content.sources import (
     publishers_source, subjectgroup_source, ddcgeo_source, ddcsach_source,
     ddczeit_source, RedisSource,
     )
-
+from psj.content.psj_basedoc import IBaseDoc, BaseDoc
 
 class PSJMetadataBase(object):
     """An adapter storing metadata directly on an object using the
@@ -168,13 +168,17 @@ class IPSJBaseData(IPSJBehavior):
     fieldset(
         'psj_metadata',
         label=_(u'PSJ Metadata'),
-        fields=('psj_author', 'psj_title', 'psj_subtitle', 'psj_abstract'),
+        fields=('psj_author', 'psj_author_relation', 'psj_title', 'psj_subtitle', 'psj_institute', 'psj_license', 'psj_abstract', 'psj_doi'),
         )
 
-    psj_author = IPSJAuthor['psj_author']
-    psj_title = IPSJTitle['psj_title']
-    psj_subtitle = IPSJSubtitle['psj_subtitle']
+    psj_author = IBaseDoc['psj_author']
+    psj_author_relation = IBaseDoc['psj_author_relation']
+    psj_title = IBaseDoc['psj_title']
+    psj_subtitle = IBaseDoc['psj_subtitle']
+    psj_institute = IBaseDoc['psj_institute']
+    psj_license = IBaseDoc['psj_license']
     psj_abstract = IPSJAbstract['psj_abstract']
+    psj_doi = IBaseDoc['psj_doi']
 
 alsoProvides(IPSJBaseData, IFormFieldProvider)
 
@@ -469,10 +473,10 @@ class PSJContributors(PSJMetadataBase):
         )
 
 
-class PSJBaseData(PSJAuthor, PSJTitle, PSJSubtitle, PSJAbstract):
+class PSJBaseData(BaseDoc):
     """A behavior providing base metadata.
     """
-    implements(IPSJBaseData)
+    implements(IBaseDoc)
 
 
 class PSJAddRetro(PSJMetadataBase):
