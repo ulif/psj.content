@@ -29,6 +29,8 @@ from zope.component import queryUtility
 from zope.schema.fieldproperty import FieldProperty
 from psj.content.interfaces import ISearchableTextGetter
 from psj.content.sources import institutes_source, licenses_source
+from plone.namedfile.field import NamedBlobFile as NamedBlobFileField
+from plone.directives.form import primary
 
 
 class IBaseRetroDoc(model.Schema):
@@ -94,6 +96,13 @@ class IBaseRetroDoc(model.Schema):
         required=True,
         )
 
+    primary('psj_file')
+    psj_file = NamedBlobFileField(
+        title=_(u'Digitized document'),
+        description=_(u'Digitized document'),
+        required=False,
+        )
+
 
 class BaseRetroDoc(Container):
     """A PSJ document.
@@ -110,6 +119,7 @@ class BaseRetroDoc(Container):
     psj_license = FieldProperty(IBaseRetroDoc["psj_license"])
     psj_abstract = FieldProperty(IBaseRetroDoc["psj_abstract"])
     psj_doi = FieldProperty(IBaseRetroDoc["psj_doi"])
+    psj_retro_doc = FieldProperty(IBaseRetroDoc["psj_file"])
 
     def SearchableText(self):
         """The text searchable in this document.
