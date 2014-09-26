@@ -39,7 +39,8 @@ from psj.content.sources import (
     publishers_source, subjectgroup_source, ddcgeo_source, ddcsach_source,
     ddczeit_source, RedisSource,
     )
-from psj.content.psj_basedoc import IBaseDoc, BaseDoc
+from psj.content.sources import institutes_source, licenses_source
+from plone.app.textfield import RichText
 
 class PSJMetadataBase(object):
     """An adapter storing metadata directly on an object using the
@@ -171,14 +172,71 @@ class IPSJBaseData(IPSJBehavior):
         fields=('psj_author', 'psj_author_relation', 'psj_title', 'psj_subtitle', 'psj_institute', 'psj_license', 'psj_abstract', 'psj_doi'),
         )
 
-    psj_author = IBaseDoc['psj_author']
-    psj_author_relation = IBaseDoc['psj_author_relation']
-    psj_title = IBaseDoc['psj_title']
-    psj_subtitle = IBaseDoc['psj_subtitle']
-    psj_institute = IBaseDoc['psj_institute']
-    psj_license = IBaseDoc['psj_license']
-    psj_abstract = IPSJAbstract['psj_abstract']
-    psj_doi = IBaseDoc['psj_doi']
+    psj_author = List(
+        title=_(u'Autor'),
+        description=_(u'Autor(en) oder Herausgeber.'),
+        required=True,
+        readonly=True,
+        value_type=TextLine(),
+        )
+
+    psj_author_relation = RelationList(
+        title=_(u'Autor Relation'),
+        description=_(u'Autor oder Herausgeber. '),
+        required=False,
+        value_type=RelationChoice(
+            title=_(
+                u'Wählen Sie einen Personensatz aus Relation '
+                u'zum Contenttype FSDPerson (Person)'),
+            source=ObjPathSourceBinder(portal_type='FSDPerson')),
+        )
+
+    psj_title = TextLine(
+        title=_(u'Titel'),
+        description=_(u'Titel der Publikation'),
+        required=True,
+        )
+
+    psj_subtitle = TextLine(
+        title=_(u'Untertitel'),
+        description=_(u'Untertitel der Publikation'),
+        required=False,
+        )
+
+    psj_institute = List(
+        title=_(u'Institut'),
+        description=_(u'Wählen Sie ein Institut aus'),
+        value_type=Choice(
+            title=_(u'Institut'),
+            description=_(u'Institut'),
+            source=institutes_source,
+            required=False,
+            ),
+        required=False,
+        )
+
+    psj_license = Choice(
+            title=_(u'Lizenz'),
+            description=_(u'Wählen Sie eine Lizenz aus'),
+            source=licenses_source,
+            required=False,
+        )
+
+    psj_abstract = RichText(
+        title=_(u'Abstract'),
+        description=_(u'Inhaltliche Zusammenfassung'),
+        default_mime_type="text/html",
+        output_mime_type="text/html",
+        allowed_mime_types=('text/structured', 'text/plain', 'text/html'),
+        default=u'',
+        required=False,
+        )
+
+    psj_doi = TextLine(
+        title=_(u'DOI'),
+        description=_(u'Digital Object Identifier'),
+        required=True,
+        )
 
 alsoProvides(IPSJBaseData, IFormFieldProvider)
 
@@ -473,10 +531,51 @@ class PSJContributors(PSJMetadataBase):
         )
 
 
-class PSJBaseData(BaseDoc):
-    """A behavior providing base metadata.
+class PSJBaseData(PSJMetadataBase):
+    """A behavior providing base metadata
+'psj_author', 'psj_author_relation', 'psj_title', 'psj_subtitle', 'psj_institute', 'psj_license', 'psj_abstract', 'psj_doi'.
     """
-    implements(IBaseDoc)
+    implements(IPSJBaseData)
+
+    psj_author = DCFieldProperty(
+        IPSJBaseData['psj_author'],
+        get_name='psj_author'
+        )
+
+    psj_author_relation = DCFieldProperty(
+        IPSJBaseData['psj_author_relation'],
+        get_name='psj_author_relation'
+        )
+
+    psj_title = DCFieldProperty(
+        IPSJBaseData['psj_title'],
+        get_name='psj_title'
+        )
+
+    psj_subtitle = DCFieldProperty(
+        IPSJBaseData['psj_subtitle'],
+        get_name='psj_subtitle'
+        )
+
+    psj_institute = DCFieldProperty(
+        IPSJBaseData['psj_institute'],
+        get_name='psj_institute'
+        )
+
+    psj_license = DCFieldProperty(
+        IPSJBaseData['psj_license'],
+        get_name='psj_license'
+        )
+
+    psj_abstract = DCFieldProperty(
+        IPSJBaseData['psj_abstract'],
+        get_name='psj_abstract'
+        )
+
+    psj_doi = DCFieldProperty(
+        IPSJBaseData['psj_doi'],
+        get_name='psj_doi'
+        )
 
 
 class PSJAddRetro(PSJMetadataBase):
