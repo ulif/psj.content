@@ -297,6 +297,12 @@ alsoProvides(IPSJPartOf, IFormFieldProvider)
 class IPSJEdition(IPSJBehavior):
     """The meta data fields to describe an edition.
     """
+    fieldset(
+        'psj_metadata',
+        label=_(u'PSJ Metadata'),
+        fields=('psj_publisher', 'psj_isbn_issn', 'psj_publication_year'),
+        )
+
     psj_publisher = Choice(
         title=_(u'Verlag'),
         description=u'',
@@ -429,17 +435,21 @@ class IPSJRelatedContent(IPSJBehavior):
         fields=('psj_media', 'psj_primary_source'),
         )
 
-    psj_media = TextLine(
+    psj_media = RelationList(
         title=_(u'Media'),
         description=_(u'Link to folder with images or videos. '
                       u'Presented as tab'),
-        required=True,
+        value_type=RelationChoice(
+            title=_(
+                u'Wählen Sie einen Ordner '),
+            source=ObjPathSourceBinder(portal_type='Folder')),
+        required=False,
         )
 
     psj_primary_source = TextLine(
         title=_(u'Quellen'),
         description=_(u'Link to related source on other site.'),
-        required=True,
+        required=False,
         )
 
 
