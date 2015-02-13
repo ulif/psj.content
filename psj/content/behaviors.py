@@ -235,7 +235,7 @@ class IPSJBaseData(IPSJBehavior):
     psj_doi = TextLine(
         title=_(u'DOI'),
         description=_(u'Digital Object Identifier'),
-        required=True,
+        required=False,
         )
 
 alsoProvides(IPSJBaseData, IFormFieldProvider)
