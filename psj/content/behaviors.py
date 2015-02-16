@@ -339,6 +339,7 @@ class IPSJSubjectIndexing(IPSJBehavior):
                 'psj_gnd_id',
                 'psj_gnd_terms',
                 'psj_free_keywords',
+                'psj_sw_zeit',
                 ),
         )
 
@@ -419,6 +420,12 @@ class IPSJSubjectIndexing(IPSJBehavior):
             title=_(u'Freies Schlagwort'),
             description=_(u''),
             ),
+        required=False,
+        )
+
+    psj_sw_zeit = TextLine(
+        title=_(u'Zeitschlagwort'),
+        description=_(u''),
         required=False,
         )
 
