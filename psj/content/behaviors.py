@@ -204,11 +204,11 @@ class IPSJBaseData(IPSJBehavior):
         )
 
     psj_institute = List(
-        title=_(u'Institut'),
-        description=_(u'Wählen Sie ein Institut aus'),
+        title=_(u'Institution'),
+        description=_(u'Wählen Sie eine Institution aus'),
         value_type=Choice(
-            title=_(u'Institut'),
-            description=_(u'Institut'),
+            title=_(u'Institution'),
+            description=_(u'Institution'),
             source=institutes_source,
             required=False,
             ),
