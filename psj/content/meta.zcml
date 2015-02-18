@@ -30,37 +30,37 @@
 
     <configure xmlns="http://namespaces.zope.org/zope"
                xmlns:psj="http://namespaces.zope.org/psj">
-      <psj:external-vocab path="/home/clamor/Instances/pp2-buildout/zinstance/src/psj.content/etc/sample-institutes.csv" name="psj.content.Institutes" />
+      <psj:external-vocab path="/srv/plone/pp2-buildout/zinstance/src/psj.content/etc/sample-institutes.csv" name="psj.content.Institutes" />
     </configure>
 
     <configure xmlns="http://namespaces.zope.org/zope"
                xmlns:psj="http://namespaces.zope.org/psj">
-      <psj:external-vocab path="/home/clamor/Instances/pp2-buildout/zinstance/src/psj.content/etc/sample-licenses.csv" name="psj.content.Licenses" />
+      <psj:external-vocab path="/srv/plone/pp2-buildout/zinstance/src/psj.content/etc/sample-licenses.csv" name="psj.content.Licenses" />
     </configure>
 
     <configure xmlns="http://namespaces.zope.org/zope"
                xmlns:psj="http://namespaces.zope.org/psj">
-      <psj:external-vocab path="/home/clamor/Instances/pp2-buildout/zinstance/src/psj.content/etc/sample-subjectgroups.csv" name="psj.content.Subjectgroup" />
+      <psj:external-vocab path="/srv/plone/pp2-buildout/zinstance/src/psj.content/etc/sample-subjectgroups.csv" name="psj.content.Subjectgroup" />
     </configure>
 
     <configure xmlns="http://namespaces.zope.org/zope"
                xmlns:psj="http://namespaces.zope.org/psj">
-      <psj:external-vocab path="/home/clamor/Instances/pp2-buildout/zinstance/src/psj.content/etc/sample-ddc-zeit.csv" name="psj.content.DDCZeit" />
+      <psj:external-vocab path="/srv/plone/pp2-buildout/zinstance/src/psj.content/etc/sample-ddc-zeit.csv" name="psj.content.DDCZeit" />
     </configure>
 
     <configure xmlns="http://namespaces.zope.org/zope"
                xmlns:psj="http://namespaces.zope.org/psj">
-      <psj:external-vocab path="/home/clamor/Instances/pp2-buildout/zinstance/src/psj.content/etc/sample-ddc-sach.csv" name="psj.content.DDCSach" />
+      <psj:external-vocab path="/srv/plone/pp2-buildout/zinstance/src/psj.content/etc/sample-ddc-sach.csv" name="psj.content.DDCSach" />
     </configure>
 
     <configure xmlns="http://namespaces.zope.org/zope"
                xmlns:psj="http://namespaces.zope.org/psj">
-      <psj:external-vocab path="/home/clamor/Instances/pp2-buildout/zinstance/src/psj.content/etc/sample-ddc-geo.csv" name="psj.content.DDCGeo" />
+      <psj:external-vocab path="/srv/plone/pp2-buildout/zinstance/src/psj.content/etc/sample-ddc-geo.csv" name="psj.content.DDCGeo" />
     </configure>
 
     <configure xmlns="http://namespaces.zope.org/zope"
                xmlns:psj="http://namespaces.zope.org/psj">
-      <psj:external-vocab path="/home/clamor/Instances/pp2-buildout/zinstance/src/psj.content/etc/sample-gnd-ids.csv" name="psj.content.GNDIds" />
+      <psj:external-vocab path="/srv/plone/pp2-buildout/zinstance/src/psj.content/etc/sample-gnd-ids.csv" name="psj.content.GNDIds" />
     </configure>
 
 </configure>

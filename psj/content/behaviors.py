@@ -24,13 +24,13 @@ from plone.app.dexterity.behaviors.metadata import DCFieldProperty
 from plone.dexterity.interfaces import IDexterityContent
 from plone.directives.form import (
     Schema, fieldset, IFormFieldProvider, mode, primary)
-from plone.formwidget.contenttree import ObjPathSourceBinder
+from plone.formwidget.contenttree import ObjPathSourceBinder, UUIDSourceBinder
 from plone.namedfile.field import NamedBlobFile as NamedBlobFileField
 from plone.namedfile.file import NamedBlobFile
 from Products.CMFCore.utils import getToolByName
 from z3c.relationfield.schema import RelationChoice, RelationList
 from zope.component import adapts, queryUtility
-from zope.interface import implements, alsoProvides
+from zope.interface import implements, alsoProvides, Interface
 from zope.lifecycleevent.interfaces import IObjectCreatedEvent
 from zope.schema import TextLine, Text, Choice, List
 from psj.content import _
@@ -41,6 +41,11 @@ from psj.content.sources import (
     )
 from psj.content.sources import institutes_source, licenses_source
 from plone.app.textfield import RichText
+
+
+from plone.formwidget.contenttree import ContentTreeFieldWidget
+from plone.autoform import directives as form
+from plone.supermodel import model
 
 class PSJMetadataBase(object):
     """An adapter storing metadata directly on an object using the
@@ -156,7 +161,7 @@ class IPSJContributors(IPSJBehavior):
             title=_(
                 u'Wählen Sie einen Personensatz aus Relation '
                 u'zum Contenttype FSDPerson (Person)'),
-            source=ObjPathSourceBinder(portal_type='FSDPerson')),
+            source=ObjPathSourceBinder()),
         )
 
 
@@ -433,7 +438,7 @@ class IPSJSubjectIndexing(IPSJBehavior):
 alsoProvides(IPSJSubjectIndexing, IFormFieldProvider)
 
 
-class IPSJRelatedContent(IPSJBehavior):
+class IPSJRelatedContent(model.Schema):
     """Some related document.
     """
     fieldset(
@@ -442,14 +447,16 @@ class IPSJRelatedContent(IPSJBehavior):
         fields=('psj_media', 'psj_primary_source'),
         )
 
+    
     psj_media = RelationList(
         title=_(u'Media'),
         description=_(u'Link to folder with images or videos. '
                       u'Presented as tab'),
+        default=[],
         value_type=RelationChoice(
             title=_(
                 u'Wählen Sie einen Ordner '),
-            source=ObjPathSourceBinder(portal_type='Folder')),
+            source=ObjPathSourceBinder()),
         required=False,
         )
 
@@ -458,8 +465,6 @@ class IPSJRelatedContent(IPSJBehavior):
         description=_(u'Link to related source on other site.'),
         required=False,
         )
-
-
 alsoProvides(IPSJRelatedContent, IFormFieldProvider)
 
 
@@ -784,17 +789,19 @@ class PSJSubjectIndexing(PSJMetadataBase):
         return result
 
 
-class PSJRelatedContent(PSJMetadataBase):
-    """A behavior providing fields for related content.
-    """
-    implements(IPSJRelatedContent)
-
-    psj_media = DCFieldProperty(
-        IPSJRelatedContent['psj_media'],
-        get_name='psj_media'
-        )
-
-    psj_primary_source = DCFieldProperty(
-        IPSJRelatedContent['psj_primary_source'],
-        get_name='psj_primary_source'
-        )
+# class PSJRelatedContent(PSJMetadataBase):
+#     """A behavior providing fields for related content.
+#     """
+#     implements(IPSJRelatedContent)
+# 
+#     psj_media = DCFieldProperty(
+#         IPSJRelatedContent['psj_media'],
+#         get_name='psj_media'
+#         )
+# 
+#     psj_primary_source = DCFieldProperty(
+#         IPSJRelatedContent['psj_primary_source'],
+#         get_name='psj_primary_source'
+#         )
+# 
+#     directives.widget('psj_media', ContentTreeFieldWidget)
