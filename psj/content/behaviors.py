@@ -243,6 +243,12 @@ class IPSJBaseData(IPSJBehavior):
         required=False,
         )
 
+    psj_urn = TextLine(
+        title=_(u'URN'),
+        description=_(u'Unfiform Resource Name'),
+        required=False,
+        )
+
 alsoProvides(IPSJBaseData, IFormFieldProvider)
 
 
@@ -555,7 +561,7 @@ class PSJContributors(PSJMetadataBase):
 
 class PSJBaseData(PSJMetadataBase):
     """A behavior providing base metadata
-'psj_author', 'psj_author_relation', 'psj_title', 'psj_subtitle', 'psj_institute', 'psj_license', 'psj_abstract', 'psj_doi'.
+'psj_author', 'psj_author_relation', 'psj_title', 'psj_subtitle', 'psj_institute', 'psj_license', 'psj_abstract', 'psj_doi', 'psj_urn'.
     """
     implements(IPSJBaseData)
 
@@ -597,6 +603,11 @@ class PSJBaseData(PSJMetadataBase):
     psj_doi = DCFieldProperty(
         IPSJBaseData['psj_doi'],
         get_name='psj_doi'
+        )
+
+    psj_urn = DCFieldProperty(
+        IPSJBaseData['psj_urn'],
+        get_name='psj_urn'
         )
 
 
