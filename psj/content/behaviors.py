@@ -71,6 +71,24 @@ class IPSJBehavior(Schema):
     """A behavior supporting PSJ content types.
     """
 
+class IPSJMetisCounter(IPSJBehavior):
+    """PSJ Metis Counter.
+    """
+    fieldset(
+        'psj_stats',
+        label=_(u'PSJ Stats'),
+        fields=('psj_metiscounter',),
+        )
+
+    psj_metiscounter = TextLine(
+        title=_(u'Metis Counter'),
+        description=_(u'URL zum Zählpixel der VG Wort'),
+        required=False,
+        )
+
+alsoProvides(IPSJMetisCounter, IFormFieldProvider)
+
+
 
 class IPSJAuthor(IPSJBehavior):
     """A document author.
@@ -174,7 +192,7 @@ class IPSJBaseData(IPSJBehavior):
     fieldset(
         'psj_metadata',
         label=_(u'PSJ Metadata'),
-        fields=('psj_author', 'psj_author_relation', 'psj_title', 'psj_subtitle', 'psj_institute', 'psj_license', 'psj_abstract', 'psj_doi'),
+        fields=('psj_author', 'psj_author_relation', 'psj_title', 'psj_subtitle', 'psj_institute', 'psj_license', 'psj_abstract', 'psj_doi', 'psj_urn'),
         )
 
     psj_author = List(
@@ -199,7 +217,7 @@ class IPSJBaseData(IPSJBehavior):
     psj_title = TextLine(
         title=_(u'Titel'),
         description=_(u'Titel der Publikation'),
-        required=True,
+        required=False,
         )
 
     psj_subtitle = TextLine(
@@ -502,6 +520,17 @@ class IPSJOfficeDocTransformer(IPSJBehavior):
 
 
 alsoProvides(IPSJOfficeDocTransformer, IFormFieldProvider)
+
+
+class PSJMetisCounter(PSJMetadataBase):
+    """A behaviour allowing to set the Metis pixel URL of a PSJ document.
+    """
+    implements(IPSJMetisCounter)
+
+    psj_metiscounter = DCFieldProperty(
+        IPSJMetisCounter['psj_metiscounter'],
+        get_name='psj_metiscounter'
+        )
 
 
 class PSJAuthor(PSJMetadataBase):

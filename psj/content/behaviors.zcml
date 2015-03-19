@@ -11,6 +11,13 @@
     <include package="plone.directives.form" />
 
     <plone:behavior
+        title="Metis counter"
+        description="URL for Metis counter"
+        provides=".behaviors.IPSJMetisCounter"
+        factory=".behaviors.PSJMetisCounter"
+        />
+
+    <plone:behavior
         title="Author"
         description="Name of Document Author"
         provides=".behaviors.IPSJAuthor"
