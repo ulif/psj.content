@@ -294,7 +294,7 @@ class IPSJAddRetro(IPSJBehavior):
     fieldset(
         'psj_metadata',
         label=_(u'PSJ Metadata'),
-        fields=('psj_link_bsb', 'psj_page_start', 'psj_page_end', 'psj_ocr_text', 'psj_file'),
+        fields=('psj_link_bsb', 'psj_pages', 'psj_ocr_text', 'psj_file'),
         )
 
     psj_link_bsb = TextLine(
@@ -303,15 +303,9 @@ class IPSJAddRetro(IPSJBehavior):
         required=False,
         )
 
-    psj_page_start = TextLine(
-        title=_(u'Seite Anfang'),
-        description=_(u'Startseite in der Publikation'),
-        required=False,
-        )
-
-    psj_page_end = TextLine(
-        title=_(u'Seite Ende'),
-        description=_(u'Endseite in der Publikation'),
+    psj_pages = TextLine(
+        title=_(u'Seiten'),
+        description=_(u'Seiten in der Publikation'),
         required=False,
         )
 
@@ -690,14 +684,9 @@ class PSJAddRetro(PSJMetadataBase):
         get_name='psj_link_bsb'
         )
 
-    psj_page_start = DCFieldProperty(
-        IPSJAddRetro['psj_page_start'],
-        get_name='psj_page_start'
-        )
-
-    psj_page_end = DCFieldProperty(
-        IPSJAddRetro['psj_page_end'],
-        get_name='psj_page_end'
+    psj_pages = DCFieldProperty(
+        IPSJAddRetro['psj_pages'],
+        get_name='psj_pages'
         )
 
     psj_ocr_text = DCFieldProperty(
