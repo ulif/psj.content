@@ -11,6 +11,13 @@
     <include package="plone.directives.form" />
 
     <plone:behavior
+        title="Content language"
+        description="PSJ content language"
+        provides=".behaviors.IPSJContentLanguage"
+        factory=".behaviors.PSJContentLanguage"
+        />
+
+    <plone:behavior
         title="Metis counter"
         description="URL for Metis counter"
         provides=".behaviors.IPSJMetisCounter"

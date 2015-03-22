@@ -71,6 +71,24 @@ class IPSJBehavior(Schema):
     """A behavior supporting PSJ content types.
     """
 
+class IPSJContentLanguage(IPSJBehavior):
+    """PSJ Metis Counter.
+    """
+    fieldset(
+        'psj_content_language',
+        label=_(u'PSJ content language'),
+        fields=('psj_language',),
+        )
+
+    psj_language = List(
+        title=_(u'Language'),
+        description=_(u'PSJ content language'),
+        required=False,
+        )
+
+alsoProvides(IPSJContentLanguage, IFormFieldProvider)
+
+
 class IPSJMetisCounter(IPSJBehavior):
     """PSJ Metis Counter.
     """
@@ -520,6 +538,16 @@ class IPSJOfficeDocTransformer(IPSJBehavior):
 
 
 alsoProvides(IPSJOfficeDocTransformer, IFormFieldProvider)
+
+class PSJContentLanguage(PSJMetadataBase):
+    """A special language field for PSJ content
+    """
+    implements(IPSJContentLanguage)
+
+    psj_language = DCFieldProperty(
+        IPSJContentLanguage['psj_language'],
+        get_name='psj_language'
+        )
 
 
 class PSJMetisCounter(PSJMetadataBase):
