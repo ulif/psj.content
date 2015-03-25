@@ -232,6 +232,13 @@ class IPSJBaseData(IPSJBehavior):
             source=ObjPathSourceBinder(portal_type='FSDPerson')),
         )
 
+    psj_author_list = List(
+        title=_(u'Autor'),
+        description=_(u'Autor(en) oder Herausgeber.'),
+        required=False,
+        value_type=TextLine(),
+        )
+
     psj_title = TextLine(
         title=_(u'Titel'),
         description=_(u'Titel der Publikation'),
@@ -624,7 +631,7 @@ class PSJContributors(PSJMetadataBase):
 
 class PSJBaseData(PSJMetadataBase):
     """A behavior providing base metadata
-'psj_author', 'psj_author_relation', 'psj_title', 'psj_subtitle', 'psj_institute', 'psj_license', 'psj_abstract', 'psj_doi', 'psj_urn'.
+'psj_author', 'psj_author_relation', 'psj_author_list', 'psj_title', 'psj_subtitle', 'psj_institute', 'psj_license', 'psj_abstract', 'psj_doi', 'psj_urn'.
     """
     implements(IPSJBaseData)
 
@@ -636,6 +643,11 @@ class PSJBaseData(PSJMetadataBase):
     psj_author_relation = DCFieldProperty(
         IPSJBaseData['psj_author_relation'],
         get_name='psj_author_relation'
+        )
+
+    psj_author_list = DCFieldProperty(
+        IPSJBaseData['psj_author_list'],
+        get_name='psj_author_list'
         )
 
     psj_title = DCFieldProperty(
