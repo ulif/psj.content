@@ -210,7 +210,7 @@ class IPSJBaseData(IPSJBehavior):
     fieldset(
         'psj_metadata',
         label=_(u'PSJ Metadata'),
-        fields=('psj_author', 'psj_author_relation', 'psj_title', 'psj_subtitle', 'psj_institute', 'psj_license', 'psj_abstract', 'psj_doi', 'psj_urn'),
+        fields=('psj_author', 'psj_author_relation', 'psj_author_list', 'psj_title', 'psj_subtitle', 'psj_institute', 'psj_license', 'psj_abstract', 'psj_doi', 'psj_urn'),
         )
 
     psj_author = List(
