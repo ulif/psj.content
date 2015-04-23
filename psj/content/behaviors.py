@@ -47,6 +47,9 @@ from plone.formwidget.contenttree import ContentTreeFieldWidget
 from plone.autoform import directives as form
 from plone.supermodel import model
 
+from plone.formwidget.autocomplete import AutocompleteMultiFieldWidget
+
+
 class PSJMetadataBase(object):
     """An adapter storing metadata directly on an object using the
     standard CMF DefaultDublinCoreImpl getters and setters.
@@ -221,15 +224,16 @@ class IPSJBaseData(IPSJBehavior):
         value_type=TextLine(),
         )
 
-    psj_author_relation = RelationList(
+    form.widget(psj_author_relation=AutocompleteMultiFieldWidget)
+    psj_author_relation = List(
         title=_(u'Autor Relation'),
         description=_(u'Autor oder Herausgeber. '),
         required=False,
-        value_type=RelationChoice(
+        value_type=Choice(
             title=_(
                 u'Wählen Sie einen Personensatz aus Relation '
                 u'zum Contenttype FSDPerson (Person)'),
-            source=ObjPathSourceBinder(portal_type='FSDPerson')),
+            vocabulary="plone.principalsource.Users"),
         )
 
     psj_author_list = List(
