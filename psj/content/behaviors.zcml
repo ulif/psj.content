@@ -11,10 +11,24 @@
     <include package="plone.directives.form" />
 
     <plone:behavior
-        title="Content language"
-        description="PSJ content language"
-        provides=".behaviors.IPSJContentLanguage"
-        factory=".behaviors.PSJContentLanguage"
+        title="Publication Year"
+        description="PSJ Publication Year"
+        provides=".behaviors.IPSJPublicationYear"
+        factory=".behaviors.PSJPublicationYear"
+        />
+
+    <plone:behavior
+        title="Doc Level Base Data"
+        description="PSJ Doc Level Base Data"
+        provides=".behaviors.IPSJBaseDataDocLevel"
+        factory=".behaviors.PSJBaseDataDocLevel"
+        />
+
+    <plone:behavior
+        title="Context Base Data"
+        description="PSJ Context Base Data"
+        provides=".behaviors.IPSJBaseDataContext"
+        factory=".behaviors.PSJBaseDataContext"
         />
 
     <plone:behavior

@@ -74,23 +74,6 @@ class IPSJBehavior(Schema):
     """A behavior supporting PSJ content types.
     """
 
-class IPSJContentLanguage(IPSJBehavior):
-    """PSJ Metis Counter.
-    """
-    fieldset(
-        'psj_content_language',
-        label=_(u'PSJ content language'),
-        fields=('psj_language',),
-        )
-
-    psj_language = List(
-        title=_(u'Language'),
-        description=_(u'PSJ content language'),
-        required=False,
-        )
-
-alsoProvides(IPSJContentLanguage, IFormFieldProvider)
-
 
 class IPSJMetisCounter(IPSJBehavior):
     """PSJ Metis Counter.
@@ -213,7 +196,7 @@ class IPSJBaseData(IPSJBehavior):
     fieldset(
         'psj_metadata',
         label=_(u'PSJ Metadata'),
-        fields=('psj_author', 'psj_author_relation', 'psj_author_list', 'psj_title', 'psj_subtitle', 'psj_institute', 'psj_license', 'psj_abstract', 'psj_doi', 'psj_urn'),
+        fields=('psj_author', 'psj_author_relation', 'psj_author_list', 'psj_title', 'psj_subtitle', 'psj_doi', 'psj_urn'),
         )
 
     psj_author = List(
@@ -255,35 +238,6 @@ class IPSJBaseData(IPSJBehavior):
         required=False,
         )
 
-    psj_institute = List(
-        title=_(u'Institution'),
-        description=_(u'Wählen Sie eine Institution aus'),
-        value_type=Choice(
-            title=_(u'Institution'),
-            description=_(u'Institution'),
-            source=institutes_source,
-            required=False,
-            ),
-        required=False,
-        )
-
-    psj_license = Choice(
-            title=_(u'Lizenz'),
-            description=_(u'Wählen Sie eine Lizenz aus'),
-            source=licenses_source,
-            required=False,
-        )
-
-    psj_abstract = RichText(
-        title=_(u'Abstract'),
-        description=_(u'Inhaltliche Zusammenfassung'),
-        default_mime_type="text/html",
-        output_mime_type="text/html",
-        allowed_mime_types=('text/structured', 'text/plain', 'text/html'),
-        default=u'',
-        required=False,
-        )
-
     psj_doi = TextLine(
         title=_(u'DOI'),
         description=_(u'Digital Object Identifier'),
@@ -298,6 +252,63 @@ class IPSJBaseData(IPSJBehavior):
 
 alsoProvides(IPSJBaseData, IFormFieldProvider)
 
+class IPSJBaseDataContext(IPSJBehavior):
+    """Document base metadata, including authorname, title, etc.
+    """
+    fieldset(
+        'psj_metadata',
+        label=_(u'PSJ Metadata'),
+        fields=('psj_institute',),
+        )
+
+    psj_institute = List(
+        title=_(u'Institution'),
+        description=_(u'Wählen Sie eine Institution aus'),
+        value_type=Choice(
+            title=_(u'Institution'),
+            description=_(u'Institution'),
+            source=institutes_source,
+            required=False,
+            ),
+        required=False,
+        )
+
+alsoProvides(IPSJBaseDataContext, IFormFieldProvider)
+
+class IPSJBaseDataDocLevel(IPSJBehavior):
+    """Document base metadata, including authorname, title, etc.
+    """
+    fieldset(
+        'psj_metadata',
+        label=_(u'PSJ Metadata'),
+        fields=('psj_abstract', 'psj_language', 'psj_license'),
+        )
+
+    psj_abstract = RichText(
+        title=_(u'Abstract'),
+        description=_(u'Inhaltliche Zusammenfassung'),
+        default_mime_type="text/html",
+        output_mime_type="text/html",
+        allowed_mime_types=('text/structured', 'text/plain', 'text/html'),
+        default=u'',
+        required=False,
+        )
+
+    psj_language = List(
+        title=_(u'Language'),
+        description=_(u'PSJ content language'),
+        value_type=TextLine(),
+        required=False,
+        )
+
+    psj_license = Choice(
+            title=_(u'Lizenz'),
+            description=_(u'Wählen Sie eine Lizenz aus'),
+            source=licenses_source,
+            required=False,
+        )
+
+alsoProvides(IPSJBaseDataDocLevel, IFormFieldProvider)
 
 class IPSJAddRetro(IPSJBehavior):
     """Technical metadata for retro articles and postprints.
@@ -342,6 +353,12 @@ alsoProvides(IPSJAddRetro, IFormFieldProvider)
 class IPSJPartOf(IPSJBehavior):
     """The meta data fields used to describe things being parts of others.
     """
+    fieldset(
+        'psj_metadata',
+        label=_(u'PSJ Metadata'),
+        fields=('psj_series', 'psj_volume'),
+        )
+
     psj_series = TextLine(
         title=_(u'Reihe'),
         description=_(u'Reihentitel'),
@@ -357,6 +374,23 @@ class IPSJPartOf(IPSJBehavior):
 
 alsoProvides(IPSJPartOf, IFormFieldProvider)
 
+class IPSJPublicationYear(IPSJBehavior):
+    """The meta data fields to describe an edition.
+    """
+    fieldset(
+        'psj_metadata',
+        label=_(u'PSJ Metadata'),
+        fields=('psj_publication_year',),
+        )
+
+    psj_publication_year = TextLine(
+        title=_(u'Erscheinungsjahr'),
+        description=u'Erscheinungsjahr',
+        required=False,
+        )
+
+alsoProvides(IPSJPublicationYear, IFormFieldProvider)
+
 
 class IPSJEdition(IPSJBehavior):
     """The meta data fields to describe an edition.
@@ -364,7 +398,7 @@ class IPSJEdition(IPSJBehavior):
     fieldset(
         'psj_metadata',
         label=_(u'PSJ Metadata'),
-        fields=('psj_publisher', 'psj_isbn_issn', 'psj_publication_year'),
+        fields=('psj_publisher', 'psj_isbn_issn'),
         )
 
     psj_publisher = Choice(
@@ -376,12 +410,6 @@ class IPSJEdition(IPSJBehavior):
 
     psj_isbn_issn = TextLine(
         title=_(u'ISBN/ISSN'),
-        description=u'',
-        required=False,
-        )
-
-    psj_publication_year = TextLine(
-        title=_(u'Erscheinungsjahr'),
         description=u'',
         required=False,
         )
@@ -556,17 +584,6 @@ class IPSJOfficeDocTransformer(IPSJBehavior):
 
 alsoProvides(IPSJOfficeDocTransformer, IFormFieldProvider)
 
-class PSJContentLanguage(PSJMetadataBase):
-    """A special language field for PSJ content
-    """
-    implements(IPSJContentLanguage)
-
-    psj_language = DCFieldProperty(
-        IPSJContentLanguage['psj_language'],
-        get_name='psj_language'
-        )
-
-
 class PSJMetisCounter(PSJMetadataBase):
     """A behaviour allowing to set the Metis pixel URL of a PSJ document.
     """
@@ -632,10 +649,42 @@ class PSJContributors(PSJMetadataBase):
         get_name='psj_contributors'
         )
 
+class PSJBaseDataContext(PSJMetadataBase):
+    """A behavior providing base metadata
+    'psj_institute'
+    """
+    implements(IPSJBaseDataContext)
+
+    psj_institute = DCFieldProperty(
+        IPSJBaseDataContext['psj_institute'],
+        get_name='psj_institute'
+        )
+
+class PSJBaseDataDocLevel(PSJMetadataBase):
+    """A behavior providing base metadata
+    'psj_abstract', 'psj_language', 'psj_license'
+    """
+    implements(IPSJBaseDataDocLevel)
+
+    psj_abstract = DCFieldProperty(
+        IPSJBaseDataDocLevel['psj_abstract'],
+        get_name='psj_abstract'
+        )
+
+    psj_language = DCFieldProperty(
+        IPSJBaseDataDocLevel['psj_language'],
+        get_name='psj_language'
+        )
+
+    psj_license = DCFieldProperty(
+        IPSJBaseDataDocLevel['psj_license'],
+        get_name='psj_license'
+        )
+
 
 class PSJBaseData(PSJMetadataBase):
     """A behavior providing base metadata
-'psj_author', 'psj_author_relation', 'psj_author_list', 'psj_title', 'psj_subtitle', 'psj_institute', 'psj_license', 'psj_abstract', 'psj_doi', 'psj_urn'.
+'psj_author', 'psj_author_relation', 'psj_author_list', 'psj_title', 'psj_subtitle','psj_doi', 'psj_urn'.
     """
     implements(IPSJBaseData)
 
@@ -662,21 +711,6 @@ class PSJBaseData(PSJMetadataBase):
     psj_subtitle = DCFieldProperty(
         IPSJBaseData['psj_subtitle'],
         get_name='psj_subtitle'
-        )
-
-    psj_institute = DCFieldProperty(
-        IPSJBaseData['psj_institute'],
-        get_name='psj_institute'
-        )
-
-    psj_license = DCFieldProperty(
-        IPSJBaseData['psj_license'],
-        get_name='psj_license'
-        )
-
-    psj_abstract = DCFieldProperty(
-        IPSJBaseData['psj_abstract'],
-        get_name='psj_abstract'
         )
 
     psj_doi = DCFieldProperty(
@@ -747,8 +781,13 @@ class PSJEdition(PSJMetadataBase):
         get_name='psj_isbn_issn'
         )
 
+class PSJPublicationYear(PSJMetadataBase):
+    """A behavior providing fields for edited documents.
+    """
+    implements(IPSJPublicationYear)
+
     psj_publication_year = DCFieldProperty(
-        IPSJEdition['psj_publication_year'],
+        IPSJPublicationYear['psj_publication_year'],
         get_name='psj_publication_year'
         )
 
