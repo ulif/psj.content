@@ -48,7 +48,7 @@ from plone.autoform import directives as form
 from plone.supermodel import model
 
 from plone.formwidget.autocomplete import AutocompleteMultiFieldWidget
-
+from z3c.form.browser.orderedselect import OrderedSelectFieldWidget
 
 class PSJMetadataBase(object):
     """An adapter storing metadata directly on an object using the
@@ -260,7 +260,7 @@ class IPSJBaseDataContext(IPSJBehavior):
         label=_(u'PSJ Metadata'),
         fields=('psj_institute',),
         )
-
+    form.widget(psj_institute=OrderedSelectFieldWidget)
     psj_institute = List(
         title=_(u'Institution'),
         description=_(u'Wählen Sie eine Institution aus'),
