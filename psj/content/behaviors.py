@@ -31,7 +31,7 @@ from Products.CMFCore.utils import getToolByName
 from z3c.relationfield.schema import RelationChoice, RelationList
 from zope.component import adapts, queryUtility
 from zope.interface import implements, alsoProvides, Interface
-from zope.lifecycleevent.interfaces import IObjectCreatedEvent
+from zope.lifecycleevent.interfaces import IObjectCreatedEvent, IObjectModifiedEvent
 from zope.schema import TextLine, Text, Choice, List
 from psj.content import _
 from psj.content.interfaces import IRedisStoreConfig
@@ -808,7 +808,7 @@ class PSJOfficeDocTransformer(PSJMetadataBase):
         )
 
 
-@grok.subscribe(IPSJOfficeDocTransformer, IObjectCreatedEvent)
+@grok.subscribe(IPSJOfficeDocTransformer, IObjectModifiedEvent)
 def create_representations(transformer, event):
     """Event handler for freshly created IPSJOfficeDocTransforms.
 
@@ -829,7 +829,7 @@ def create_representations(transformer, event):
     transformer.psj_pdf_repr = NamedBlobFile(
         data=out_data.getData(), filename=new_filename)
 
-@grok.subscribe(IPSJOfficeDocTransformer, IObjectCreatedEvent)
+@grok.subscribe(IPSJOfficeDocTransformer, IObjectModifiedEvent)
 def psj_create_html(transformer, event):
     """Create an HTML representation of `in_data`.
 
