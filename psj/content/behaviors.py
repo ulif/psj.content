@@ -903,6 +903,11 @@ class PSJSubjectIndexing(PSJMetadataBase):
         get_name='psj_free_keywords',
         )
 
+    psj_sw_zeit = DCFieldProperty(
+        IPSJSubjectIndexing['psj_sw_zeit'],
+        get_name='psj_sw_zeit',
+        )
+
     @property
     def psj_gnd_terms(self):
         if not hasattr(self, 'psj_gnd_id'):
