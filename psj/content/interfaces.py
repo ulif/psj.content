@@ -22,6 +22,11 @@
 from zope.configuration.fields import Path
 from zope.interface import Interface
 from zope.schema import TextLine, ASCIILine, Int
+from z3c.relationfield.interfaces import IHasRelations
+
+
+class IDexterityHasRelations(IHasRelations):
+    """ """
 
 
 class IExternalVocabConfig(Interface):
