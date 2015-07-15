@@ -401,10 +401,9 @@ class IPSJEdition(IPSJBehavior):
         fields=('psj_publisher', 'psj_isbn_issn'),
         )
 
-    psj_publisher = Choice(
+    psj_publisher = TextLine(
         title=_(u'Verlag'),
         description=u'',
-        source=publishers_source,
         required=False,
         )
 
