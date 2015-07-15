@@ -926,21 +926,3 @@ class PSJSubjectIndexing(PSJMetadataBase):
                 # id not in store.
                 result.append(elem)
         return result
-
-
-# class PSJRelatedContent(PSJMetadataBase):
-#     """A behavior providing fields for related content.
-#     """
-#     implements(IPSJRelatedContent)
-# 
-#     psj_media = DCFieldProperty(
-#         IPSJRelatedContent['psj_media'],
-#         get_name='psj_media'
-#         )
-# 
-#     psj_primary_source = DCFieldProperty(
-#         IPSJRelatedContent['psj_primary_source'],
-#         get_name='psj_primary_source'
-#         )
-# 
-#     directives.widget('psj_media', ContentTreeFieldWidget)
