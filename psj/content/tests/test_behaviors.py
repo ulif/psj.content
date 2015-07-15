@@ -265,7 +265,3 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
         behavior.psj_gnd_id = [u'foo', u'baz']
         self.setup_redis_store()
         self.assertEqual(behavior.psj_gnd_terms, [u'bar', u'baz'])
-
-    def test_relatedcontent_behavior_usable(self):
-        self.text_behavior_usable(b'psj_media', IPSJRelatedContent)
-        self.text_behavior_usable(b'psj_primary_source', IPSJRelatedContent)
