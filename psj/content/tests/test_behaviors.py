@@ -236,7 +236,6 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
     def test_edition_behavior_usable(self):
         self.choice_behavior_usable(b'psj_publisher', IPSJEdition)
         self.text_behavior_usable(b'psj_isbn_issn', IPSJEdition)
-        self.text_behavior_usable(b'psj_publication_year', IPSJEdition)
 
     def test_subject_indexing_behavior_installed(self):
         self.behavior_installed('IPSJSubjectIndexing', IPSJSubjectIndexing)
