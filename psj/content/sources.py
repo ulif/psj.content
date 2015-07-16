@@ -133,7 +133,7 @@ class RedisKeysSource(RedisSource):
         return SimpleTerm(
             result.value, token=result.token, title=result.value)
 
-
+language_source = ExternalVocabBinder(u'psj.content.Languages')
 institutes_source = ExternalVocabBinder(u'psj.content.Institutes')
 licenses_source = ExternalVocabBinder(u'psj.content.Licenses')
 publishers_source = ExternalVocabBinder(u'psj.content.Publishers')

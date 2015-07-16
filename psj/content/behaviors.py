@@ -37,7 +37,7 @@ from psj.content import _
 from psj.content.interfaces import IRedisStoreConfig
 from psj.content.sources import (
     publishers_source, subjectgroup_source, ddcgeo_source, ddcsach_source,
-    ddczeit_source, RedisSource,
+    ddczeit_source, RedisSource, language_source
     )
 from psj.content.sources import institutes_source, licenses_source
 from plone.app.textfield import RichText
@@ -297,7 +297,12 @@ class IPSJBaseDataDocLevel(IPSJBehavior):
     psj_language = List(
         title=_(u'Language'),
         description=_(u'PSJ content language'),
-        value_type=TextLine(),
+        value_type=Choice(
+            title=_(u'PSJ content language'),
+            description=_(u''),
+            source=language_source,
+            required=False,
+            ),
         required=False,
         )
 
