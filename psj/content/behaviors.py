@@ -46,6 +46,8 @@ from plone.app.textfield import RichText
 from plone.formwidget.contenttree import ContentTreeFieldWidget
 from plone.autoform import directives as form
 from plone.supermodel import model
+from z3c.form.interfaces import IEditForm
+
 
 from plone.formwidget.autocomplete import AutocompleteMultiFieldWidget
 from z3c.form.browser.orderedselect import OrderedSelectFieldWidget
@@ -156,7 +158,7 @@ class IPSJAbstract(IPSJBehavior):
         label=_(u'PSJ Metadata'),
         fields=('psj_abstract',),
         )
-
+    
     psj_abstract = Text(
         title=_(u'Abstract'),
         description=_(u'Document Abstract'),
@@ -336,6 +338,8 @@ class IPSJAddRetro(IPSJBehavior):
         required=False,
         )
 
+    form.omitted('psj_ocr_text')
+    form.no_omit(IEditForm, 'psj_ocr_text')
     psj_ocr_text = Text(
         title=_(u'OCR Text'),
         description=_(u''),
