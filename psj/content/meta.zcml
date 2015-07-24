@@ -30,6 +30,11 @@
 
     <configure xmlns="http://namespaces.zope.org/zope"
                xmlns:psj="http://namespaces.zope.org/psj">
+      <psj:external-vocab path="../../etc/sample-languages.csv" name="psj.content.Languages" />
+    </configure>
+
+    <configure xmlns="http://namespaces.zope.org/zope"
+               xmlns:psj="http://namespaces.zope.org/psj">
       <psj:external-vocab path="../../etc/sample-institutes.csv" name="psj.content.Institutes" />
     </configure>
 

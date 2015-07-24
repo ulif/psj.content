@@ -35,6 +35,7 @@ setup(name='psj.content',
           # -*- Extra requirements: -*-
           'Plone',
           'collective.autopermission',
+          'collective.dexteritytextindexer',
           'grokcore.component',
           'plone.app.dexterity [grok, relations]',
           'plone.app.referenceablebehavior',

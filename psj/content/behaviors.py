@@ -37,7 +37,7 @@ from psj.content import _
 from psj.content.interfaces import IRedisStoreConfig
 from psj.content.sources import (
     publishers_source, subjectgroup_source, ddcgeo_source, ddcsach_source,
-    ddczeit_source, RedisSource,
+    ddczeit_source, RedisSource, language_source
     )
 from psj.content.sources import institutes_source, licenses_source
 from plone.app.textfield import RichText
@@ -46,9 +46,13 @@ from plone.app.textfield import RichText
 from plone.formwidget.contenttree import ContentTreeFieldWidget
 from plone.autoform import directives as form
 from plone.supermodel import model
+from z3c.form.interfaces import IEditForm
+
 
 from plone.formwidget.autocomplete import AutocompleteMultiFieldWidget
 from z3c.form.browser.orderedselect import OrderedSelectFieldWidget
+
+from collective import dexteritytextindexer
 
 class PSJMetadataBase(object):
     """An adapter storing metadata directly on an object using the
@@ -156,7 +160,7 @@ class IPSJAbstract(IPSJBehavior):
         label=_(u'PSJ Metadata'),
         fields=('psj_abstract',),
         )
-
+    
     psj_abstract = Text(
         title=_(u'Abstract'),
         description=_(u'Document Abstract'),
@@ -199,6 +203,7 @@ class IPSJBaseData(IPSJBehavior):
         fields=('psj_author', 'psj_author_relation', 'psj_author_list', 'psj_title', 'psj_subtitle', 'psj_doi', 'psj_urn'),
         )
 
+    dexteritytextindexer.searchable('psj_author')
     psj_author = List(
         title=_(u'Autor'),
         description=_(u'Autor(en) oder Herausgeber.'),
@@ -226,24 +231,28 @@ class IPSJBaseData(IPSJBehavior):
         value_type=TextLine(),
         )
 
+    dexteritytextindexer.searchable('psj_title')
     psj_title = TextLine(
         title=_(u'Titel'),
         description=_(u'Titel der Publikation'),
         required=False,
         )
 
+    dexteritytextindexer.searchable('psj_subtitle')
     psj_subtitle = TextLine(
         title=_(u'Untertitel'),
         description=_(u'Untertitel der Publikation'),
         required=False,
         )
 
+    dexteritytextindexer.searchable('psj_doi')
     psj_doi = TextLine(
         title=_(u'DOI'),
         description=_(u'Digital Object Identifier'),
         required=False,
         )
 
+    dexteritytextindexer.searchable('psj_urn')
     psj_urn = TextLine(
         title=_(u'URN'),
         description=_(u'Unfiform Resource Name'),
@@ -260,6 +269,8 @@ class IPSJBaseDataContext(IPSJBehavior):
         label=_(u'PSJ Metadata'),
         fields=('psj_institute',),
         )
+
+    dexteritytextindexer.searchable('psj_institute')
     form.widget(psj_institute=OrderedSelectFieldWidget)
     psj_institute = List(
         title=_(u'Institution'),
@@ -284,6 +295,7 @@ class IPSJBaseDataDocLevel(IPSJBehavior):
         fields=('psj_abstract', 'psj_language', 'psj_license'),
         )
 
+    dexteritytextindexer.searchable('psj_abstract')
     psj_abstract = RichText(
         title=_(u'Abstract'),
         description=_(u'Inhaltliche Zusammenfassung'),
@@ -297,10 +309,16 @@ class IPSJBaseDataDocLevel(IPSJBehavior):
     psj_language = List(
         title=_(u'Language'),
         description=_(u'PSJ content language'),
-        value_type=TextLine(),
+        value_type=Choice(
+            title=_(u'PSJ content language'),
+            description=_(u''),
+            source=language_source,
+            required=False,
+            ),
         required=False,
         )
 
+    dexteritytextindexer.searchable('psj_license')
     psj_license = Choice(
             title=_(u'Lizenz'),
             description=_(u'Wählen Sie eine Lizenz aus'),
@@ -331,6 +349,9 @@ class IPSJAddRetro(IPSJBehavior):
         required=False,
         )
 
+    form.omitted('psj_ocr_text')
+    form.no_omit(IEditForm, 'psj_ocr_text')
+    dexteritytextindexer.searchable('psj_ocr_text')
     psj_ocr_text = Text(
         title=_(u'OCR Text'),
         description=_(u''),
@@ -359,12 +380,14 @@ class IPSJPartOf(IPSJBehavior):
         fields=('psj_series', 'psj_volume'),
         )
 
+    dexteritytextindexer.searchable('psj_series')
     psj_series = TextLine(
         title=_(u'Reihe'),
         description=_(u'Reihentitel'),
         required=False,
         )
 
+    dexteritytextindexer.searchable('psj_volume')
     psj_volume = TextLine(
         title=_(u'Band'),
         description=_(u'Band'),
@@ -383,6 +406,7 @@ class IPSJPublicationYear(IPSJBehavior):
         fields=('psj_publication_year',),
         )
 
+    dexteritytextindexer.searchable('psj_publication_year')
     psj_publication_year = TextLine(
         title=_(u'Erscheinungsjahr'),
         description=u'Erscheinungsjahr',
@@ -401,12 +425,14 @@ class IPSJEdition(IPSJBehavior):
         fields=('psj_publisher', 'psj_isbn_issn'),
         )
 
+    dexteritytextindexer.searchable('psj_publisher')
     psj_publisher = TextLine(
         title=_(u'Verlag'),
         description=u'',
         required=False,
         )
 
+    dexteritytextindexer.searchable('psj_isbn_issn')
     psj_isbn_issn = TextLine(
         title=_(u'ISBN/ISSN'),
         description=u'',
@@ -434,6 +460,7 @@ class IPSJSubjectIndexing(IPSJBehavior):
                 ),
         )
 
+    dexteritytextindexer.searchable('psj_subject_group')
     psj_subject_group = List(
         title=_(u'Epochenkategorie'),
         description=_(u''),
@@ -446,6 +473,7 @@ class IPSJSubjectIndexing(IPSJBehavior):
         required=False,
         )
 
+    dexteritytextindexer.searchable('psj_ddc_geo')
     psj_ddc_geo = List(
         title=_(u'Land/Region'),
         description=_(u''),
@@ -458,6 +486,7 @@ class IPSJSubjectIndexing(IPSJBehavior):
         required=False,
         )
 
+    dexteritytextindexer.searchable('psj_ddc_sach')
     psj_ddc_sach = List(
         title=_(u'Sach-Klassifikation'),
         description=_(u''),
@@ -470,6 +499,7 @@ class IPSJSubjectIndexing(IPSJBehavior):
         required=False,
         )
 
+    dexteritytextindexer.searchable('psj_ddc_zeit')
     psj_ddc_zeit = List(
         title=_(u'Epoche'),
         description=_(u''),
@@ -482,6 +512,7 @@ class IPSJSubjectIndexing(IPSJBehavior):
         required=False,
         )
 
+    dexteritytextindexer.searchable('psj_gnd_id')
     psj_gnd_id = List(
         title=_(u'Identnummern aus GND'),
         description=_(u''),
@@ -493,6 +524,7 @@ class IPSJSubjectIndexing(IPSJBehavior):
         required=False,
         )
 
+    dexteritytextindexer.searchable('psj_gnd_terms')
     psj_gnd_terms = List(
         title=_(u'GND Schlagwörter'),
         description=_(u''),
@@ -504,6 +536,7 @@ class IPSJSubjectIndexing(IPSJBehavior):
         readonly=True,
         )
 
+    dexteritytextindexer.searchable('psj_free_keywords')
     psj_free_keywords = List(
         title=_(u'Freie Schlagwörter'),
         description=_(u''),
@@ -514,6 +547,7 @@ class IPSJSubjectIndexing(IPSJBehavior):
         required=False,
         )
 
+    dexteritytextindexer.searchable('psj_sw_zeit')
     psj_sw_zeit = TextLine(
         title=_(u'Zeitschlagwort'),
         description=_(u''),
@@ -573,12 +607,22 @@ class IPSJOfficeDocTransformer(IPSJBehavior):
         required=True,
         )
 
+    dexteritytextindexer.searchable('psj_pdf_repr')
     psj_pdf_repr = NamedBlobFileField(
         title=_(u'PDF version'),
         description=_(u'The PDF representation of the source document.'),
         required=False,
         readonly=True,
         )
+
+
+    psj_html_repr = NamedBlobFileField(
+        title=_(u'HTML representation'),
+        description=_(u'The HTML representation of the source document.'),
+        required=False,
+        readonly=True,
+        )
+
 
 
 alsoProvides(IPSJOfficeDocTransformer, IFormFieldProvider)
