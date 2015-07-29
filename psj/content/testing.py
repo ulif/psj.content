@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-#  psj.content is copyright (c) 2014 Uli Fouquet
+#  psj.content is copyright (c) 2014, 2015 Uli Fouquet
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -53,7 +53,7 @@ class ExternalVocabSetup(object):
         gsm.registerUtility(conf, provided=IExternalVocabConfig, name=name)
 
     def create_external_vocab_from_choice(
-        self, iface, attr_name, is_list=False):
+            self, iface, attr_name, is_list=False):
         """Create an external vocab from a choice field.
         """
         choice = iface[attr_name]
