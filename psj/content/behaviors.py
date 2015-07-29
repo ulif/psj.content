@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#  psj.content is copyright (c) 2014 Uli Fouquet
+#  psj.content is copyright (c) 2014, 2015 Uli Fouquet
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
