@@ -19,15 +19,22 @@
 """Plone Behaviors for `psj.content`.
 
 """
+from collective import dexteritytextindexer
 from five import grok
 from plone.app.dexterity.behaviors.metadata import DCFieldProperty
+from plone.app.textfield import RichText
+from plone.autoform import directives as form
 from plone.dexterity.interfaces import IDexterityContent
 from plone.directives.form import (
     Schema, fieldset, IFormFieldProvider, mode, primary)
+from plone.formwidget.autocomplete import AutocompleteMultiFieldWidget
 from plone.formwidget.contenttree import ObjPathSourceBinder
 from plone.namedfile.field import NamedBlobFile as NamedBlobFileField
 from plone.namedfile.file import NamedBlobFile
+from plone.supermodel import model
 from Products.CMFCore.utils import getToolByName
+from z3c.form.browser.orderedselect import OrderedSelectFieldWidget
+from z3c.form.interfaces import IEditForm
 from z3c.relationfield.schema import RelationChoice, RelationList
 from zope.component import adapts, queryUtility
 from zope.interface import implements, alsoProvides
@@ -37,19 +44,9 @@ from psj.content import _
 from psj.content.interfaces import IRedisStoreConfig
 from psj.content.sources import (
     subjectgroup_source, ddcgeo_source, ddcsach_source,
-    ddczeit_source, RedisSource, language_source
-    )
-from psj.content.sources import institutes_source, licenses_source
-from plone.app.textfield import RichText
-
-from plone.autoform import directives as form
-from plone.supermodel import model
-from z3c.form.interfaces import IEditForm
-
-from plone.formwidget.autocomplete import AutocompleteMultiFieldWidget
-from z3c.form.browser.orderedselect import OrderedSelectFieldWidget
-
-from collective import dexteritytextindexer
+    ddczeit_source, RedisSource, language_source, institutes_source,
+    licenses_source
+)
 
 
 class PSJMetadataBase(object):
