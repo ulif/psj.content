@@ -31,7 +31,9 @@ from Products.CMFCore.utils import getToolByName
 from z3c.relationfield.schema import RelationChoice, RelationList
 from zope.component import adapts, queryUtility
 from zope.interface import implements, alsoProvides, Interface
-from zope.lifecycleevent.interfaces import IObjectCreatedEvent, IObjectModifiedEvent
+from zope.lifecycleevent.interfaces import (
+    IObjectCreatedEvent, IObjectModifiedEvent
+)
 from zope.schema import TextLine, Text, Choice, List
 from psj.content import _
 from psj.content.interfaces import IRedisStoreConfig
@@ -53,6 +55,7 @@ from plone.formwidget.autocomplete import AutocompleteMultiFieldWidget
 from z3c.form.browser.orderedselect import OrderedSelectFieldWidget
 
 from collective import dexteritytextindexer
+
 
 class PSJMetadataBase(object):
     """An adapter storing metadata directly on an object using the
@@ -95,7 +98,6 @@ class IPSJMetisCounter(IPSJBehavior):
         )
 
 alsoProvides(IPSJMetisCounter, IFormFieldProvider)
-
 
 
 class IPSJAuthor(IPSJBehavior):
@@ -160,7 +162,7 @@ class IPSJAbstract(IPSJBehavior):
         label=_(u'PSJ Metadata'),
         fields=('psj_abstract',),
         )
-    
+
     psj_abstract = Text(
         title=_(u'Abstract'),
         description=_(u'Document Abstract'),
@@ -200,7 +202,8 @@ class IPSJBaseData(IPSJBehavior):
     fieldset(
         'psj_metadata',
         label=_(u'PSJ Metadata'),
-        fields=('psj_author', 'psj_author_relation', 'psj_author_list', 'psj_title', 'psj_subtitle', 'psj_doi', 'psj_urn'),
+        fields=('psj_author', 'psj_author_relation', 'psj_author_list',
+                'psj_title', 'psj_subtitle', 'psj_doi', 'psj_urn'),
         )
 
     dexteritytextindexer.searchable('psj_author')
@@ -261,6 +264,7 @@ class IPSJBaseData(IPSJBehavior):
 
 alsoProvides(IPSJBaseData, IFormFieldProvider)
 
+
 class IPSJBaseDataContext(IPSJBehavior):
     """Document base metadata, including authorname, title, etc.
     """
@@ -285,6 +289,7 @@ class IPSJBaseDataContext(IPSJBehavior):
         )
 
 alsoProvides(IPSJBaseDataContext, IFormFieldProvider)
+
 
 class IPSJBaseDataDocLevel(IPSJBehavior):
     """Document base metadata, including authorname, title, etc.
@@ -320,13 +325,14 @@ class IPSJBaseDataDocLevel(IPSJBehavior):
 
     dexteritytextindexer.searchable('psj_license')
     psj_license = Choice(
-            title=_(u'Lizenz'),
-            description=_(u'Wählen Sie eine Lizenz aus'),
-            source=licenses_source,
-            required=False,
-        )
+        title=_(u'Lizenz'),
+        description=_(u'Wählen Sie eine Lizenz aus'),
+        source=licenses_source,
+        required=False,
+    )
 
 alsoProvides(IPSJBaseDataDocLevel, IFormFieldProvider)
+
 
 class IPSJAddRetro(IPSJBehavior):
     """Technical metadata for retro articles and postprints.
@@ -396,6 +402,7 @@ class IPSJPartOf(IPSJBehavior):
 
 
 alsoProvides(IPSJPartOf, IFormFieldProvider)
+
 
 class IPSJPublicationYear(IPSJBehavior):
     """The meta data fields to describe an edition.
@@ -567,7 +574,6 @@ class IPSJRelatedContent(model.Schema):
         fields=('psj_media', 'psj_primary_source'),
         )
 
-    
     psj_media = RelationList(
         title=_(u'Media'),
         description=_(u'Link to folder with images or videos. '
@@ -615,7 +621,6 @@ class IPSJOfficeDocTransformer(IPSJBehavior):
         readonly=True,
         )
 
-
     psj_html_repr = NamedBlobFileField(
         title=_(u'HTML representation'),
         description=_(u'The HTML representation of the source document.'),
@@ -624,8 +629,8 @@ class IPSJOfficeDocTransformer(IPSJBehavior):
         )
 
 
-
 alsoProvides(IPSJOfficeDocTransformer, IFormFieldProvider)
+
 
 class PSJMetisCounter(PSJMetadataBase):
     """A behaviour allowing to set the Metis pixel URL of a PSJ document.
@@ -692,6 +697,7 @@ class PSJContributors(PSJMetadataBase):
         get_name='psj_contributors'
         )
 
+
 class PSJBaseDataContext(PSJMetadataBase):
     """A behavior providing base metadata
     'psj_institute'
@@ -702,6 +708,7 @@ class PSJBaseDataContext(PSJMetadataBase):
         IPSJBaseDataContext['psj_institute'],
         get_name='psj_institute'
         )
+
 
 class PSJBaseDataDocLevel(PSJMetadataBase):
     """A behavior providing base metadata
@@ -727,7 +734,8 @@ class PSJBaseDataDocLevel(PSJMetadataBase):
 
 class PSJBaseData(PSJMetadataBase):
     """A behavior providing base metadata
-'psj_author', 'psj_author_relation', 'psj_author_list', 'psj_title', 'psj_subtitle','psj_doi', 'psj_urn'.
+    'psj_author', 'psj_author_relation', 'psj_author_list',
+    'psj_title', 'psj_subtitle','psj_doi', 'psj_urn'.
     """
     implements(IPSJBaseData)
 
@@ -793,6 +801,7 @@ class PSJAddRetro(PSJMetadataBase):
         get_name='psj_file'
         )
 
+
 class PSJPartOf(PSJMetadataBase):
     """A behavior providing fields for docs being part of others.
     """
@@ -823,6 +832,7 @@ class PSJEdition(PSJMetadataBase):
         IPSJEdition['psj_isbn_issn'],
         get_name='psj_isbn_issn'
         )
+
 
 class PSJPublicationYear(PSJMetadataBase):
     """A behavior providing fields for edited documents.
@@ -872,6 +882,7 @@ def create_representations(transformer, event):
     transformer.psj_pdf_repr = NamedBlobFile(
         data=out_data.getData(), filename=new_filename)
 
+
 @grok.subscribe(IPSJOfficeDocTransformer, IObjectModifiedEvent)
 def psj_create_html(transformer, event):
     """Create an HTML representation of `in_data`.
@@ -882,7 +893,7 @@ def psj_create_html(transformer, event):
     `transforms` are the portal transforms.
     """
     transforms = getToolByName(transformer, 'portal_transforms')
-    if transformer.psj_office_doc:    
+    if transformer.psj_office_doc:
         in_data = transformer.psj_office_doc.data
     else:
         return
