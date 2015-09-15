@@ -19,6 +19,8 @@
 """Plone Behaviors for `psj.content`.
 
 """
+
+import md5
 from five import grok
 from plone.app.dexterity.behaviors.metadata import DCFieldProperty
 from plone.dexterity.interfaces import IDexterityContent
@@ -31,8 +33,8 @@ from Products.CMFCore.utils import getToolByName
 from z3c.relationfield.schema import RelationChoice, RelationList
 from zope.component import adapts, queryUtility
 from zope.interface import implements, alsoProvides, Interface
-from zope.lifecycleevent.interfaces import IObjectCreatedEvent, IObjectModifiedEvent
-from zope.schema import TextLine, Text, Choice, List
+from zope.lifecycleevent.interfaces import IObjectAddedEvent, IObjectCreatedEvent, IObjectModifiedEvent
+from zope.schema import TextLine, Text, Choice, List, ASCIILine
 from psj.content import _
 from psj.content.interfaces import IRedisStoreConfig
 from psj.content.sources import (
@@ -597,7 +599,7 @@ class IPSJOfficeDocTransformer(IPSJBehavior):
     fieldset(
         'psj_docholder',
         label=_(u'Office Docs'),
-        fields=('psj_office_doc', 'psj_pdf_repr'),
+        fields=('psj_office_doc', 'psj_pdf_repr', 'psj_html_repr', 'psj_md5'),
         )
 
     primary('psj_office_doc')
@@ -623,7 +625,12 @@ class IPSJOfficeDocTransformer(IPSJBehavior):
         readonly=True,
         )
 
-
+    psj_md5 = ASCIILine(
+        title=_(u'MD5 of Source'),
+        description=_(u'The MD5 sum of the contained office doc.'),
+        required=False,
+        readonly=True,
+        )
 
 alsoProvides(IPSJOfficeDocTransformer, IFormFieldProvider)
 
@@ -850,30 +857,39 @@ class PSJOfficeDocTransformer(PSJMetadataBase):
         get_name='psj_pdf_repr',
         )
 
+    psj_html_repr = DCFieldProperty(
+        IPSJOfficeDocTransformer['psj_html_repr'],
+        get_name='psj_html_repr',
+        )
 
-@grok.subscribe(IPSJOfficeDocTransformer, IObjectModifiedEvent)
-def create_representations(transformer, event):
+def psj_create_reprs(self):
+    """Create PDF, HTML, etc. representations of source doc.
+    """
+    transforms = getToolByName(self, 'portal_transforms')
+    in_data = getattr(self.psj_office_doc, 'data', None)
+    filename = getattr(self.psj_office_doc, 'filename', 'unknown')
+    if in_data is not None:  # safety belt
+        psj_create_pdf(self, transforms)
+        psj_create_html(self, transforms)
+    return
+
+
+def psj_create_pdf(obj, transforms):
     """Event handler for freshly created IPSJOfficeDocTransforms.
 
     Creates PDF representation of uploaded office doc on creation.
     """
-    transforms = getToolByName(transformer, 'portal_transforms')
-    if transformer.psj_office_doc:
-        in_data = transformer.psj_office_doc.data
-    else:
-        return
     out_data = transforms.convertTo(
-        'application/pdf', in_data,
+        'application/pdf', getattr(obj.psj_office_doc, 'data'),
         mimetype='application/vnd.oasis.opendocument.text')
     if out_data is None:
         # transform failed
         return
-    new_filename = transformer.psj_office_doc.filename + '.pdf'
-    transformer.psj_pdf_repr = NamedBlobFile(
+    new_filename = obj.psj_office_doc.filename + '.pdf'
+    obj.psj_pdf_repr = NamedBlobFile(
         data=out_data.getData(), filename=new_filename)
 
-@grok.subscribe(IPSJOfficeDocTransformer, IObjectModifiedEvent)
-def psj_create_html(transformer, event):
+def psj_create_html(obj, transforms):
     """Create an HTML representation of `in_data`.
 
     `in_data` is supposed to be the binary content of an office
@@ -881,35 +897,42 @@ def psj_create_html(transformer, event):
 
     `transforms` are the portal transforms.
     """
-    transforms = getToolByName(transformer, 'portal_transforms')
-    if transformer.psj_office_doc:    
-        in_data = transformer.psj_office_doc.data
-    else:
-        return
 
     out_data = transforms.convertTo(
-        'text/html', in_data,
+        'text/html', getattr(obj.psj_office_doc, 'data'),
         mimetype='application/vnd.oasis.opendocument.text')
+    obj.psj_md5 = md5.new(getattr(obj.psj_office_doc, 'data')).hexdigest()
     if out_data is None:
         # transform failed
         return
-    new_filename = transformer.psj_office_doc.filename + '.html'
+    new_filename = obj.psj_office_doc.filename + '.html'
     html = out_data.getData()
-    transformer.psj_html_repr = NamedBlobFile(
+    obj.psj_html_repr = NamedBlobFile(
         data=html, filename=new_filename)
-    # for name in transformer.keys():
-    #     # make sure all old extra-files (images, etc.) are
-    #     # deleted.
-    #     del transformer[name]
-    # for name, subdata in out_data.getSubObjects().items():
-    #     name = name.decode('utf8')
-    #     if name.lower()[-4:] in (u'.png', u'.jpg', u'.gif', u'.tif'):
-    #         new_name = transformer.invokeFactory('Image', name)
-    #     else:
-    #         new_name = transformer.invokeFactory('File', name)
-    #     new_context = transformer[new_name]
-    #     new_context.update_data(subdata)
+    for name in obj.keys():
+        # make sure all old extra-files (images, etc.) are
+        # deleted.
+        del obj[name]
+    for name, subdata in out_data.getSubObjects().items():
+        name = name.decode('utf8')
+        if name.lower()[-4:] in (u'.png', u'.jpg', u'.gif', u'.tif'):
+            new_name = obj.invokeFactory('Image', name)
+        else:
+            new_name = obj.invokeFactory('File', name)
+        new_context = obj[new_name]
+        new_context.file = NamedFile(subdata)
 
+# @grok.subscribe(IPSJOfficeDocTransformer, IObjectModifiedEvent)
+@grok.subscribe(IPSJOfficeDocTransformer, IObjectModifiedEvent)
+def update_representations(obj, event):
+    """
+    """
+    md5_sum = md5.new(getattr(obj.psj_office_doc, 'data', '')).hexdigest()
+    old_md5 = getattr(obj, 'psj_md5', '')
+    if md5_sum == old_md5:
+        return
+    psj_create_reprs(obj)
+    return
 
 class PSJSubjectIndexing(PSJMetadataBase):
     """A behavior providing fields for subject indexing.
