@@ -865,14 +865,14 @@ class PSJOfficeDocTransformer(PSJMetadataBase):
         )
 
 
-def psj_create_reprs(self):
+def psj_create_reprs(obj):
     """Create PDF, HTML, etc. representations of source doc.
     """
-    transforms = getToolByName(self, 'portal_transforms')
-    in_data = getattr(self.psj_office_doc, 'data', None)
+    transforms = getToolByName(obj, 'portal_transforms')
+    in_data = getattr(obj.psj_office_doc, 'data', None)
     if in_data is not None:  # safety belt
-        psj_create_pdf(self, transforms)
-        psj_create_html(self, transforms)
+        psj_create_pdf(obj, transforms)
+        psj_create_html(obj, transforms)
     return
 
 
