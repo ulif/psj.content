@@ -38,10 +38,8 @@ from z3c.form.browser.orderedselect import OrderedSelectFieldWidget
 from z3c.form.interfaces import IEditForm
 from z3c.relationfield.schema import RelationChoice, RelationList
 from zope.component import adapts, queryUtility
-from zope.interface import implements, alsoProvides, Interface
-from zope.lifecycleevent.interfaces import (
-    IObjectAddedEvent, IObjectCreatedEvent, IObjectModifiedEvent
-    )
+from zope.interface import implements, alsoProvides
+from zope.lifecycleevent.interfaces import IObjectModifiedEvent
 from zope.schema import TextLine, Text, Choice, List, ASCIILine
 from psj.content import _
 from psj.content.interfaces import IRedisStoreConfig
@@ -872,7 +870,6 @@ def psj_create_reprs(self):
     """
     transforms = getToolByName(self, 'portal_transforms')
     in_data = getattr(self.psj_office_doc, 'data', None)
-    filename = getattr(self.psj_office_doc, 'filename', 'unknown')
     if in_data is not None:  # safety belt
         psj_create_pdf(self, transforms)
         psj_create_html(self, transforms)
