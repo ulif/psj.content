@@ -866,6 +866,7 @@ class PSJOfficeDocTransformer(PSJMetadataBase):
         get_name='psj_html_repr',
         )
 
+
 def psj_create_reprs(self):
     """Create PDF, HTML, etc. representations of source doc.
     """
@@ -892,6 +893,7 @@ def psj_create_pdf(obj, transforms):
     new_filename = obj.psj_office_doc.filename + '.pdf'
     obj.psj_pdf_repr = NamedBlobFile(
         data=out_data.getData(), filename=new_filename)
+
 
 def psj_create_html(obj, transforms):
     """Create an HTML representation of `in_data`.
@@ -925,6 +927,7 @@ def psj_create_html(obj, transforms):
         new_context = obj[new_name]
         new_context.file = NamedFile(subdata)
 
+
 # @grok.subscribe(IPSJOfficeDocTransformer, IObjectModifiedEvent)
 @grok.subscribe(IPSJOfficeDocTransformer, IObjectModifiedEvent)
 def update_representations(obj, event):
@@ -936,6 +939,7 @@ def update_representations(obj, event):
         return
     psj_create_reprs(obj)
     return
+
 
 class PSJSubjectIndexing(PSJMetadataBase):
     """A behavior providing fields for subject indexing.
