@@ -930,11 +930,8 @@ def update_representations(obj, event):
     """Update office representations of file connected to context obj.
     """
     md5_sum = md5.new(getattr(obj.psj_office_doc, 'data', '')).hexdigest()
-    old_md5 = getattr(obj, 'psj_md5', '')
-    if md5_sum == old_md5:
-        return
-    psj_create_reprs(obj)
-    return
+    if md5_sum != getattr(obj, 'psj_md5', ''):
+        psj_create_reprs(obj)
 
 
 class PSJSubjectIndexing(PSJMetadataBase):
