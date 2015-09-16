@@ -922,7 +922,7 @@ def psj_create_html(obj, transforms):
         else:
             new_name = obj.invokeFactory('File', name)
         new_context = obj[new_name]
-        new_context.file = NamedFile(subdata)
+        new_context.file = NamedBlobFile(subdata, filename=name)
 
 
 @grok.subscribe(IPSJOfficeDocTransformer, IObjectModifiedEvent)
