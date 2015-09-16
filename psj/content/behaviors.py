@@ -925,7 +925,6 @@ def psj_create_html(obj, transforms):
         new_context.file = NamedFile(subdata)
 
 
-# @grok.subscribe(IPSJOfficeDocTransformer, IObjectModifiedEvent)
 @grok.subscribe(IPSJOfficeDocTransformer, IObjectModifiedEvent)
 def update_representations(obj, event):
     """
