@@ -133,7 +133,7 @@ class RedisSource(object):
     def __len__(self):
         """Required by IIterableVocabulary.
         """
-        return None
+        return self._get_client().dbsize()
 
 
 class RedisKeysSource(RedisSource):
