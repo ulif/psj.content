@@ -23,7 +23,8 @@ import os
 import redis
 from five import grok
 from zope.component import queryUtility
-from zope.schema.interfaces import IContextSourceBinder, IBaseVocabulary
+from zope.schema.interfaces import (
+    IContextSourceBinder, IBaseVocabulary, IIterableVocabulary)
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content.interfaces import IExternalVocabConfig, IRedisStoreConfig
 from psj.content.utils import make_terms, tokenize
@@ -86,7 +87,7 @@ class RedisSource(object):
 
     This source contains keys of a Redis Store db.
     """
-    grok.implements(IBaseVocabulary)
+    grok.implements(IIterableVocabulary)
 
     _client = None
 
@@ -123,6 +124,16 @@ class RedisSource(object):
             raise LookupError('No such term: %s' % value)
         return SimpleTerm(
             value, token=tokenize(value), title=db_val.decode('utf-8'))
+
+    def __iter__(self):
+        """Required by IIterableVocabulary.
+        """
+        yield 1
+
+    def __len__(self):
+        """Required by IIterableVocabulary.
+        """
+        return None
 
 
 class RedisKeysSource(RedisSource):
