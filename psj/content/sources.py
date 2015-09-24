@@ -131,7 +131,10 @@ class RedisSource(object):
         Return an iterator over all elements in source.
         """
         client = self._get_client()
-        return client.scan_iter()
+        for key in client.scan_iter():
+            value = self._get_client().get(key)
+            yield SimpleTerm(
+                key, token=tokenize(key), title=value.decode('utf-8'))
 
     def __len__(self):
         """Required by IIterableVocabulary.
