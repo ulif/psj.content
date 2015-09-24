@@ -76,6 +76,13 @@ class RedisSourceTests(unittest.TestCase):
         self.redis.set("bar", "baz")
         self.assertEqual(len(source), 2)
 
+    def test_iter(self):
+        # we can iterate over all elements
+        source = RedisSource(host=self.redis_host, port=self.redis_port)
+        elem_list = [x for x in source]
+        self.assertEqual(len(elem_list), 1)
+        self.assertTrue(ITitledTokenizedTerm.providedBy(elem_list[0]))
+
 
 class RedisKeysSourceTests(unittest.TestCase):
 
