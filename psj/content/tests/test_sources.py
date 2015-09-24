@@ -5,6 +5,7 @@ import unittest
 from zope.interface import verify
 from zope.schema.interfaces import (
     IContextSourceBinder, IBaseVocabulary, ITitledTokenizedTerm,
+    IIterableVocabulary
     )
 from zope.schema.vocabulary import SimpleVocabulary
 from psj.content.sources import (
@@ -37,6 +38,8 @@ class RedisSourceTests(unittest.TestCase):
         source = RedisSource(host=self.redis_host, port=self.redis_port)
         verify.verifyClass(IBaseVocabulary, RedisSource)
         verify.verifyObject(IBaseVocabulary, source)
+        verify.verifyClass(IIterableVocabulary, RedisKeysSource)
+        verify.verifyObject(IIterableVocabulary, source)
 
     def test_basic(self):
         # make sure, basic redis store test setup works
@@ -90,6 +93,8 @@ class RedisKeysSourceTests(unittest.TestCase):
         source = RedisKeysSource(host=self.redis_host, port=self.redis_port)
         verify.verifyClass(IBaseVocabulary, RedisKeysSource)
         verify.verifyObject(IBaseVocabulary, source)
+        verify.verifyClass(IIterableVocabulary, RedisKeysSource)
+        verify.verifyObject(IIterableVocabulary, source)
 
     def test_get_contained(self):
         # we can tell whether a certain key is stored in redis store
