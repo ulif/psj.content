@@ -69,6 +69,13 @@ class RedisSourceTests(unittest.TestCase):
         self.assertTrue(hasattr(term, 'title'))
         self.assertEqual(term.title, u'bar')
 
+    def test_len(self):
+        # we can get the size of a database
+        source = RedisSource(host=self.redis_host, port=self.redis_port)
+        self.assertEqual(len(source), 1)
+        self.redis.set("bar", "baz")
+        self.assertEqual(len(source), 2)
+
 
 class RedisKeysSourceTests(unittest.TestCase):
 
