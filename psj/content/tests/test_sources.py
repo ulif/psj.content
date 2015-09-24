@@ -36,7 +36,7 @@ class RedisSourceTests(unittest.TestCase):
     def test_iface(self):
         # make sure we fullfill promised interfaces
         source = RedisSource(host=self.redis_host, port=self.redis_port)
-        verify.verifyClass(IIterableVocabulary, RedisKeysSource)
+        verify.verifyClass(IIterableVocabulary, RedisSource)
         verify.verifyObject(IIterableVocabulary, source)
 
     def test_basic(self):
