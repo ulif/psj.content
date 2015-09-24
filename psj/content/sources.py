@@ -127,8 +127,11 @@ class RedisSource(object):
 
     def __iter__(self):
         """Required by IIterableVocabulary.
+
+        Return an iterator over all elements in source.
         """
-        yield 1
+        client = self._get_client()
+        return client.scan_iter()
 
     def __len__(self):
         """Required by IIterableVocabulary.
