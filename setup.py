@@ -44,10 +44,12 @@ setup(name='psj.content',
           'plone.behavior',             # for behaviours
           'plone.dexterity',
           'plone.directives.form',      # for behaviours
+          'plone.formwidget.autocomplete',
           'plone.formwidget.contenttree',
           'plone.formwidget.namedfile',  # for named files in behaviors
           'plone.namedfile[blobs]',      # for named files in behaviors
           'plone.supermodel',
+          'z3c.formwidget.query',
           'z3c.relationfield',
           'zope.component',
           'zope.event',
