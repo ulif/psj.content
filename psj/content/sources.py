@@ -146,6 +146,15 @@ class RedisSource(object):
         key = untokenize(token)
         return self.getTerm(key)
 
+    def search(self, query_string):
+        """Return an iterable of ITerms matching `query_string`.
+
+        A term matches, if its title starts with `query_string`.
+        """
+        for term in self:
+            if term.title.startswith(query_string):
+                yield term
+
 
 class RedisKeysSource(RedisSource):
     """A redis source that only looks for keys in Redis stores.
