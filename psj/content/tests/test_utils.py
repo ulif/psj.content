@@ -9,6 +9,7 @@ from psj.content.interfaces import ISearchableTextGetter
 from psj.content.testing import INTEGRATION_TESTING
 from psj.content.utils import (
     to_string, strip_tags, SearchableTextGetter, make_terms, tokenize,
+    untokenize,
     )
 
 
@@ -249,6 +250,21 @@ class TokenizeTests(unittest.TestCase):
         self.assertEqual(result, 'w6TDtsO8')
         self.is_7bit_ascii(result)
 
+
+class UntokenizeTest(unittest.TestCase):
+    # tests for untokenize()
+
+    def test_empty_string(self):
+        result = untokenize(tokenize(''))
+        self.assertEqual(result, '')
+
+    def test_simple_stream(self):
+        result = untokenize(tokenize('abc'))
+        self.assertEqual(result, 'abc')
+
+    def test_utf8_stream(self):
+        result = untokenize(tokenize('äöü'))
+        self.assertEqual(result, 'äöü')
 
 class MakeTermsTests(unittest.TestCase):
     # tests for the make_terms function

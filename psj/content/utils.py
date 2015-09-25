@@ -19,7 +19,7 @@
 """Utilities and helpers for PSJ.
 
 """
-from base64 import b64encode
+from base64 import b64encode, b64decode
 from five import grok
 from plone.app.textfield import RichTextValue
 from zope.schema.vocabulary import SimpleTerm
@@ -137,6 +137,15 @@ def tokenize(byte_string):
     """
     return b64encode(byte_string) or '#'
 
+
+def untokenize(ascii_string):
+    """Create a byte stream from an ASCII token.
+
+    Reverse op to `tokenize`.
+    """
+    if ascii_string == "#":
+        return ""
+    return b64decode(ascii_string)
 
 def make_terms(strings):
     """Create zope.schema.SimpleTermss from strings.
