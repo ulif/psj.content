@@ -27,7 +27,7 @@ from zope.schema.interfaces import (
     IContextSourceBinder, IBaseVocabulary, IVocabularyTokenized)
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content.interfaces import IExternalVocabConfig, IRedisStoreConfig
-from psj.content.utils import make_terms, tokenize
+from psj.content.utils import make_terms, tokenize, untokenize
 
 
 class ExternalVocabBinder(object):
@@ -142,8 +142,8 @@ class RedisSource(object):
         return self._get_client().dbsize()
 
     def getTermByToken(self, token):
-        # XXX: to be implemented
-        pass
+        key = untokenize(token)
+        return self.getTerm(key)
 
 
 class RedisKeysSource(RedisSource):
