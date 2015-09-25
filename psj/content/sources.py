@@ -22,9 +22,10 @@
 import os
 import redis
 from five import grok
+from z3c.formwidget.query.interfaces import IQuerySource
 from zope.component import queryUtility
 from zope.schema.interfaces import (
-    IContextSourceBinder, IBaseVocabulary, IVocabularyTokenized)
+    IContextSourceBinder, IBaseVocabulary)
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content.interfaces import IExternalVocabConfig, IRedisStoreConfig
 from psj.content.utils import make_terms, tokenize, untokenize
@@ -87,7 +88,7 @@ class RedisSource(object):
 
     This source contains keys of a Redis Store db.
     """
-    grok.implements(IVocabularyTokenized)
+    grok.implements(IQuerySource)
 
     _client = None
 
