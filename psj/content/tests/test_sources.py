@@ -2,6 +2,7 @@
 # Tests for sources module.
 import redis
 import unittest
+from z3c.formwidget.query.interfaces import IQuerySource
 from zope.interface import verify
 from zope.schema.interfaces import (
     IContextSourceBinder, IBaseVocabulary, ITitledTokenizedTerm,
@@ -37,8 +38,8 @@ class RedisSourceTests(unittest.TestCase):
     def test_iface(self):
         # make sure we fullfill promised interfaces
         source = RedisSource(host=self.redis_host, port=self.redis_port)
-        verify.verifyClass(IVocabularyTokenized, RedisSource)
-        verify.verifyObject(IVocabularyTokenized, source)
+        verify.verifyClass(IQuerySource, RedisSource)
+        verify.verifyObject(IQuerySource, source)
 
     def test_basic(self):
         # make sure, basic redis store test setup works
@@ -111,8 +112,8 @@ class RedisKeysSourceTests(unittest.TestCase):
     def test_iface(self):
         # make sure we fullfill promised interfaces
         source = RedisKeysSource(host=self.redis_host, port=self.redis_port)
-        verify.verifyClass(IVocabularyTokenized, RedisKeysSource)
-        verify.verifyObject(IVocabularyTokenized, source)
+        verify.verifyClass(IQuerySource, RedisKeysSource)
+        verify.verifyObject(IQuerySource, source)
 
     def test_get_contained(self):
         # we can tell whether a certain key is stored in redis store
