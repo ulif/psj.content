@@ -15,6 +15,7 @@ from psj.content.sources import (
     gndid_source,
     )
 from psj.content.testing import ExternalVocabSetup, RedisLayer
+from psj.content.utils import tokenize
 
 
 class RedisSourceTests(unittest.TestCase):
@@ -82,6 +83,13 @@ class RedisSourceTests(unittest.TestCase):
         elem_list = [x for x in source]
         self.assertEqual(len(elem_list), 1)
         self.assertTrue(ITitledTokenizedTerm.providedBy(elem_list[0]))
+
+    def test_get_term_by_token(self):
+        # we can get a term by its token
+        source = RedisSource(host=self.redis_host, port=self.redis_port)
+        token = tokenize("foo")
+        result = source.getTermByToken(token)
+        self.assertTrue(ITitledTokenizedTerm.providedBy(result))
 
 
 class RedisKeysSourceTests(unittest.TestCase):
