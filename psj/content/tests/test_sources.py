@@ -92,6 +92,18 @@ class RedisSourceTests(unittest.TestCase):
         result = source.getTermByToken(token)
         self.assertTrue(ITitledTokenizedTerm.providedBy(result))
 
+    def test_search(self):
+        # we can search a source
+        source = RedisSource(host=self.redis_host, port=self.redis_port)
+        self.redis.set("far", "boo")
+        self.redis.set("gaz", "hor")
+        result1 = [x.title for x in source.search("b")]
+        result2 = [x.title for x in source.search("h")]
+        result3 = [x.title for x in source.search("ba")]
+        self.assertEqual(sorted(result1), ["bar", "boo"])
+        self.assertEqual(result2, ["hor"])
+        self.assertEqual(result3, ["bar"])
+
 
 class RedisKeysSourceTests(unittest.TestCase):
 
