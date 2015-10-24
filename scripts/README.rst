@@ -42,3 +42,32 @@ can install everything with::
   $ pip install redis
 
 Of course you will need a running redis DB to make all this work.
+
+You will normally want to run ``normalize.py`` before, to create a
+suitable list of terms and their normalizations. We will need a file
+``terms.txt`` which we work with.
+
+The autocomplete data will be stored in a redis ZSET named
+``gnd-autocomplete``.
+
+After storing the data (with the ``fill-redis.py`` script) you can try
+to fetch them via the local redis client::
+
+  $ redis-cli
+  127.0.0.1:6397> ZRANGEBYLEX gnd-autocomplete [bb + LIMIT 0 5
+  1) ...
+  2) ...
+  3) ...
+  4) ...
+  5) ...
+
+The ZRANGEBYLEX command might not be documented in your client
+(although being available).
+
+  http://redis.io/commands/zrangebylex
+
+Please note, that it was introduced in redis 2.8.9, so your server
+should meet this version requirement.
+
+With the command above we asked for the first five entries that start
+with ``"bb"``.
