@@ -1,3 +1,5 @@
+# Fill redis DB with autocomplete values.
+#
 import redis
 
 
