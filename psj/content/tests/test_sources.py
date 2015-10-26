@@ -161,10 +161,10 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
         port = settings['port']
         self.redis = redis.StrictRedis(host='localhost', port=port, db=0)
         self.redis.flushdb()
-        self.redis.zadd(u'autocomplete-foo', 0, "foo (1)")
-        self.redis.zadd(u'autocomplete-foo', 0, "for (2)")
-        self.redis.zadd(u'autocomplete-foo', 0, "baz (3)")
-        self.redis.zadd(u'autocomplete-foo', 0, "bar (4)")
+        self.redis.zadd(u'autocomplete-foo', 0, "foo (1)&&Foo (1)")
+        self.redis.zadd(u'autocomplete-foo', 0, "for (2)&&For (2)")
+        self.redis.zadd(u'autocomplete-foo', 0, "baz (3)&&Baz (3)")
+        self.redis.zadd(u'autocomplete-foo', 0, "bar (4)&&Bar (4)")
         self.redis_host = settings['bind']
         self.redis_port = settings['port']
 
@@ -176,6 +176,13 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
         source = RedisAutocompleteSource(host=self.redis_host, port=self.redis_port)
         verify.verifyClass(IQuerySource, RedisAutocompleteSource)
         verify.verifyObject(IQuerySource, source)
+
+    def test_get_contained(self):
+        # we can tell whether a certain key is stored in redis store
+        source = RedisAutocompleteSource(
+            host=self.redis_host, port=self.redis_port, zset_name="autocomplete-foo")
+        result = u'foo (1)' in source
+        self.assertEqual(result, True)
 
 
 class ExternalVocabBinderTests(ExternalVocabSetup, unittest.TestCase):
