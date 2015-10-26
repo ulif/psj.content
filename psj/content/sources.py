@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#  psj.content is copyright (c) 2014 Uli Fouquet
+#  psj.content is copyright (c) 2014, 2015 Uli Fouquet
 #
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -24,8 +24,7 @@ import redis
 from five import grok
 from z3c.formwidget.query.interfaces import IQuerySource
 from zope.component import queryUtility
-from zope.schema.interfaces import (
-    IContextSourceBinder, IBaseVocabulary)
+from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content.interfaces import IExternalVocabConfig, IRedisStoreConfig
 from psj.content.utils import make_terms, tokenize, untokenize
