@@ -10,7 +10,7 @@ from zope.schema.interfaces import (
     )
 from zope.schema.vocabulary import SimpleVocabulary
 from psj.content.sources import (
-    ExternalVocabBinder, ExternalRedisBinder, RedisSource,
+    ExternalVocabBinder, ExternalRedisBinder, RedisSource, RedisAutocompleteSource,
     RedisKeysSource, institutes_source, licenses_source, publishers_source,
     subjectgroup_source, ddcgeo_source, ddcsach_source, ddczeit_source,
     gndid_source,
@@ -150,6 +150,32 @@ class RedisKeysSourceTests(unittest.TestCase):
         self.assertEqual(term.token, 'Zm9v')
         self.assertTrue(hasattr(term, 'title'))
         self.assertEqual(term.title, u'foo')
+
+
+class RedisAutocompleteSourceTests(unittest.TestCase):
+
+    layer = RedisLayer
+
+    def setUp(self):
+        settings = self.layer['redis_server'].settings['redis_conf']
+        port = settings['port']
+        self.redis = redis.StrictRedis(host='localhost', port=port, db=0)
+        self.redis.flushdb()
+        self.redis.zadd(u'autocomplete-foo', 0, "foo (1)")
+        self.redis.zadd(u'autocomplete-foo', 0, "for (2)")
+        self.redis.zadd(u'autocomplete-foo', 0, "baz (3)")
+        self.redis.zadd(u'autocomplete-foo', 0, "bar (4)")
+        self.redis_host = settings['bind']
+        self.redis_port = settings['port']
+
+    def tearDown(self):
+        self.redis.flushdb()
+
+    def test_iface(self):
+        # make sure we fullfill promised interfaces
+        source = RedisSource(host=self.redis_host, port=self.redis_port)
+        verify.verifyClass(IQuerySource, RedisSource)
+        verify.verifyObject(IQuerySource, source)
 
 
 class ExternalVocabBinderTests(ExternalVocabSetup, unittest.TestCase):
