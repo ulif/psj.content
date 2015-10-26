@@ -5,7 +5,7 @@ language: python
 python: "2.7"
 before_install:
   # need a more recent version of redis-server than is currently (2015, Oct) in Ubuntu
-  - sudo add-apt-repository ppa:chris-lea/redis-server
+  - sudo add-apt-repository ppa:chris-lea/redis-server -y
   - sudo apt-get update -qq
   - sudo apt-get install -qq libreoffice unoconv tidy redis-server
   # Workaround for a permissions issue with Travis virtual machine images
