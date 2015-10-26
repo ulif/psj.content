@@ -36,6 +36,7 @@ setup(name='psj.content',
           'Plone',
           'collective.autopermission',
           'collective.dexteritytextindexer',
+          'dinsort',                    # for redis.io autocomplete support.
           'grokcore.component',
           'plone.app.dexterity [grok, relations]',
           'plone.app.referenceablebehavior',
