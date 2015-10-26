@@ -167,9 +167,14 @@ class RedisKeysSource(RedisSource):
 class RedisAutocompleteSource(RedisSource):
     """A redis source that supports autocomplete functionality.
 
-    `zset_name` sets the name of the redis ZSET containing the autocomplete terms.
+    `zset_name` sets the name of the redis ZSET containing the
+    autocomplete terms.
+
+    `separator` tells how we separate normalized terms from
+    non-normalized when we lookup entries in redis ZSET.
     """
-    def __init__(self, host='localhost', port=6379, db=0, zset_name="autocomplete"):
+    def __init__(self, host='localhost', port=6379, db=0,
+                 zset_name="autocomplete", separator="&&"):
         self.host = host
         self.port = port
         self.db = db
