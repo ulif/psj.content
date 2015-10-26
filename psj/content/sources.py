@@ -166,8 +166,15 @@ class RedisKeysSource(RedisSource):
 
 class RedisAutocompleteSource(RedisSource):
     """A redis source that supports autocomplete functionality.
+
+    `zset_name` sets the name of the redis ZSET containing the autocomplete terms.
     """
-    pass
+    def __init__(self, host='localhost', port=6379, db=0, zset_name="autocomplete"):
+        self.host = host
+        self.port = port
+        self.db = db
+        self.zset_name = zset_name
+
 
 language_source = ExternalVocabBinder(u'psj.content.Languages')
 institutes_source = ExternalVocabBinder(u'psj.content.Institutes')
