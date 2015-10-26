@@ -173,8 +173,8 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
 
     def test_iface(self):
         # make sure we fullfill promised interfaces
-        source = RedisSource(host=self.redis_host, port=self.redis_port)
-        verify.verifyClass(IQuerySource, RedisSource)
+        source = RedisAutocompleteSource(host=self.redis_host, port=self.redis_port)
+        verify.verifyClass(IQuerySource, RedisAutocompleteSource)
         verify.verifyObject(IQuerySource, source)
 
 
