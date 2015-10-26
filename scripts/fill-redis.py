@@ -23,10 +23,10 @@ with open("terms.txt", "r") as fd:
         if cnt % 100000 == 0:
             print("CNT: %s" % cnt)
         try:
-            result = client.setnx(key, content)
-            if result:
-                result = client.zadd("gnd-autocomplete", 0, "%s (%s)" % (normalized, key))
-            else:
+            result = client.zadd(
+                "gnd-autocomplete", 0, "%s (%s)&&%s (%s)" % (
+                    normalized, key, content, key))
+            if not result:
                 print("PROBLEM")
                 print(cnt, key, content)
                 print("--------")
