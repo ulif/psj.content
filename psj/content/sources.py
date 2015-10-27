@@ -189,6 +189,33 @@ class RedisAutocompleteSource(RedisSource):
             self.zset_name, search_term, search_term + chr(255))
         return result and True or False
 
+    def getTerm(self, value):
+        """Return the ITerm object for term `value`.
+
+        Raises `LookupError` if no such value can be found in Redis
+        Store.
+
+        Returns ITerm of `value`, where `value` is expected to be an
+        existing normalized string at beginning of an entry in a Redis
+        store ZSET.
+
+        The `title` of any resulting term will be the latter part of the
+        respective Redis Store entry.
+
+        Say we have a ZSET with an entry "foo(1-1)&&The Foo (1-1)", then
+        the term value and token (both are equal) will be 'foo(1-1)'
+        while the Title will be u'The Foo (1-1)'.
+        """
+        search_term = "[%s%s" % (value, self.separator)
+        if isinstance(search_term, unicode):
+            search_term = search_term.encode("utf-8")
+        db_entries = self._get_client().zrangebylex(
+            self.zset_name, search_term, search_term + chr(255))
+        if len(db_entries) == 0:
+            raise LookupError('No such term: %s' % value)
+        title = db_entries[0].split(self.separator)[-1].decode("utf-8")
+        return SimpleTerm(value, value, title=title)
+
 
 language_source = ExternalVocabBinder(u'psj.content.Languages')
 institutes_source = ExternalVocabBinder(u'psj.content.Institutes')

@@ -205,6 +205,20 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
         assert u'bär' not in source
         assert 'bär' not in source
 
+    def test_get_term_contained(self):
+        # we can get contained terms as ITerm
+        source = RedisAutocompleteSource(
+            host=self.redis_host, port=self.redis_port,
+            zset_name="autocomplete-foo")
+        term = source.getTerm(u'foo (1)')
+        assert ITitledTokenizedTerm.providedBy(term)
+        self.assertTrue(hasattr(term, 'value'))
+        self.assertEqual(term.value, u'foo (1)')
+        self.assertTrue(hasattr(term, 'token'))
+        self.assertEqual(term.token, u'foo (1)')
+        self.assertTrue(hasattr(term, 'title'))
+        self.assertEqual(term.title, u'Foo (1)')
+
 
 class ExternalVocabBinderTests(ExternalVocabSetup, unittest.TestCase):
 
