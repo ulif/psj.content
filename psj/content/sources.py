@@ -202,8 +202,11 @@ class RedisAutocompleteSource(RedisSource):
         The `title` of any resulting term will be the latter part of the
         respective Redis Store entry.
 
-        Say we have a ZSET with an entry "foo(1-1)&&The Foo (1-1)", then
-        the term value and token (both are equal) will be 'foo(1-1)'
+        Say we have a ZSET with an entry::
+
+          "foo(1-1)&&The Foo (1-1)",
+
+        then the term value and token (both are equal) will be 'foo(1-1)'
         while the Title will be u'The Foo (1-1)'.
         """
         search_term = "[%s%s" % (value, self.separator)
