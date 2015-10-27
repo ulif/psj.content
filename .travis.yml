@@ -1,10 +1,11 @@
 #
-# See http://docs.travis-ci.com/user/installing-dependencies/#Installing-Packages-from-a-custom-APT-repository
+# See http://docs.travis-ci.com/user/getting-started/
 #
 language: python
 python: "2.7"
 before_install:
   # need a more recent version of redis-server than is currently (2015, Oct) in Ubuntu
+  # Have to remove the old one first, as it interferes with new one.
   - sudo apt-get remove --purge redis-server
   - sudo add-apt-repository ppa:chris-lea/redis-server -y
   - sudo apt-get update -qq
