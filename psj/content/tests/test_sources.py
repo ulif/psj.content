@@ -10,8 +10,9 @@ from zope.schema.interfaces import (
     )
 from zope.schema.vocabulary import SimpleVocabulary
 from psj.content.sources import (
-    ExternalVocabBinder, ExternalRedisBinder, RedisSource, RedisAutocompleteSource,
-    RedisKeysSource, institutes_source, licenses_source, publishers_source,
+    ExternalVocabBinder, ExternalRedisBinder, RedisSource,
+    RedisAutocompleteSource, RedisKeysSource, institutes_source,
+    licenses_source, publishers_source,
     subjectgroup_source, ddcgeo_source, ddcsach_source, ddczeit_source,
     gndid_source,
     )
@@ -173,14 +174,16 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
 
     def test_iface(self):
         # make sure we fullfill promised interfaces
-        source = RedisAutocompleteSource(host=self.redis_host, port=self.redis_port)
+        source = RedisAutocompleteSource(
+            host=self.redis_host, port=self.redis_port)
         verify.verifyClass(IQuerySource, RedisAutocompleteSource)
         verify.verifyObject(IQuerySource, source)
 
     def test_get_contained(self):
         # we can tell whether a certain key is stored in redis store
         source = RedisAutocompleteSource(
-            host=self.redis_host, port=self.redis_port, zset_name="autocomplete-foo")
+            host=self.redis_host, port=self.redis_port,
+            zset_name="autocomplete-foo")
         result = u'foo (1)' in source
         self.assertEqual(result, True)
 
