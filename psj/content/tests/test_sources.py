@@ -181,11 +181,14 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
 
     def test_get_contained(self):
         # we can tell whether a certain key is stored in redis store
+        self.redis.zadd(u'autocomplete-foo', 0, "bär (5)&&Bär (4)")
         source = RedisAutocompleteSource(
             host=self.redis_host, port=self.redis_port,
             zset_name="autocomplete-foo")
         assert u'foo (1)' in source
         assert 'foo (1)' in source
+        assert u'bär (5)' in source
+        assert 'bär (5)' in source
 
     def test_get_uncontained(self):
         # we can tell if a certain key is not in redis store
@@ -194,6 +197,8 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
             zset_name="autocomplete-foo")
         assert u'bar' not in source
         assert 'bar' not in source
+        assert u'bär' not in source
+        assert 'bär' not in source
 
 
 class ExternalVocabBinderTests(ExternalVocabSetup, unittest.TestCase):
