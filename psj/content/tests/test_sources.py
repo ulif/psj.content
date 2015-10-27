@@ -185,6 +185,7 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
             host=self.redis_host, port=self.redis_port,
             zset_name="autocomplete-foo")
         assert u'foo (1)' in source
+        assert 'foo (1)' in source
 
     def test_get_uncontained(self):
         # we can tell if a certain key is not in redis store
@@ -192,6 +193,7 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
             host=self.redis_host, port=self.redis_port,
             zset_name="autocomplete-foo")
         assert u'bar' not in source
+        assert 'bar' not in source
 
 
 class ExternalVocabBinderTests(ExternalVocabSetup, unittest.TestCase):
