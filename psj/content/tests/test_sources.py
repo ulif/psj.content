@@ -172,6 +172,11 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
     def tearDown(self):
         self.redis.flushdb()
 
+    def test_basic(self):
+        # make sure, basic redis store test setup works
+        r = self.redis
+        assert r.zcard('autocomplete-foo') == 4
+
     def test_iface(self):
         # make sure we fullfill promised interfaces
         source = RedisAutocompleteSource(
