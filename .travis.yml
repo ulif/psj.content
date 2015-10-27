@@ -1,6 +1,7 @@
 #
 # See http://docs.travis-ci.com/user/getting-started/
 #
+sudo: required
 language: python
 python: "2.7"
 before_install:
