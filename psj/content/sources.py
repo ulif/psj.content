@@ -183,7 +183,8 @@ class RedisAutocompleteSource(RedisSource):
 
     def __contains__(self, value):
         search_term = "[%s%s" % (value, self.separator)
-        search_term = search_term.encode("utf-8")
+        if isinstance(search_term, unicode):
+            search_term = search_term.encode("utf-8")
         result = self._get_client().zlexcount(
             self.zset_name, search_term, search_term + chr(255))
         return result and True or False
