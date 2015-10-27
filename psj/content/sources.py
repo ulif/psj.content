@@ -183,12 +183,10 @@ class RedisAutocompleteSource(RedisSource):
 
     def __contains__(self, value):
         search_term = "[%s%s" % (value, self.separator)
-        result = self._get_client().zrangebylex(
-            self.zset_name, search_term, '+', 0, 1)
-        if result and result[0].startswith(search_term[1:]):
-            return True
-        assert 1 == 0
-        return False
+        search_term = search_term.encode("utf-8")
+        result = self._get_client().zlexcount(
+            self.zset_name, search_term, search_term + chr(255))
+        return result and True or False
 
 
 language_source = ExternalVocabBinder(u'psj.content.Languages')
