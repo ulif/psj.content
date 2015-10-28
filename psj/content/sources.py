@@ -27,7 +27,7 @@ from zope.component import queryUtility
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 from psj.content.interfaces import IExternalVocabConfig, IRedisStoreConfig
-from psj.content.utils import make_terms, tokenize, untokenize
+from psj.content.utils import make_terms, tokenize, untokenize, to_string
 
 
 class ExternalVocabBinder(object):
@@ -179,12 +179,10 @@ class RedisAutocompleteSource(RedisSource):
         self.port = port
         self.db = db
         self.zset_name = zset_name
-        self.separator = separator
+        self.separator = to_string(separator)
 
     def __contains__(self, value):
-        search_term = "[%s%s" % (value, self.separator)
-        if isinstance(search_term, unicode):
-            search_term = search_term.encode("utf-8")
+        search_term = "[%s%s" % (to_string(value), self.separator)
         result = self._get_client().zlexcount(
             self.zset_name, search_term, search_term + chr(255))
         return result and True or False
@@ -209,9 +207,7 @@ class RedisAutocompleteSource(RedisSource):
         then the term value and token (both are equal) will be 'foo(1-1)'
         while the Title will be u'The Foo (1-1)'.
         """
-        search_term = "[%s%s" % (value, self.separator)
-        if isinstance(search_term, unicode):
-            search_term = search_term.encode("utf-8")
+        search_term = "[%s%s" % (to_string(value), self.separator)
         db_entries = self._get_client().zrangebylex(
             self.zset_name, search_term, search_term + chr(255))
         if len(db_entries) == 0:
