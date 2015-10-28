@@ -184,6 +184,16 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
         verify.verifyClass(IQuerySource, RedisAutocompleteSource)
         verify.verifyObject(IQuerySource, source)
 
+    def test_split_entry(self):
+        # we can split ZSET entries.
+        source = RedisAutocompleteSource(
+            host=self.redis_host, port=self.redis_port)
+        assert source._split_entry("one&&two") == ("one", u"two")
+        assert source._split_entry(u"one&&two") == ("one", u"two")
+        part1, part2 = source._split_entry("one&&two")
+        assert isinstance(part1, str)
+        assert isinstance(part2, unicode)
+
     def test_get_contained(self):
         # we can tell whether a certain key is stored in redis store
         self.redis.zadd(u'autocomplete-foo', 0, "bär (5)&&Bär (4)")

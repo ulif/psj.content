@@ -181,6 +181,12 @@ class RedisAutocompleteSource(RedisSource):
         self.zset_name = zset_name
         self.separator = to_string(separator)
 
+    def _split_entry(self, entry):
+        """Split an entry as found in ZSETs into pieces.
+        """
+        normalized, title = to_string(entry).split(self.separator, 1)
+        return normalized.encode("utf-8"), title.decode("utf-8")
+
     def __contains__(self, value):
         search_term = "[%s%s" % (to_string(value), self.separator)
         result = self._get_client().zlexcount(
