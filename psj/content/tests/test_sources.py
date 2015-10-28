@@ -255,6 +255,21 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
         result = source.getTermByToken(u'foo (1)')
         self.assertTrue(ITitledTokenizedTerm.providedBy(result))
 
+    def test_search(self):
+        # we can search autocomplete sources
+        source = RedisAutocompleteSource(
+            host=self.redis_host, port=self.redis_port,
+            zset_name="autocomplete-foo")
+        result1 = [x.title for x in source.search("b")]
+        result2 = [x.title for x in source.search("fo")]
+        result3 = [x.title for x in source.search("for")]
+        result4 = [x.title for x in source.search("For (2)")]
+        self.assertEqual(
+            result1, [u'Bar (4)', u'Baz (3)', u'Foo (1)', u'For (2)'])
+        self.assertEqual(result2, [u"Foo (1)", u"For (2)"])
+        self.assertEqual(result3, [u"For (2)"])
+        self.assertEqual(result4, [u"For (2)"])
+
 
 class ExternalVocabBinderTests(ExternalVocabSetup, unittest.TestCase):
 

@@ -21,6 +21,7 @@
 """
 import os
 import redis
+from dinsort import normalize
 from five import grok
 from z3c.formwidget.query.interfaces import IQuerySource
 from zope.component import queryUtility
@@ -252,6 +253,23 @@ class RedisAutocompleteSource(RedisSource):
         Raises `LookupError` if token cannot be found.
         """
         return self.getTerm(token)
+
+    def search(self, query_string):
+        """Return an iterable of ITerms matching `query_string`.
+
+        A term matches, if its normalized title starts with `query_string`.
+
+        "normalized" means what `dinsort` defines as normalizing.
+
+        We will delver at most 100 entries.
+        """
+        query_string = normalize(query_string)
+        search_term = "(%s" % to_string(query_string)
+        db_entries = self._get_client().zrangebylex(
+            self.zset_name, search_term, "+", 0, 100)
+        for entry in db_entries:
+            token, title = self._split_entry(entry)
+            yield SimpleTerm(token, token, title)
 
 
 language_source = ExternalVocabBinder(u'psj.content.Languages')
