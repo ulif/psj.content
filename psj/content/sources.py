@@ -231,6 +231,9 @@ class RedisAutocompleteSource(RedisSource):
         token, title = self._split_entry(db_entries[0])
         return SimpleTerm(token, token, title)
 
+    def getTermByToken(self, token):
+        return self.getTerm(token)
+
     def __iter__(self):
         """Required by IIterableVocabulary.
 

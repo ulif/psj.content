@@ -247,6 +247,14 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
         self.assertEqual(len(elem_list), 4)
         self.assertTrue(ITitledTokenizedTerm.providedBy(elem_list[0]))
 
+    def test_get_term_by_token(self):
+        # we can get a term by its token
+        source = RedisAutocompleteSource(
+            host=self.redis_host, port=self.redis_port,
+            zset_name="autocomplete-foo")
+        result = source.getTermByToken(u'foo (1)')
+        self.assertTrue(ITitledTokenizedTerm.providedBy(result))
+
 
 class ExternalVocabBinderTests(ExternalVocabSetup, unittest.TestCase):
 
