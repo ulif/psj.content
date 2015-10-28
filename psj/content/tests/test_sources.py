@@ -228,6 +228,15 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
         self.redis.zadd(u'autocomplete-foo', 0, "new (0)&&New Kid (0)")
         self.assertEqual(len(source), 5)
 
+    def test_iter(self):
+        # we can iterate over all elements
+        source = RedisAutocompleteSource(
+            host=self.redis_host, port=self.redis_port,
+            zset_name="autocomplete-foo")
+        elem_list = [x for x in source]
+        self.assertEqual(len(elem_list), 4)
+        self.assertTrue(ITitledTokenizedTerm.providedBy(elem_list[0]))
+
 
 class ExternalVocabBinderTests(ExternalVocabSetup, unittest.TestCase):
 

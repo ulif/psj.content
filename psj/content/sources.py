@@ -215,6 +215,17 @@ class RedisAutocompleteSource(RedisSource):
         title = db_entries[0].split(self.separator)[-1].decode("utf-8")
         return SimpleTerm(value, value, title=title)
 
+    def __iter__(self):
+        """Required by IIterableVocabulary.
+
+        Return an iterator over all elements in source.
+        """
+        client = self._get_client()
+        for entry, score in client.zscan_iter(self.zset_name):
+            token, title = entry.split(self.separator, 1)
+            yield SimpleTerm(
+                token, token, title=title.decode('utf-8'))
+
     def __len__(self):
         """Required by IIterableVocabulary.
         """
