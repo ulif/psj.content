@@ -247,6 +247,10 @@ class RedisAutocompleteSource(RedisSource):
         return SimpleTerm(token, token, title)
 
     def getTermByToken(self, token):
+        """Get ITerm with `token`.
+
+        Raises `LookupError` if token cannot be found.
+        """
         return self.getTerm(token)
 
 
