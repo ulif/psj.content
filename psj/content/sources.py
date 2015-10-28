@@ -188,6 +188,16 @@ class RedisAutocompleteSource(RedisSource):
         return normalized.encode("utf-8"), title.decode("utf-8")
 
     def __contains__(self, value):
+        """Tell wether `value` is in the associated ZSET.
+
+        This is the case, when we can find a ZSET entry that starts with
+        the given `value` followed by ``&&``. A `value` to be found
+        therfore must not contain a complete ZSET entry nor even the
+        `separator` string.
+
+        For example: the value `foo (1)` is found, if the associated
+        ZSET contains an entry "foo (1)&&does-not-matter" or similar.
+        """
         search_term = "[%s%s" % (to_string(value), self.separator)
         result = self._get_client().zlexcount(
             self.zset_name, search_term, search_term + chr(255))
