@@ -218,8 +218,8 @@ class RedisAutocompleteSource(RedisSource):
             self.zset_name, search_term, search_term + chr(255))
         if len(db_entries) == 0:
             raise LookupError('No such term: %s' % value)
-        title = db_entries[0].split(self.separator)[-1].decode("utf-8")
-        return SimpleTerm(value, value, title=title)
+        token, title = self._split_entry(db_entries[0])
+        return SimpleTerm(token, token, title)
 
     def __iter__(self):
         """Required by IIterableVocabulary.
@@ -228,9 +228,8 @@ class RedisAutocompleteSource(RedisSource):
         """
         client = self._get_client()
         for entry, score in client.zscan_iter(self.zset_name):
-            token, title = entry.split(self.separator, 1)
-            yield SimpleTerm(
-                token, token, title=title.decode('utf-8'))
+            token, title = self._split_entry(entry)
+            yield SimpleTerm(token, token, title)
 
     def __len__(self):
         """Required by IIterableVocabulary.
