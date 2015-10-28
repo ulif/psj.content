@@ -219,6 +219,15 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
         self.assertTrue(hasattr(term, 'title'))
         self.assertEqual(term.title, u'Foo (1)')
 
+    def test_len(self):
+        # we can get the size of a ZSET providing our terms
+        source = RedisAutocompleteSource(
+            host=self.redis_host, port=self.redis_port,
+            zset_name="autocomplete-foo")
+        self.assertEqual(len(source), 4)
+        self.redis.zadd(u'autocomplete-foo', 0, "new (0)&&New Kid (0)")
+        self.assertEqual(len(source), 5)
+
 
 class ExternalVocabBinderTests(ExternalVocabSetup, unittest.TestCase):
 

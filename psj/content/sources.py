@@ -219,6 +219,11 @@ class RedisAutocompleteSource(RedisSource):
         title = db_entries[0].split(self.separator)[-1].decode("utf-8")
         return SimpleTerm(value, value, title=title)
 
+    def __len__(self):
+        """Required by IIterableVocabulary.
+        """
+        return self._get_client().zcard(self.zset_name)
+
 
 language_source = ExternalVocabBinder(u'psj.content.Languages')
 institutes_source = ExternalVocabBinder(u'psj.content.Institutes')
