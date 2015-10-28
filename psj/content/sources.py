@@ -203,6 +203,21 @@ class RedisAutocompleteSource(RedisSource):
             self.zset_name, search_term, search_term + chr(255))
         return result and True or False
 
+    def __iter__(self):
+        """Required by IIterableVocabulary.
+
+        Return an iterator over all elements in source.
+        """
+        client = self._get_client()
+        for entry, score in client.zscan_iter(self.zset_name):
+            token, title = self._split_entry(entry)
+            yield SimpleTerm(token, token, title)
+
+    def __len__(self):
+        """Required by IIterableVocabulary.
+        """
+        return self._get_client().zcard(self.zset_name)
+
     def getTerm(self, value):
         """Return the ITerm object for term `value`.
 
@@ -233,21 +248,6 @@ class RedisAutocompleteSource(RedisSource):
 
     def getTermByToken(self, token):
         return self.getTerm(token)
-
-    def __iter__(self):
-        """Required by IIterableVocabulary.
-
-        Return an iterator over all elements in source.
-        """
-        client = self._get_client()
-        for entry, score in client.zscan_iter(self.zset_name):
-            token, title = self._split_entry(entry)
-            yield SimpleTerm(token, token, title)
-
-    def __len__(self):
-        """Required by IIterableVocabulary.
-        """
-        return self._get_client().zcard(self.zset_name)
 
 
 language_source = ExternalVocabBinder(u'psj.content.Languages')
