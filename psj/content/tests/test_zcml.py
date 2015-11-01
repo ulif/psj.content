@@ -4,7 +4,9 @@ import os
 import unittest
 from zope.component import queryUtility
 from zope.configuration import xmlconfig
-from psj.content.interfaces import IExternalVocabConfig, IRedisStoreConfig
+from psj.content.interfaces import (
+    IExternalVocabConfig, IRedisStoreConfig, IRedisStoreZSetConfig
+    )
 
 
 class ZCMLDirectiveTests(unittest.TestCase):
@@ -37,3 +39,15 @@ class ZCMLDirectiveTests(unittest.TestCase):
             conf2, {'host': 'localhost', 'port': 6379, 'db': 0})
         self.assertEqual(
             conf3, {'host': 'localhost', 'port': 666, 'db': 0})
+
+    def test_redis_store_zset_config(self):
+        # The local sample.zcml contains a couple of redis store zset configs
+        sample_zcml = os.path.join(
+            os.path.dirname(__file__), 'sample.zcml')
+        xmlconfig.xmlconfig(open(sample_zcml, 'r'))
+        conf1 = queryUtility(IRedisStoreZSetConfig, name=u'psj.content.redis-zset-foo')
+        conf2 = queryUtility(IRedisStoreZSetConfig, name=u'psj.content.redis-zset-bar')
+        self.assertEqual(
+            conf1, {'host': 'localhost', 'port': 1234, 'db': 42, 'zset_name': u'foo'})
+        self.assertEqual(
+            conf2, {'host': 'localhost', 'port': 6379, 'db': 0, 'zset_name': u'bar'})
