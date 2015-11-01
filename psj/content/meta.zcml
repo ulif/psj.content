@@ -28,6 +28,13 @@
       handler=".zcml.redis_store_conf"
       />
 
+  <meta:directive
+      namespace="http://namespaces.zope.org/psj"
+      name="redis-store-zset"
+      schema=".zcml.IRedisStoreZSetConfig"
+      handler=".zcml.redis_store_zset"
+      />
+
   <configure xmlns="http://namespaces.zope.org/zope"
              xmlns:psj="http://namespaces.zope.org/psj">
     <psj:external-vocab path="../../etc/sample-languages.csv" name="psj.content.Languages" />
