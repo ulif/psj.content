@@ -88,6 +88,22 @@ class IRedisStoreConfig(Interface):
         )
 
 
+class IRedisStoreZSetConfig(IRedisStoreConfig):
+    """Definition of a ZSet stored in a RedisStore.
+
+    Requires parameters from `IRedisStoreConfig` and one additional
+    parameter `zset_name` that gives the name of an existing ZSET
+    stored in a redis store.
+
+    See `zcml.py` for hints how to use this ZCML directive.
+    """
+    zset_name = TextLine(
+        title=u"ZSet name",
+        description=u"Name of ZSET as stored in redis store.",
+        required=True,
+    )
+
+
 class ISearchableTextGetter(Interface):
     """A utility determining the searchable text of objects.
     """
