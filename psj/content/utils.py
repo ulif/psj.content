@@ -147,6 +147,7 @@ def untokenize(ascii_string):
         return ""
     return b64decode(ascii_string)
 
+
 def make_terms(strings):
     """Create zope.schema.SimpleTermss from strings.
 
