@@ -83,6 +83,25 @@ class ExternalRedisBinder(ExternalVocabBinder):
             host=util['host'], port=util['port'], db=util['db'])
 
 
+class ExternalRedisAutocompleteBinder(ExternalVocabBinder):
+    """A source that looks up an external REDIS store to retrieve
+    valid entries.
+
+    Different to `ExternalRedisBinder` this one utilizes a
+    `RedisAutocompleteSource` for retrieving data and not a regular
+    RedisSource.
+
+    """
+    def __call__(self, context):
+        if self.vocab is not None:
+            return self.vocab
+        util = queryUtility(IRedisStoreConfig, name=self.name)
+        if util is None:
+            return SimpleVocabulary.fromValues([])
+        return RedisSource(
+            host=util['host'], port=util['port'], db=util['db'])
+
+
 class RedisSource(object):
     """A zope.schema ISource containing values from a Redis Store.
 

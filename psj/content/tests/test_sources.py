@@ -10,11 +10,10 @@ from zope.schema.interfaces import (
     )
 from zope.schema.vocabulary import SimpleVocabulary
 from psj.content.sources import (
-    ExternalVocabBinder, ExternalRedisBinder, RedisSource,
-    RedisAutocompleteSource, RedisKeysSource, institutes_source,
-    licenses_source, publishers_source,
-    subjectgroup_source, ddcgeo_source, ddcsach_source, ddczeit_source,
-    gndid_source,
+    ExternalVocabBinder, ExternalRedisBinder, ExternalRedisAutocompleteBinder,
+    RedisSource, RedisAutocompleteSource, RedisKeysSource, institutes_source,
+    licenses_source, publishers_source, subjectgroup_source, ddcgeo_source,
+    ddcsach_source, ddczeit_source, gndid_source,
     )
 from psj.content.testing import ExternalVocabSetup, RedisLayer
 from psj.content.utils import tokenize
@@ -412,3 +411,39 @@ class ExternalRedisBinderTests(unittest.TestCase):
         assert u'baz' not in source
         self.assertEqual(term.value, u'foo')
         self.assertEqual(term.title, u'bar')
+
+
+class ExternalRedisAutocompleteBinderTests(unittest.TestCase):
+
+    layer = RedisLayer
+
+    def setUp(self):
+        settings = self.layer['redis_server'].settings['redis_conf']
+        port = settings['port']
+        self.redis = redis.StrictRedis(host='localhost', port=port, db=0)
+        self.redis.flushdb()
+        self.redis.zadd(u'autocomplete-foo', 0, u'foo&&Foo')
+        self.redis.zadd(u'autocomplete-foo', 0, u'bar&&Bar')
+        self.redis_host = settings['bind']
+        self.redis_port = settings['port']
+
+    def tearDown(self):
+        self.redis.flushdb()
+
+    def register_redis_conf(self, name='my-conf', invalid=0):
+        # register a redis config as a named utility
+        from zope.component import getGlobalSiteManager
+        from psj.content.interfaces import IRedisStoreConfig
+        gsm = getGlobalSiteManager()
+        conf = {
+            'host': self.redis_host,
+            'port': self.redis_port,
+            'db': 0 + invalid
+            }
+        gsm.registerUtility(conf, provided=IRedisStoreConfig, name=name)
+
+    def test_external_redis_binder_iface(self):
+        binder = ExternalRedisAutocompleteBinder(None)
+        verify.verifyClass(IContextSourceBinder, ExternalRedisAutocompleteBinder)
+        verify.verifyObject(IContextSourceBinder, binder)
+
