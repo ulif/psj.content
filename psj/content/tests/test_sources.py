@@ -441,3 +441,35 @@ class ExternalRedisAutocompleteBinderTests(unittest.TestCase):
         verify.verifyClass(
             IContextSourceBinder, ExternalRedisAutocompleteBinder)
         verify.verifyObject(IContextSourceBinder, binder)
+
+    def test_external_redis_binder_no_conf(self):
+        # we cope with not registered redis confs
+        binder = ExternalRedisAutocompleteBinder(
+            name='not-a-registered-util-name', zset_name='autocomplete-foo')
+        vocab = binder(context=None)
+        assert isinstance(vocab, SimpleVocabulary)
+        assert len([x for x in vocab]) == 0
+
+    def test_external_redis_binder_invalid_conf(self):
+        # with an invalid redis conf, we get empty sources
+        self.register_redis_conf(name='my-test-redis-conf', invalid=1)
+        binder = ExternalRedisAutocompleteBinder(
+            name='my-test-redis-conf', zset_name='autocomplete-foo')
+        source = binder(context=None)
+        self.assertRaises(LookupError, source.getTerm, u'foo')
+        assert isinstance(source, RedisSource)
+        assert u'foo' not in source
+
+    def test_external_redis_binder_valid_conf(self):
+        # with a valid redis conf, we get valid vocabs
+        self.register_redis_conf(name='my-test-redis-conf')
+        binder = ExternalRedisAutocompleteBinder(
+            name='my-test-redis-conf', zset_name='autocomplete-foo')
+        source = binder(context=None)
+        term = source.getTerm(u'foo')
+        assert isinstance(source, RedisSource)
+        assert u'foo' in source
+        assert u'bar' in source
+        assert u'baz' not in source
+        self.assertEqual(term.value, u'foo')
+        self.assertEqual(term.title, u'Foo')

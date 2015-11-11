@@ -92,14 +92,19 @@ class ExternalRedisAutocompleteBinder(ExternalVocabBinder):
     RedisSource.
 
     """
+    def __init__(self, name, zset_name="autcomplete"):
+        self.name = name
+        self.zset_name = zset_name
+
     def __call__(self, context):
         if self.vocab is not None:
             return self.vocab
         util = queryUtility(IRedisStoreConfig, name=self.name)
         if util is None:
             return SimpleVocabulary.fromValues([])
-        return RedisSource(
-            host=util['host'], port=util['port'], db=util['db'])
+        return RedisAutocompleteSource(
+            host=util['host'], port=util['port'], db=util['db'],
+            zset_name=self.zset_name)
 
 
 class RedisSource(object):
