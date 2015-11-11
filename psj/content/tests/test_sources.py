@@ -444,6 +444,6 @@ class ExternalRedisAutocompleteBinderTests(unittest.TestCase):
 
     def test_external_redis_binder_iface(self):
         binder = ExternalRedisAutocompleteBinder(None)
-        verify.verifyClass(IContextSourceBinder, ExternalRedisAutocompleteBinder)
+        verify.verifyClass(
+            IContextSourceBinder, ExternalRedisAutocompleteBinder)
         verify.verifyObject(IContextSourceBinder, binder)
-
