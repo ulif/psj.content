@@ -5,10 +5,7 @@ import unittest
 from z3c.formwidget.query.interfaces import IQuerySource
 from zope.component import getGlobalSiteManager
 from zope.interface import verify
-from zope.schema.interfaces import (
-    IContextSourceBinder, IBaseVocabulary, ITitledTokenizedTerm,
-    IIterableVocabulary, IVocabularyTokenized
-    )
+from zope.schema.interfaces import IContextSourceBinder, ITitledTokenizedTerm
 from zope.schema.vocabulary import SimpleVocabulary
 from psj.content.interfaces import IRedisStoreConfig
 from psj.content.sources import (
@@ -21,10 +18,7 @@ from psj.content.testing import ExternalVocabSetup, RedisLayer
 from psj.content.utils import tokenize
 
 
-
-
 class RedisSourceTests(unittest.TestCase):
-
     layer = RedisLayer
 
     def setUp(self):
