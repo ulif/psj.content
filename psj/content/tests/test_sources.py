@@ -3,12 +3,14 @@
 import redis
 import unittest
 from z3c.formwidget.query.interfaces import IQuerySource
+from zope.component import getGlobalSiteManager
 from zope.interface import verify
 from zope.schema.interfaces import (
     IContextSourceBinder, IBaseVocabulary, ITitledTokenizedTerm,
     IIterableVocabulary, IVocabularyTokenized
     )
 from zope.schema.vocabulary import SimpleVocabulary
+from psj.content.interfaces import IRedisStoreConfig
 from psj.content.sources import (
     ExternalVocabBinder, ExternalRedisBinder, ExternalRedisAutocompleteBinder,
     RedisSource, RedisAutocompleteSource, RedisKeysSource, institutes_source,
@@ -17,6 +19,8 @@ from psj.content.sources import (
     )
 from psj.content.testing import ExternalVocabSetup, RedisLayer
 from psj.content.utils import tokenize
+
+
 
 
 class RedisSourceTests(unittest.TestCase):
@@ -368,8 +372,6 @@ class ExternalRedisBinderTests(unittest.TestCase):
 
     def register_redis_conf(self, name='my-conf', invalid=0):
         # register a redis config as a named utility
-        from zope.component import getGlobalSiteManager
-        from psj.content.interfaces import IRedisStoreConfig
         gsm = getGlobalSiteManager()
         conf = {
             'host': self.redis_host,
@@ -432,8 +434,6 @@ class ExternalRedisAutocompleteBinderTests(unittest.TestCase):
 
     def register_redis_conf(self, name='my-conf', invalid=0):
         # register a redis config as a named utility
-        from zope.component import getGlobalSiteManager
-        from psj.content.interfaces import IRedisStoreConfig
         gsm = getGlobalSiteManager()
         conf = {
             'host': self.redis_host,
