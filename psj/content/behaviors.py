@@ -190,6 +190,30 @@ class IPSJContributors(IPSJBehavior):
 alsoProvides(IPSJContributors, IFormFieldProvider)
 
 
+class IPSJGNDTerms(IPSJBehavior):
+    """A field providing GND terms with autocompletion.
+    """
+    form.widget('psj_gndterms', AutocompleteMultiFieldWidget)
+    fieldset(
+        'psj_metadata',
+        label=_(u'PSJ Metadata'),
+        fields=('psj_gndterms',),
+        )
+
+    psj_gndterms = List(
+        title=_(u'GND Terms'),
+        description=_(u'Description for GND Terms'),
+        value_type=Choice(
+            title=_(u'GND Terms'),
+            description=_(u'GND Terms'),
+            source=gndterms_source,
+            ),
+        required=False,
+        )
+
+alsoProvides(IPSJGNDTerms, IFormFieldProvider)
+
+
 class IPSJBaseData(IPSJBehavior):
     """Document base metadata, including authorname, title, etc.
     """
@@ -695,6 +719,17 @@ class PSJContributors(PSJMetadataBase):
     psj_abstract = DCFieldProperty(
         IPSJContributors['psj_contributors'],
         get_name='psj_contributors'
+        )
+
+
+class PSJGNDTerms(PSJMetadataBase):
+    """A behavior providing GND terms read from a Redis Store.
+    """
+    implements(IPSJGNDTerms)
+
+    psj_gndterms = DCFieldProperty(
+        IPSJGNDTerms['psj_gndterms'],
+        get_name='psj_gndterms'
         )
 
 
