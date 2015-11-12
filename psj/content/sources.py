@@ -305,3 +305,5 @@ ddcgeo_source = ExternalVocabBinder(u'psj.content.DDCGeo')
 ddcsach_source = ExternalVocabBinder(u'psj.content.DDCSach')
 ddczeit_source = ExternalVocabBinder(u'psj.content.DDCZeit')
 gndid_source = ExternalVocabBinder(u'psj.content.GND_ID')
+gndterms_source = ExternalRedisAutocompleteBinder(
+    u'psj.content.redis_conf', zset_name="gnd-autocomplete")
