@@ -28,7 +28,8 @@ from plone.autoform import directives as form
 from plone.dexterity.interfaces import IDexterityContent
 from plone.directives.form import (
     Schema, fieldset, IFormFieldProvider, mode, primary)
-from plone.formwidget.autocomplete import AutocompleteMultiFieldWidget
+from plone.formwidget.autocomplete import (
+    AutocompleteMultiFieldWidget, AutocompleteFieldWidget)
 from plone.formwidget.contenttree import ObjPathSourceBinder
 from plone.namedfile.field import NamedBlobFile as NamedBlobFileField
 from plone.namedfile.file import NamedBlobFile
@@ -46,7 +47,7 @@ from psj.content.interfaces import IRedisStoreConfig
 from psj.content.sources import (
     subjectgroup_source, ddcgeo_source, ddcsach_source,
     ddczeit_source, RedisSource, language_source, institutes_source,
-    licenses_source
+    licenses_source, gndterms_source
 )
 
 
