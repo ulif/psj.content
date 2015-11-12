@@ -71,3 +71,40 @@ should meet this version requirement.
 
 With the command above we asked for the first five entries that start
 with ``"bb"``.
+
+
+Preparing Plone
+===============
+
+To enable the above redis store as a source for a Plone behavior, the
+Plone instance must be able to access the redis store at runtime.
+
+That also means, that you need a more recent redis server install than
+is currently (Nov 2015) provided by Ubuntu. The server should be
+version 3 or greater.
+
+If you want to run tests (also recommended) you have to provide even a
+more recent client version of redis. This can be accomplished by
+installing a redis store from source in the virtualenv you normally
+use for your Plone instance (you _do_ use a virtualenv, don't you?).::
+
+  $ virtualenv py27
+  $ cd py27
+  $ wget http://download.redis.io/releases/redis-3.0.5.tar.gz
+  $ tar xzf redis-3.0.5.tar.gz
+  $ cd redis-3.0.5
+  $ make
+
+Now, additionally do::
+
+  $ make PREFIX=/path/to/py27 install
+
+That's it. You have to enable the virtualenv before running the tests.
+
+Another option would be to simply get your Redis server from a more
+recent repository. See for instance the local ``.travis.yml`` for a
+different source.
+
+If the redis server is ready and all (or some terms) stored, the
+autocompletion of the PSJGNDTerms field (a behavior) should work out
+of the box.
