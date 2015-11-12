@@ -74,6 +74,13 @@
         />
 
     <plone:behavior
+        title="GND Terms"
+        description="GND Terms"
+        provides=".behaviors.IPSJGNDTerms"
+        factory=".behaviors.PSJGNDTerms"
+        />
+
+    <plone:behavior
 	title="PSJAddRetro"
 	description="Technical metadata for retro docs."
 	provides=".behaviors.IPSJAddRetro"
