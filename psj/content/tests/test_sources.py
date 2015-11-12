@@ -12,7 +12,7 @@ from psj.content.sources import (
     ExternalVocabBinder, ExternalRedisBinder, ExternalRedisAutocompleteBinder,
     RedisSource, RedisAutocompleteSource, RedisKeysSource, institutes_source,
     licenses_source, publishers_source, subjectgroup_source, ddcgeo_source,
-    ddcsach_source, ddczeit_source, gndid_source,
+    ddcsach_source, ddczeit_source, gndid_source, gndterms_source,
     )
 from psj.content.testing import ExternalVocabSetup, RedisLayer
 from psj.content.utils import tokenize
@@ -473,3 +473,14 @@ class ExternalRedisAutocompleteBinderTests(unittest.TestCase):
         assert u'baz' not in source
         self.assertEqual(term.value, u'foo')
         self.assertEqual(term.title, u'Foo')
+
+    def test_gndterms_src_w_vocab(self):
+        # we can use the gndterms source
+        self.redis.zadd(u'gnd-autocomplete', 0, u'foo&&Foo')
+        self.redis.zadd(u'gnd-autocomplete', 0, u'bar&&Bar')
+        self.register_redis_conf(name=u'psj.content.redis_conf')
+        gndterms_source.vocab = None  # avoid cached entries
+        src = gndterms_source(context=None)
+        assert isinstance(src, RedisAutocompleteSource)
+        assert u'foo' in src
+        assert u'baz' not in src
