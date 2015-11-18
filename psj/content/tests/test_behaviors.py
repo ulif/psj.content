@@ -19,7 +19,7 @@ from zope.schema.interfaces import (
 from psj.content.behaviors import (
     IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract, IPSJContributors,
     IPSJAddRetro, IPSJPartOf, IPSJEdition, IPSJSubjectIndexing,
-    IPSJRelatedContent,
+    IPSJRelatedContent, IPSJGNDTerms,
     )
 from psj.content.interfaces import IRedisStoreConfig
 from psj.content.testing import (
@@ -55,7 +55,7 @@ class TestingAssignable(object):
 
     enabled = [IPSJAuthor, IPSJTitle, IPSJSubtitle, IPSJAbstract,
                IPSJContributors, IPSJAddRetro, IPSJPartOf, IPSJEdition,
-               IPSJSubjectIndexing, IPSJRelatedContent,
+               IPSJSubjectIndexing, IPSJRelatedContent, IPSJGNDTerms
                ]
 
     def __init__(self, context):
@@ -75,7 +75,7 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
     layer = REDIS_INTEGRATION_TESTING
 
     def setup_redis_store(self):
-        # setup a redis store config providing GND terms
+        # setup a redis store config providing GND terms (deprecated?)
         gsm = getGlobalSiteManager()
         settings = self.layer['redis_server'].settings['redis_conf']
         conf = {
@@ -86,6 +86,35 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
         redis_client.set(u'foo', u'bar')
         gsm.registerUtility(
             conf, provided=IRedisStoreConfig, name="psj.content.redis-GND")
+
+    def setup_redis_autocomplete(self):
+        # setup a redis store config providing GND terms for autocompletion
+        gsm = getGlobalSiteManager()
+        settings = self.layer['redis_server'].settings['redis_conf']
+        conf = {
+            'host': settings['bind'], 'port': settings['port'], 'db': 0
+            }
+        redis_cli = redis.StrictRedis(
+            host=conf['host'], port=conf['port'], db=conf['db'])
+        redis_cli.zadd(
+            u'gnd-autocomplete', 0, "Vocab Entry 1&&Vocab Entry Title 1")
+        redis_cli.zadd(
+            u'gnd-autocomplete', 0, "Vocab Entry 2&&Vocab Entry Title 2")
+        redis_cli.zadd(
+            u'gnd-autocomplete', 0, "Vocab Entry 3&&Vocab Entry Title 3")
+        gsm.registerUtility(
+            conf, provided=IRedisStoreConfig, name="psj.content.redis_conf")
+        return redis_cli
+
+    def tearDown(self):
+        # unregister IRedisStoreConfig utils, if they are registered.
+        for name in ("psj.content.redis-GND", "psj.content.redis_conf"):
+            util = queryUtility(IRedisStoreConfig, name=name)
+            if util is None:
+                continue
+            getGlobalSiteManager().unregisterUtility(
+                util, provided=IRedisStoreConfig, name=name)
+        super(MetadataBehaviorsTests, self).tearDown()
 
     def behavior_installed(self, name, iface):
         # make sure we get the desired behavior after install
