@@ -294,3 +294,11 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
         behavior.psj_gnd_id = [u'foo', u'baz']
         self.setup_redis_store()
         self.assertEqual(behavior.psj_gnd_terms, [u'bar', u'baz'])
+
+    def test_gndterms_installed(self):
+        self.behavior_installed('IPSJGNDTerms', IPSJGNDTerms)
+        return
+
+    def test_gndterms_usable(self):
+        self.setup_redis_autocomplete()
+        self.choicelist_behavior_usable(b'psj_gndterms', IPSJGNDTerms)
