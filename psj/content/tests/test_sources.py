@@ -490,6 +490,17 @@ class ExternalRedisAutocompleteBinderTests(unittest.TestCase):
         self.assertEqual(term.value, u'foo')
         self.assertEqual(term.title, u'Foo')
 
+    def test_external_redid_binder_no_iter(self):
+        # for huge datasets, redis autocomplete binders forbids iter()
+        self.register_redis_conf(name='my-test-redis-conf')
+        binder = ExternalRedisAutocompleteBinder(
+            name='my-test-redis-conf', zset_name='autocomplete-foo')
+        source = binder(context=None)
+        term = source.getTerm(u'foo')
+        assert term is not None               # we can get single terms...
+        assert len([x for x in source]) == 0    # ...but not _all_ terms.
+        assert source.allow_iter is False
+
     def test_gndterms_src_w_vocab(self):
         # we can use the gndterms source
         self.redis.zadd(u'gnd-autocomplete', 0, u'foo&&Foo')

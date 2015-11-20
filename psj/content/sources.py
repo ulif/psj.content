@@ -91,6 +91,8 @@ class ExternalRedisAutocompleteBinder(ExternalVocabBinder):
     `RedisAutocompleteSource` for retrieving data and not a regular
     RedisSource.
 
+    Please note, that we provide sources with `allow_iter` set to
+    False. This should work even with huge amounts of data.
     """
     def __init__(self, name, zset_name="autcomplete"):
         self.name = name
@@ -104,7 +106,7 @@ class ExternalRedisAutocompleteBinder(ExternalVocabBinder):
             return SimpleVocabulary.fromValues([])
         return RedisAutocompleteSource(
             host=util['host'], port=util['port'], db=util['db'],
-            zset_name=self.zset_name)
+            zset_name=self.zset_name, allow_iter=False)
 
 
 class RedisSource(object):
