@@ -194,6 +194,7 @@ class IPSJGNDTerms(IPSJBehavior):
     """A field providing GND terms with autocompletion.
     """
     form.widget('psj_gndterms', AutocompleteMultiFieldWidget)
+    dexteritytextindexer.searchable('psj_gndterms')
     fieldset(
         'psj_metadata',
         label=_(u'PSJ Metadata'),
