@@ -244,6 +244,22 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
         self.assertEqual(len(elem_list), 4)
         self.assertTrue(ITitledTokenizedTerm.providedBy(elem_list[0]))
 
+    def test_allow_iter(self):
+        # we can forbid to iterate. Useful for huge data sets.
+        source = RedisAutocompleteSource(
+            host=self.redis_host, port=self.redis_port,
+            zset_name="autocomplete-foo", allow_iter=False)
+        self.assertEqual(len([x for x in source]), 0)
+
+    def test_allow_iter_on_the_fly(self):
+        # we can forbid to iterate even after creation of source
+        source = RedisAutocompleteSource(
+            host=self.redis_host, port=self.redis_port,
+            zset_name="autocomplete-foo", allow_iter=True)
+        self.assertEqual(len([x for x in source]), 4)
+        source.allow_iter = False
+        self.assertEqual(len([x for x in source]), 0)
+
     def test_get_term_by_token(self):
         # we can get a term by its token
         source = RedisAutocompleteSource(

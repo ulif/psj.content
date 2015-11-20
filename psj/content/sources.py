@@ -197,14 +197,21 @@ class RedisAutocompleteSource(RedisSource):
 
     `separator` tells how we separate normalized terms from
     non-normalized when we lookup entries in redis ZSET.
+
+    `allow_iter` marks whether queries over the full range of items are
+    allowed. In principle we allow the use of `__iter__` but some dumb
+    Plone widgets use it to render unchosen values. For huge datasets
+    (say 100k+ items at least) we recommend to disable iteration. You
+    should set `allow_iter` to `False` then.
     """
     def __init__(self, host='localhost', port=6379, db=0,
-                 zset_name="autocomplete", separator="&&"):
+                 zset_name="autocomplete", separator="&&", allow_iter=True):
         self.host = host
         self.port = port
         self.db = db
         self.zset_name = zset_name
         self.separator = to_string(separator)
+        self.allow_iter = allow_iter
 
     def _split_entry(self, entry):
         """Split an entry as found in ZSETs into pieces.
@@ -231,12 +238,14 @@ class RedisAutocompleteSource(RedisSource):
     def __iter__(self):
         """Required by IIterableVocabulary.
 
-        Return an iterator over all elements in source.
+        Return an iterator over all elements in source. If instance var
+        `allow_iter` is False, we return an empty iterator.
         """
-        client = self._get_client()
-        for entry, score in client.zscan_iter(self.zset_name):
-            token, title = self._split_entry(entry)
-            yield SimpleTerm(token, token, title)
+        if self.allow_iter:
+            client = self._get_client()
+            for entry, score in client.zscan_iter(self.zset_name):
+                token, title = self._split_entry(entry)
+                yield SimpleTerm(token, token, title)
 
     def __len__(self):
         """Required by IIterableVocabulary.
