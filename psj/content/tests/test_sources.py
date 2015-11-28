@@ -490,7 +490,7 @@ class ExternalRedisAutocompleteBinderTests(unittest.TestCase):
         self.assertEqual(term.value, u'foo')
         self.assertEqual(term.title, u'Foo')
 
-    def test_external_redid_binder_no_iter(self):
+    def test_external_redis_binder_no_iter(self):
         # for huge datasets, redis autocomplete binders forbids iter()
         self.register_redis_conf(name='my-test-redis-conf')
         binder = ExternalRedisAutocompleteBinder(
