@@ -1,5 +1,29 @@
 # Fill redis DB with autocomplete values.
 #
+# For each entry  <KEY>&&<VALUE> in a file "term.txt"
+# we do:
+#
+# - ZADD gnd-autocomplete 0 <NORMALIZED-VALUE>&&<KEY>
+# - SET <KEY> <VALUE>
+#
+# (we do the Python equivalent, of course).
+# Example:
+# Let "terms.txt" contain the two lines:
+#
+#   1&&Foo
+#   2&&Bar
+#
+# then we will:
+#
+#   ZADD gnd-autocomplete 0 foo&&1
+#   SET 1 Foo
+#   ZADD gnd-autocomplete 0 bar&&2
+#   SET 2 Bar
+#
+# This way we can please autocomplete widgets (looking for "a" can
+# provide "bar&&2", "foo&&1" in that order) and asking for "1" then
+# will provide "Foo".
+#
 import re
 import redis
 
@@ -24,12 +48,14 @@ with open("terms.txt", "r") as fd:
             print("CNT: %s" % cnt)
         try:
             result = client.zadd(
-                "gnd-autocomplete", 0, "%s (%s)&&%s (%s)" % (
-                    normalized, key, content, key))
+                "gnd-autocomplete", 0, "%s (%s)&&%s" % (
+                    normalized, key, key))
             if not result:
                 print("PROBLEM")
                 print(cnt, key, content)
                 print("--------")
+            else:
+                client.set(key, content)
 
         except:
             print("EXCEPT")
