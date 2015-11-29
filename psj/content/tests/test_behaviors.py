@@ -200,6 +200,23 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
             behavior, attr_name, [u'Invalid Entry', ])
         return
 
+    def enum_choicelist_behavior_usable(self, attr_name, iface):
+        # test choicelists that contain "enumerating" choices, i.e.
+        # sources with key/value pairs and numbers as keys.
+        doc = self.create_behavioral_doc()
+        behavior = iface(doc, None)
+        self.assertTrue(behavior is not None)
+        self.assertEqual(True, hasattr(behavior, attr_name))
+        # we can assign valid values to doc through the behavior
+        setattr(behavior, attr_name, ['1', ])
+        self.assertEqual(['1', ], getattr(doc, attr_name))
+        # values not in the vocab are rejected
+        self.assertRaises(
+            WrongContainedType,
+            setattr,
+            behavior, attr_name, [u'Invalid Entry', ])
+        return
+
     def test_author_installed(self):
         self.behavior_installed('IPSJAuthor', IPSJAuthor)
         return
