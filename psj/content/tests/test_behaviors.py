@@ -116,6 +116,13 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
                 util, provided=IRedisStoreConfig, name=name)
         super(MetadataBehaviorsTests, self).tearDown()
 
+    def create_behavioral_doc(self):
+        # Create a dummy document for which bahaviors can be assigned
+        doc = DummyDocument(b'doc')
+        provideAdapter(TestingAssignable)
+        self.assertEqual(IDexterityContent.providedBy(doc), True)
+        return doc
+
     def behavior_installed(self, name, iface):
         # make sure we get the desired behavior after install
         name = u'psj.content.behaviors.%s' % name
@@ -130,9 +137,7 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
     def text_behavior_usable(self, attr_name, iface):
         # we can attach a behavior to a content type and modify some
         # text/textline attribute
-        doc = DummyDocument(b'doc')
-        provideAdapter(TestingAssignable)
-        self.assertEqual(IDexterityContent.providedBy(doc), True)
+        doc = self.create_behavioral_doc()
         behavior = iface(doc, None)
         self.assertTrue(behavior is not None)
         self.assertEqual(True, hasattr(behavior, attr_name))
@@ -151,9 +156,7 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
     def textlist_behavior_usable(self, attr_name, iface):
         # we can attach a behavior to a content type and modify some
         # list of text/textline attribute
-        doc = DummyDocument(b'doc')
-        provideAdapter(TestingAssignable)
-        self.assertEqual(IDexterityContent.providedBy(doc), True)
+        doc = self.create_behavioral_doc()
         behavior = iface(doc, None)
         self.assertTrue(behavior is not None)
         self.assertEqual(True, hasattr(behavior, attr_name))
@@ -166,9 +169,7 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
         return
 
     def choice_behavior_usable(self, attr_name, iface):
-        doc = DummyDocument(b'doc')
-        provideAdapter(TestingAssignable)
-        self.assertEqual(IDexterityContent.providedBy(doc), True)
+        doc = self.create_behavioral_doc()
         self.create_external_vocab_from_choice(iface, attr_name)
         behavior = iface(doc, None)
         self.assertTrue(behavior is not None)
@@ -184,9 +185,7 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
         return
 
     def choicelist_behavior_usable(self, attr_name, iface):
-        doc = DummyDocument(b'doc')
-        provideAdapter(TestingAssignable)
-        self.assertEqual(IDexterityContent.providedBy(doc), True)
+        doc = self.create_behavioral_doc()
         self.create_external_vocab_from_choicelist(iface, attr_name)
         behavior = iface(doc, None)
         self.assertTrue(behavior is not None)
