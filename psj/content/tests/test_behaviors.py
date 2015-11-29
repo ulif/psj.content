@@ -96,12 +96,12 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
             }
         redis_cli = redis.StrictRedis(
             host=conf['host'], port=conf['port'], db=conf['db'])
-        redis_cli.zadd(
-            u'gnd-autocomplete', 0, "Vocab Entry 1&&Vocab Entry Title 1")
-        redis_cli.zadd(
-            u'gnd-autocomplete', 0, "Vocab Entry 2&&Vocab Entry Title 2")
-        redis_cli.zadd(
-            u'gnd-autocomplete', 0, "Vocab Entry 3&&Vocab Entry Title 3")
+        redis_cli.zadd(u'gnd-autocomplete', 0, "vocab entry 1&&1")
+        redis_cli.zadd(u'gnd-autocomplete', 0, "vocab entry 2&&2")
+        redis_cli.zadd(u'gnd-autocomplete', 0, "vocab entry 3&&3")
+        redis_cli.set("1", "Vocab Entry Title 1")
+        redis_cli.set("2", "Vocab Entry Title 2")
+        redis_cli.set("3", "Vocab Entry Title 3")
         gsm.registerUtility(
             conf, provided=IRedisStoreConfig, name="psj.content.redis_conf")
         return redis_cli
@@ -317,4 +317,4 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
 
     def test_gndterms_usable(self):
         self.setup_redis_autocomplete()
-        self.choicelist_behavior_usable(b'psj_gndterms', IPSJGNDTerms)
+        self.enum_choicelist_behavior_usable(b'psj_gndterms', IPSJGNDTerms)
