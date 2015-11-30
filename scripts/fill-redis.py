@@ -1,17 +1,18 @@
 # Fill redis DB with autocomplete values.
 #
-# For each entry  <KEY>&&<VALUE> in a file "term.txt"
-# we do:
+# For each entry  <NORMALIZED-VALUE>(<KEY>)&&<VALUE> in a file
+# "term.txt" we do:
 #
 # - ZADD gnd-autocomplete 0 <NORMALIZED-VALUE>&&<KEY>
 # - SET <KEY> <VALUE>
 #
-# (we do the Python equivalent, of course).
+# (we do the Python equivalent, of course). Files of this format
+# can be generated with the local `normalize.py` script.
 # Example:
 # Let "terms.txt" contain the two lines:
 #
-#   1&&Foo
-#   2&&Bar
+#   foo(1)&&Foo
+#   bar(2)&&Bar
 #
 # then we will:
 #
