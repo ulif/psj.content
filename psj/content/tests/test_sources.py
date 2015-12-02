@@ -166,7 +166,7 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
         self.redis.set("1", "Foo")
         self.redis.set("2", "For")
         self.redis.set("3", "Baz")
-        self.redis.set("4", "Bar")
+        self.redis.set("4", "Bär")
         self.redis_host = settings['bind']
         self.redis_port = settings['port']
 
@@ -177,7 +177,7 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
         # make sure, basic redis store test setup works
         r = self.redis
         assert r.zcard('autocomplete-foo') == 4
-        assert r.get("4") == "Bar"
+        assert r.get("4") == "Bär"
 
     def test_iface(self):
         # make sure we fullfill promised interfaces
@@ -221,14 +221,14 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
         source = RedisAutocompleteSource(
             host=self.redis_host, port=self.redis_port,
             zset_name="autocomplete-foo")
-        term = source.getTerm(u'1')
+        term = source.getTerm(u'4')
         assert ITitledTokenizedTerm.providedBy(term)
         self.assertTrue(hasattr(term, 'value'))
-        self.assertEqual(term.value, u'1')
+        self.assertEqual(term.value, u'4')
         self.assertTrue(hasattr(term, 'token'))
-        self.assertEqual(term.token, u'1')
+        self.assertEqual(term.token, u'4')
         self.assertTrue(hasattr(term, 'title'))
-        self.assertEqual(term.title, u'Foo (1)')
+        self.assertEqual(term.title, u'Bär (4)')
 
     def test_len(self):
         # we can get the size of a ZSET providing our terms
@@ -282,10 +282,10 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
         result3 = [x.title for x in source.search("for")]
         result4 = [x.title for x in source.search("For (2)")]
         self.assertEqual(
-            result1, [u'4', u'3', u'1', u'2'])
-        self.assertEqual(result2, [u"1", u"2"])
-        self.assertEqual(result3, [u"2"])
-        self.assertEqual(result4, [u"2"])
+            result1, [u'Bär (4)', u'Baz (3)', u'Foo (1)', u'For (2)'])
+        self.assertEqual(result2, [u"Foo (1)", u"For (2)"])
+        self.assertEqual(result3, [u"For (2)"])
+        self.assertEqual(result4, [u"For (2)"])
 
 
 class ExternalVocabBinderTests(ExternalVocabSetup, unittest.TestCase):
