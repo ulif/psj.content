@@ -278,8 +278,9 @@ class RedisAutocompleteSource(RedisSource):
         db_entries = self._get_client().zrangebylex(
             self.zset_name, search_term, "+", 0, 100)
         for entry in db_entries:
-            token, title = self._split_entry(entry)
-            yield SimpleTerm(token, token, title)
+            normalized, token = self._split_entry(entry)
+            term = self.getTerm(token)
+            yield term
 
 
 language_source = ExternalVocabBinder(u'psj.content.Languages')
