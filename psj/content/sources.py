@@ -254,7 +254,7 @@ class RedisAutocompleteSource(RedisSource):
         value = self._get_client().get(key)
         if value is None:
             raise LookupError('No such term: %s' % key)
-        title = "%s (%s)" % (value, key)
+        title = "%s (%s)" % (value.decode("utf-8"), key)
         return SimpleTerm(key, key, title)
 
     def getTermByToken(self, token):
