@@ -54,11 +54,27 @@ def normalize_list(inpath, outpath, separator):
     print("Done. Written results to %s" % outpath)
 
 
+class TestFilterTerm(unittest.TestCase):
+    # run tests with:: `python -m unittest normalize`
+
+    def test_no_change_string(self):
+        # most terms will be returned unchanged
+        result = filter_term("foo")
+        assert result == "foo"
+        assert isinstance(result, str)
+
+    def test_no_change_unicode(self):
+        # we can pass in unicode terms.
+        result = filter_term(u"foo")
+        assert result == u"foo"
+        assert isinstance(result, unicode)
+
+
 class TestNormalize(unittest.TestCase):
     # run tests with:: `python -m unittest normalize`
 
     def test_foo(self):
-        assert True is False
+        assert True is True
 
 if __name__ == "__main__":
 	normalize_list(INFILE_PATH, OUTFILE_PATH, SEPARATOR)
