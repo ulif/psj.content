@@ -12,6 +12,16 @@ OUTFILE_PATH = "terms.txt"
 SEPARATOR = "&&"
 
 
+def filter_term(term):
+    """Strip unwanted chars.
+
+    Currently we only remove "<" and ">".
+    """
+    for removable in ("<", ">"):
+        term = term.replace(removable, "")
+    return term
+
+
 def normalize_list(inpath, outpath, separator):
     """Turn a list of terms into normalized form.
 
@@ -36,6 +46,7 @@ def normalize_list(inpath, outpath, separator):
                     # ping back every 10**6th entry
                     print("Done: %s entries" % cnt)
                 id_num, term = line.strip().split(separator, 1)
+                term = filter_term(term)
                 term = term.decode("utf-8")
                 normalized = dinsort.normalize("%s(%s)" % (term, id_num))
                 out_term = "%s%s%s\n" % (normalized, separator, term)
@@ -48,7 +59,6 @@ class TestNormalize(unittest.TestCase):
 
     def test_foo(self):
         assert True is False
-
 
 if __name__ == "__main__":
 	normalize_list(INFILE_PATH, OUTFILE_PATH, SEPARATOR)
