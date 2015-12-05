@@ -120,4 +120,4 @@ class TestNormalizeList(unittest.TestCase):
             "tarm3(3)&&Tärm3\n")
 
 if __name__ == "__main__":
-	normalize_list(INFILE_PATH, OUTFILE_PATH, SEPARATOR)
+    normalize_list(INFILE_PATH, OUTFILE_PATH, SEPARATOR)
