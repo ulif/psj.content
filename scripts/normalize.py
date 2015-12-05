@@ -2,8 +2,21 @@
 #
 # normalize terms
 #
+# This file contains tests. You can run tests simply by::
+#
+#   `python -m unittest normalize`
+#
+# or you install py.test in your virtualenv (pip install pytest) and run
+#
+#   `py.test normalize.py`
+#
+# in this directory. The latter is much more comfortable in the long run.
+#
 import dinsort
 import gzip
+import os
+import tempfile
+import shutil
 import unittest
 
 
@@ -82,11 +95,32 @@ class TestFilterTerm(unittest.TestCase):
         assert filter_term("fär <bar>") == "fär bar"
 
 
-class TestNormalize(unittest.TestCase):
+class TestNormalizeList(unittest.TestCase):
     # run tests with:: `python -m unittest normalize`
+    # or 
 
-    def test_foo(self):
-        assert True is True
+    def setUp(self):
+        self.tempdir = tempfile.mkdtemp()
+        self.infile = os.path.join(self.tempdir, "identifiers.gz")
+        self.outfile = os.path.join(self.tempdir, "terms.txt")
+        self.create_gzip_file(b"1&&Term1\n2&&Term2\n3&&Tärm3\n")
+
+    def tearDown(self):
+        shutil.rmtree(self.tempdir)
+
+    def create_gzip_file(self, contents):
+        with gzip.open(self.infile, 'wb') as fd:
+            fd.write(contents)
+
+    def test_normalize_list(self):
+        normalize_list(self.infile, self.outfile, "&&")
+        assert os.path.isfile(self.outfile)
+        with open(self.outfile, "rb") as fd:
+            result = fd.read()
+        assert result == (
+            "term1(1)&&Term1\n"
+            "term2(2)&&Term2\n"
+            "tarm3(3)&&Tärm3\n")
 
 if __name__ == "__main__":
 	normalize_list(INFILE_PATH, OUTFILE_PATH, SEPARATOR)
