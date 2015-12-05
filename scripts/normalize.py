@@ -47,8 +47,8 @@ def normalize_list(inpath, outpath, separator):
 
     will become::
 
-        term1(123)&&Term1
-        term number 2(124)&&Term Number 2
+        123&&term1&&Term1
+        124&&term number 2&&Term Number 2
 
     etc. Here the `separator` string is "&&" in both,
     input and output file.
@@ -63,8 +63,9 @@ def normalize_list(inpath, outpath, separator):
                 id_num, term = line.strip().split(separator, 1)
                 term = filter_term(term)
                 term = term.decode("utf-8")
-                normalized = dinsort.normalize("%s(%s)" % (term, id_num))
-                out_term = "%s%s%s\n" % (normalized, separator, term)
+                normalized = dinsort.normalize(term)
+                out_term = "%s%s%s%s%s\n" % (
+                    id_num, separator, normalized, separator, term)
                 outfile.write(out_term.encode("utf-8"))
     print("Done. Written results to %s" % outpath)
 
@@ -115,9 +116,9 @@ class TestNormalizeList(unittest.TestCase):
         with open(self.outfile, "rb") as fd:
             result = fd.read()
         assert result == (
-            "term1(1)&&Term1\n"
-            "term2(2)&&Term2\n"
-            "tarm3(3)&&Tärm3\n")
+            "1&&term1&&Term1\n"
+            "2&&term2&&Term2\n"
+            "3&&tarm3&&Tärm3\n")
 
 if __name__ == "__main__":
     normalize_list(INFILE_PATH, OUTFILE_PATH, SEPARATOR)

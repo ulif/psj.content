@@ -8,11 +8,12 @@
 #
 # (we do the Python equivalent, of course). Files of this format
 # can be generated with the local `normalize.py` script.
+#
 # Example:
 # Let "terms.txt" contain the two lines:
 #
-#   foo(1)&&Foo
-#   bar(2)&&Bar
+#   1&&foo&&Foo
+#   2&&bar&&Bar
 #
 # then we will:
 #
@@ -28,7 +29,7 @@
 import re
 import redis
 
-ENTRY_FORM = re.compile("(.+)\(([^\)\(]+)\)\&\&(.+)\n$")
+ENTRY_FORM = re.compile("^(.+)\&\&(.+)\&\&(.+)\n$")
 
 
 client = redis.StrictRedis(host='localhost', port=6379, db=0)
@@ -43,7 +44,7 @@ with open("terms.txt", "r") as fd:
         match = ENTRY_FORM.match(line)
         if not match:
             continue
-        normalized, key, content = match.groups()
+        key, normalized, content = match.groups()
         cnt += 1
         if cnt % 100000 == 0:
             print("CNT: %s" % cnt)
