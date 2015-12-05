@@ -70,7 +70,6 @@ def normalize_list(inpath, outpath, separator):
 
 
 class TestFilterTerm(unittest.TestCase):
-    # run tests with:: `python -m unittest normalize`
 
     def test_no_change_string(self):
         # most terms will be returned unchanged
@@ -96,8 +95,6 @@ class TestFilterTerm(unittest.TestCase):
 
 
 class TestNormalizeList(unittest.TestCase):
-    # run tests with:: `python -m unittest normalize`
-    # or 
 
     def setUp(self):
         self.tempdir = tempfile.mkdtemp()
