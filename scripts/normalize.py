@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+#
 # normalize terms
 #
 import dinsort
@@ -68,6 +70,16 @@ class TestFilterTerm(unittest.TestCase):
         result = filter_term(u"foo")
         assert result == u"foo"
         assert isinstance(result, unicode)
+
+    def test_tags_are_stripped(self):
+        # tag chars ('<', '>') are stripped
+        result = filter_term(u"foo <bar>")
+        assert result == u"foo bar"
+
+    def test_umlauts(Self):
+        # we cope with umlauts
+        assert filter_term(u"fär <bar>") == u"fär bar"
+        assert filter_term("fär <bar>") == "fär bar"
 
 
 class TestNormalize(unittest.TestCase):
