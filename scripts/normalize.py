@@ -42,8 +42,8 @@ def normalize_list(inpath, outpath, separator):
 
     For instance::
 
-        (123)&&Term1
-        (124)&&Term Number 2
+        123&&Term1
+        124&&Term Number 2
 
     will become::
 
