@@ -143,7 +143,6 @@ class MetadataBehaviorsTests(ExternalVocabSetup, unittest.TestCase):
         self.assertEqual(True, hasattr(behavior, attr_name))
         # we can assign valid values to doc through the behavior
         setattr(behavior, attr_name, u'John Cleese')
-        #behavior.psj_author = u'John Cleese'
         self.assertEqual(u'John Cleese', getattr(doc, attr_name))
         # numbers are not accepted as Text/TextLines
         self.assertRaises(
