@@ -246,7 +246,8 @@ class RedisAutocompleteSource(RedisSource):
 
         Given keys are treated as tokens.
 
-        The `title` of any resulting term will is constructed from key and value as::
+        The `title` of any resulting term will is constructed from key
+        and value as::
 
            "<VALUE> (<KEY>)"
 
