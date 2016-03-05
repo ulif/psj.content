@@ -102,7 +102,6 @@ class RedisSourceTests(unittest.TestCase):
         self.assertEqual(result2, ["hor"])
         self.assertEqual(result3, ["bar"])
 
-
 class RedisKeysSourceTests(unittest.TestCase):
 
     layer = RedisLayer
@@ -286,6 +285,19 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
         self.assertEqual(result2, [u"Foo (1)", u"For (2)"])
         self.assertEqual(result3, [u"For (2)"])
         self.assertEqual(result4, [u"For (2)"])
+
+    def test_search_num(self):
+        # we get 10 result entries (if available)
+        for n in range(50):
+            self.redis.zadd(u"autocomplete-baz", 0, "baz %s&&%s" % (n, n))
+            self.redis.set("%s" % n, "Baz %s" % n)
+        source = RedisAutocompleteSource(
+            host=self.redis_host, port=self.redis_port,
+            zset_name="autocomplete-baz")
+        result1 = [x.title for x in source.search("baz 1")]
+        self.assertEqual(len(result1), 10)
+        assert u"Baz 1 (1)" in result1
+        assert u"Baz 19 (19)" not in result1
 
 
 class ExternalVocabBinderTests(ExternalVocabSetup, unittest.TestCase):
