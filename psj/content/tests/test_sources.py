@@ -299,6 +299,23 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
         assert u"Baz 1 (1)" in result1
         assert u"Baz 19 (19)" not in result1
 
+    def test_search_sorting(self):
+        # we get a sorted list returned
+        for n in range(5):  # create 5 items of each variant (bar, bär, baer)
+            self.redis.zadd(u"autocomplete-baz", 0, "bar&&2%s" % n)
+            self.redis.set("2%s" % n, u"Bar")
+            self.redis.zadd(u"autocomplete-baz", 0, "bar&&1%s" % n)
+            self.redis.set("1%s" % n, u"Bär")
+            self.redis.zadd(u"autocomplete-baz", 0, "baer&&3%s" % n)
+            self.redis.set("3%s" % n, u"Baer")
+        source = RedisAutocompleteSource(
+            host=self.redis_host, port=self.redis_port,
+            zset_name="autocomplete-baz")
+        result = [x.title for x in source.search(u"Bar")]
+        assert u"Bär (10)" in result
+        assert u"Bar (20)" in result
+        self.assertEqual(result[0], u"Bär (10)")
+
 
 class ExternalVocabBinderTests(ExternalVocabSetup, unittest.TestCase):
 
