@@ -316,6 +316,14 @@ class RedisAutocompleteSourceTests(unittest.TestCase):
         assert u"Bar (20)" in result
         self.assertEqual(result[0], u"Bär (10)")
 
+    def test_search_accepts_umlauts(self):
+        # we can enter umlauts in searches
+        source = RedisAutocompleteSource(
+            host=self.redis_host, port=self.redis_port,
+            zset_name="autocomplete-foo")
+        result = [x.title for x in source.search(u"Bär")]
+        assert u"Bär (4)" in result
+
 
 class ExternalVocabBinderTests(ExternalVocabSetup, unittest.TestCase):
 
